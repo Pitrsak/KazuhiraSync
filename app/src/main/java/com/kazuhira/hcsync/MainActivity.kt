@@ -255,8 +255,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
     
-    private suspend fun markRecordsAsSynced(token: String, ids: List<String>) = withContext(Dispatchers.IO) {
+    private suspend fun markRecordsAsSynced(token: String, ids: List<String>): Boolean = withContext(Dispatchers.IO) {
         try {
+            android.util.Log.d("KazuhiraSync", "Marking ${ids.size} records as synced")
+            android.util.Log.d("KazuhiraSync", "Token: ${token.take(20)}...")
+            android.util.Log.d("KazuhiraSync", "Record IDs: $ids")
+            
             val jsonArray = org.json.JSONArray(ids)
             val json = JSONObject().apply {
                 put("ids", jsonArray)
@@ -268,10 +272,14 @@ class MainActivity : AppCompatActivity() {
                 .build()
             
             client.newCall(request).execute().use { response ->
-                // Assuming successful or ignoring failures silently as it will be retried on next sync
+                android.util.Log.d("KazuhiraSync", "Mark synced response code: ${response.code}")
+                val body = response.body?.string()
+                android.util.Log.d("KazuhiraSync", "Mark synced response body: $body")
+                response.isSuccessful
             }
         } catch (e: Exception) {
-            // Ignore for now
+            android.util.Log.e("KazuhiraSync", "Mark synced error: ${e.message}", e)
+            false
         }
     }
 }
