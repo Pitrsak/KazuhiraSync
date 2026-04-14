@@ -255,15 +255,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
     
-    private suspend fun markRecordsAsSynced(token: String, ids: List<String>): Boolean = withContext(Dispatchers.IO) {
+    private suspend fun markRecordsAsSynced(token: String, ids: List<String>) = withContext(Dispatchers.IO) {
         try {
-            android.util.Log.d("KazuhiraSync", "Marking ${ids.size} records as synced")
-            android.util.Log.d("KazuhiraSync", "Token: ${token.take(20)}...")
-            android.util.Log.d("KazuhiraSync", "Record IDs: $ids")
-            
             val jsonArray = org.json.JSONArray(ids)
             val json = JSONObject().apply {
-                put("ids", jsonArray)
+                put("record_ids", jsonArray)
             }
             val request = Request.Builder()
                 .url("$HCGATEWAY_URL/api/v2/mark_synced/nutrition")
@@ -272,14 +268,10 @@ class MainActivity : AppCompatActivity() {
                 .build()
             
             client.newCall(request).execute().use { response ->
-                android.util.Log.d("KazuhiraSync", "Mark synced response code: ${response.code}")
-                val body = response.body?.string()
-                android.util.Log.d("KazuhiraSync", "Mark synced response body: $body")
-                response.isSuccessful
+                // Fire and forget - even if it fails, it will retry next sync
             }
         } catch (e: Exception) {
-            android.util.Log.e("KazuhiraSync", "Mark synced error: ${e.message}", e)
-            false
+            // Ignore
         }
     }
 }
