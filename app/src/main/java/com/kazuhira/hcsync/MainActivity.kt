@@ -28,9 +28,9 @@ class MainActivity : AppCompatActivity() {
     private val client = OkHttpClient()
     
     // CONFIGURATION
-    private val HCGATEWAY_URL = "http://100.67.83.57:8765"
-    private val USERNAME = "kazuhira"
-    private val PASSWORD = "miller2026"
+    private lateinit var HCGATEWAY_URL: String
+    private lateinit var USERNAME: String
+    private lateinit var PASSWORD: String
     
     private lateinit var statusText: TextView
     private lateinit var syncButton: Button
@@ -44,6 +44,20 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        
+        val prefs = getSharedPreferences("KazuhiraSyncPrefs", MODE_PRIVATE)
+        HCGATEWAY_URL = prefs.getString("HCGATEWAY_URL", "http://100.67.83.57:8765") ?: "http://100.67.83.57:8765"
+        USERNAME = prefs.getString("USERNAME", "kazuhira") ?: "kazuhira"
+        PASSWORD = prefs.getString("PASSWORD", "miller2026") ?: "miller2026"
+        
+        // Persist default values securely if they aren't written yet
+        if (!prefs.contains("USERNAME")) {
+            prefs.edit()
+                .putString("HCGATEWAY_URL", HCGATEWAY_URL)
+                .putString("USERNAME", USERNAME)
+                .putString("PASSWORD", PASSWORD)
+                .apply()
+        }
         
         statusText = findViewById(R.id.statusText)
         syncButton = findViewById(R.id.syncButton)
@@ -81,6 +95,14 @@ class MainActivity : AppCompatActivity() {
         
         lifecycleScope.launch {
             try {
+                statusText.text = "⏳ Checking connection..."
+                if (!checkServerHealth()) {
+                    statusText.text = "❌ Gateway offline (Check Tailscale)"
+                    syncButton.isEnabled = true
+                    return@launch
+                }
+                
+                statusText.text = "⏳ Authenticating..."
                 val token = login()
                 if (token == null) {
                     statusText.text = "❌ Login failed - check Tailscale"
@@ -158,13 +180,20 @@ class MainActivity : AppCompatActivity() {
                 }
                 
                 val body = response.body?.string() ?: return@withContext emptyList()
-                val data = JSONObject(body)
-                
-                if (!data.optBoolean("success", false)) {
-                    return@withContext emptyList()
+                val records: org.json.JSONArray = try {
+                    val data = JSONObject(body)
+                    if (data.has("success") && !data.optBoolean("success", false)) {
+                        return@withContext emptyList()
+                    }
+                    data.optJSONArray("records") ?: org.json.JSONArray()
+                } catch (e: org.json.JSONException) {
+                    try {
+                        org.json.JSONArray(body)
+                    } catch (ex: Exception) {
+                        return@withContext emptyList()
+                    }
                 }
                 
-                val records = data.getJSONArray("records")
                 val result = mutableListOf<Pair<String, NutritionRecord>>()
                 
                 for (i in 0 until records.length()) {
@@ -208,6 +237,21 @@ class MainActivity : AppCompatActivity() {
             records.size
         } catch (e: Exception) {
             0
+        }
+    }
+    
+    private suspend fun checkServerHealth(): Boolean = withContext(Dispatchers.IO) {
+        try {
+            val request = Request.Builder()
+                .url("$HCGATEWAY_URL/health")
+                .get()
+                .build()
+            
+            client.newCall(request).execute().use { response ->
+                response.isSuccessful
+            }
+        } catch (e: Exception) {
+            false
         }
     }
     
