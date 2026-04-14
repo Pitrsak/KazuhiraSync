@@ -88,15 +88,23 @@ class MainActivity : AppCompatActivity() {
                     return@launch
                 }
                 
-                val records = fetchNutrition(token)
-                if (records.isEmpty()) {
+                val fetched = fetchNutrition(token)
+                if (fetched.isEmpty()) {
                     statusText.text = "ℹ️ No meals to sync"
                     syncButton.isEnabled = true
                     return@launch
                 }
                 
-                val successCount = writeToHealthConnect(records)
-                statusText.text = "✅ Synced $successCount/${records.size} meals to Samsung Health"
+                val recordsToInsert = fetched.map { it.second }
+                val idsToMark = fetched.map { it.first }.filter { it.isNotEmpty() }
+                
+                val successCount = writeToHealthConnect(recordsToInsert)
+                
+                if (successCount > 0 && idsToMark.isNotEmpty()) {
+                    markRecordsAsSynced(token, idsToMark)
+                }
+                
+                statusText.text = "✅ Synced $successCount/${fetched.size} meals to Samsung Health"
                 
             } catch (e: Exception) {
                 statusText.text = "❌ Error: ${e.message}"
@@ -137,7 +145,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
     
-    private suspend fun fetchNutrition(token: String): List<NutritionRecord> = withContext(Dispatchers.IO) {
+    private suspend fun fetchNutrition(token: String): List<Pair<String, NutritionRecord>> = withContext(Dispatchers.IO) {
         try {
             val request = Request.Builder()
                 .url("$HCGATEWAY_URL/api/v2/read/nutrition")
@@ -157,11 +165,12 @@ class MainActivity : AppCompatActivity() {
                 }
                 
                 val records = data.getJSONArray("records")
-                val result = mutableListOf<NutritionRecord>()
+                val result = mutableListOf<Pair<String, NutritionRecord>>()
                 
                 for (i in 0 until records.length()) {
                     try {
                         val record = records.getJSONObject(i)
+                        val id = record.optString("id", "")
                         val nutritionData = record.getJSONObject("data")
                         
                         val startTime = Instant.parse(nutritionData.getString("timestamp_iso"))
@@ -179,7 +188,7 @@ class MainActivity : AppCompatActivity() {
                             totalFat = Mass.grams(nutritionData.optDouble("fat_g", 0.0))
                         )
                         
-                        result.add(nutritionRecord)
+                        result.add(Pair(id, nutritionRecord))
                     } catch (e: Exception) {
                         // Skip invalid records
                     }
@@ -199,6 +208,26 @@ class MainActivity : AppCompatActivity() {
             records.size
         } catch (e: Exception) {
             0
+        }
+    }
+    
+    private suspend fun markRecordsAsSynced(token: String, ids: List<String>) = withContext(Dispatchers.IO) {
+        try {
+            val jsonArray = org.json.JSONArray(ids)
+            val json = JSONObject().apply {
+                put("ids", jsonArray)
+            }
+            val request = Request.Builder()
+                .url("$HCGATEWAY_URL/api/v2/mark_synced/nutrition")
+                .header("Authorization", "Bearer $token")
+                .post(json.toString().toRequestBody("application/json".toMediaType()))
+                .build()
+            
+            client.newCall(request).execute().use { response ->
+                // Assuming successful or ignoring failures silently as it will be retried on next sync
+            }
+        } catch (e: Exception) {
+            // Ignore for now
         }
     }
 }

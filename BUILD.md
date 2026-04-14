@@ -48,5 +48,4 @@ If your Tailscale IP changes, edit:
 | "No meals to sync" | Send food photo to Kazuhira first |
 | "Health Connect error" | Grant permissions in Settings → Health Connect |
 
----
-*Kazuhira Miller Health Connect Sync. v1.0.0*
+*Kazuhira Miller Health Connect Sync. v1.1.0*
