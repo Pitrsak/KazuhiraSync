@@ -6,9 +6,12 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.health.connect.client.HealthConnectClient
 import androidx.health.connect.client.records.NutritionRecord
+import androidx.health.connect.client.permission.HealthPermission
+import androidx.health.connect.client.PermissionController
 import androidx.health.connect.client.units.Energy
 import androidx.health.connect.client.units.Mass
 import androidx.lifecycle.lifecycleScope
+import androidx.activity.result.ActivityResultLauncher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -32,6 +35,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var statusText: TextView
     private lateinit var syncButton: Button
     
+    private lateinit var requestPermissions: ActivityResultLauncher<Set<String>>
+    private val PERMISSIONS = setOf(
+        HealthPermission.getReadPermission(NutritionRecord::class),
+        HealthPermission.getWritePermission(NutritionRecord::class)
+    )
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -39,8 +48,30 @@ class MainActivity : AppCompatActivity() {
         statusText = findViewById(R.id.statusText)
         syncButton = findViewById(R.id.syncButton)
         
+        val requestPermissionActivityContract = PermissionController.createRequestPermissionResultContract()
+        requestPermissions = registerForActivityResult(requestPermissionActivityContract) { granted ->
+            if (granted.containsAll(PERMISSIONS)) {
+                performSync()
+            } else {
+                statusText.text = "❌ Health Connect Permission Denied"
+            }
+        }
+        
         syncButton.setOnClickListener {
-            performSync()
+            lifecycleScope.launch {
+                try {
+                    val hcClient = HealthConnectClient.getOrCreate(this@MainActivity)
+                    val granted = hcClient.permissionController.getGrantedPermissions()
+                    if (granted.containsAll(PERMISSIONS)) {
+                        performSync()
+                    } else {
+                        statusText.text = "⏳ Requesting Permissions..."
+                        requestPermissions.launch(PERMISSIONS)
+                    }
+                } catch(e: Exception) {
+                    statusText.text = "❌ Error accessing Health Connect: ${e.message}"
+                }
+            }
         }
     }
     
