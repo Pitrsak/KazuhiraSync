@@ -1,277 +1,360 @@
 package com.kazuhira.hcsync
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.*
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import androidx.health.connect.client.HealthConnectClient
-import androidx.health.connect.client.records.NutritionRecord
-import androidx.health.connect.client.permission.HealthPermission
 import androidx.health.connect.client.PermissionController
+import androidx.health.connect.client.permission.HealthPermission
+import androidx.health.connect.client.records.NutritionRecord
 import androidx.health.connect.client.units.Energy
 import androidx.health.connect.client.units.Mass
 import androidx.lifecycle.lifecycleScope
-import androidx.activity.result.ActivityResultLauncher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.RequestBody.Companion.toRequestBody
-import org.json.JSONObject
+import java.io.File
 import java.time.Instant
 import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 
 class MainActivity : AppCompatActivity() {
-    
-    private val client = OkHttpClient()
-    
-    // CONFIGURATION
-    private lateinit var HCGATEWAY_URL: String
-    private lateinit var USERNAME: String
-    private lateinit var PASSWORD: String
-    
+
     private lateinit var statusText: TextView
-    private lateinit var syncButton: Button
-    
-    private lateinit var requestPermissions: ActivityResultLauncher<Set<String>>
+    private lateinit var progressBar: ProgressBar
+    private lateinit var btnTakePhoto: Button
+    private lateinit var btnPickGallery: Button
+    private lateinit var btnSettings: ImageButton
+    private lateinit var listViewHistory: ListView
+
+    private lateinit var localRepo: LocalMealRepository
+    private var tempPhotoUri: Uri? = null
+
+    // Launchers
+    private lateinit var cameraLauncher: ActivityResultLauncher<Uri>
+    private lateinit var galleryLauncher: ActivityResultLauncher<String>
+    private lateinit var requestPermissionsLauncher: ActivityResultLauncher<Set<String>>
+
     private val PERMISSIONS = setOf(
         HealthPermission.getReadPermission(NutritionRecord::class),
         HealthPermission.getWritePermission(NutritionRecord::class)
     )
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        
-        val prefs = getSharedPreferences("KazuhiraSyncPrefs", MODE_PRIVATE)
-        HCGATEWAY_URL = prefs.getString("HCGATEWAY_URL", "http://100.67.83.57:8765") ?: "http://100.67.83.57:8765"
-        USERNAME = prefs.getString("USERNAME", "kazuhira") ?: "kazuhira"
-        PASSWORD = prefs.getString("PASSWORD", "miller2026") ?: "miller2026"
-        
-        // Persist default values securely if they aren't written yet
-        if (!prefs.contains("USERNAME")) {
+
+        localRepo = LocalMealRepository(this)
+        initDefaultPrefs()
+
+        statusText = findViewById(R.id.statusText)
+        progressBar = findViewById(R.id.progressBar)
+        btnTakePhoto = findViewById(R.id.btnTakePhoto)
+        btnPickGallery = findViewById(R.id.btnPickGallery)
+        btnSettings = findViewById(R.id.btnSettings)
+        listViewHistory = findViewById(R.id.listViewHistory)
+
+        // Health Connect Permissions Contract
+        val requestPermissionActivityContract = PermissionController.createRequestPermissionResultContract()
+        requestPermissionsLauncher = registerForActivityResult(requestPermissionActivityContract) { granted ->
+            if (granted.containsAll(PERMISSIONS)) {
+                Toast.makeText(this, "Health Connect permissions granted!", Toast.LENGTH_SHORT).show()
+            } else {
+                statusText.text = "⚠️ Health Connect permissions not granted"
+            }
+        }
+
+        // Camera Launcher
+        cameraLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+            if (success && tempPhotoUri != null) {
+                processFoodImage(tempPhotoUri!!)
+            } else {
+                statusText.text = "Camera photo capture cancelled."
+            }
+        }
+
+        // Gallery Launcher
+        galleryLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            if (uri != null) {
+                processFoodImage(uri)
+            }
+        }
+
+        btnTakePhoto.setOnClickListener {
+            launchCamera()
+        }
+
+        btnPickGallery.setOnClickListener {
+            galleryLauncher.launch("image/*")
+        }
+
+        btnSettings.setOnClickListener {
+            showSettingsDialog()
+        }
+
+        refreshHistoryList()
+
+        // Handle incoming intent if shared from Gallery/Camera app
+        handleIncomingIntent(intent)
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        handleIncomingIntent(intent)
+    }
+
+    private fun initDefaultPrefs() {
+        val prefs = getSharedPreferences("KazuhiraPrefs", MODE_PRIVATE)
+        if (!prefs.contains("GEMINI_API_KEY")) {
             prefs.edit()
-                .putString("HCGATEWAY_URL", HCGATEWAY_URL)
-                .putString("USERNAME", USERNAME)
-                .putString("PASSWORD", PASSWORD)
+                .putString("GEMINI_API_KEY", "AIzaSyA8uAMWwiGiTG4JXA0TOWnemYo5iuIIzDw")
+                .putString("GEMINI_MODEL", "gemini-2.5-flash")
                 .apply()
         }
-        
-        statusText = findViewById(R.id.statusText)
-        syncButton = findViewById(R.id.syncButton)
-        
-        val requestPermissionActivityContract = PermissionController.createRequestPermissionResultContract()
-        requestPermissions = registerForActivityResult(requestPermissionActivityContract) { granted ->
-            if (granted.containsAll(PERMISSIONS)) {
-                performSync()
-            } else {
-                statusText.text = "❌ Health Connect Permission Denied"
-            }
-        }
-        
-        syncButton.setOnClickListener {
-            lifecycleScope.launch {
-                try {
-                    val hcClient = HealthConnectClient.getOrCreate(this@MainActivity)
-                    val granted = hcClient.permissionController.getGrantedPermissions()
-                    if (granted.containsAll(PERMISSIONS)) {
-                        performSync()
-                    } else {
-                        statusText.text = "⏳ Requesting Permissions..."
-                        requestPermissions.launch(PERMISSIONS)
-                    }
-                } catch(e: Exception) {
-                    statusText.text = "❌ Error accessing Health Connect: ${e.message}"
-                }
+    }
+
+    private fun handleIncomingIntent(intent: Intent?) {
+        if (intent == null) return
+        val action = intent.action
+        val type = intent.type
+
+        if (Intent.ACTION_SEND == action && type != null && type.startsWith("image/")) {
+            val imageUri = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
+            if (imageUri != null) {
+                statusText.text = "Processing shared image..."
+                processFoodImage(imageUri)
             }
         }
     }
-    
-    private fun performSync() {
-        statusText.text = "⏳ Syncing..."
-        syncButton.isEnabled = false
-        
+
+    private fun launchCamera() {
+        try {
+            val photoFile = File(cacheDir, "food_photo_${System.currentTimeMillis()}.jpg")
+            tempPhotoUri = FileProvider.getUriForFile(
+                this,
+                "com.kazuhira.hcsync.fileprovider",
+                photoFile
+            )
+            cameraLauncher.launch(tempPhotoUri!!)
+        } catch (e: Exception) {
+            Toast.makeText(this, "Error launching camera: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun processFoodImage(imageUri: Uri) {
+        val prefs = getSharedPreferences("KazuhiraPrefs", MODE_PRIVATE)
+        val apiKey = prefs.getString("GEMINI_API_KEY", "") ?: ""
+        val modelName = prefs.getString("GEMINI_MODEL", "gemini-2.5-flash") ?: "gemini-2.5-flash"
+
+        if (apiKey.isBlank()) {
+            Toast.makeText(this, "Please configure your Google AI API key in Settings first", Toast.LENGTH_LONG).show()
+            showSettingsDialog()
+            return
+        }
+
+        statusText.text = "🧠 Analyzing meal photo with Gemini AI ($modelName)..."
+        progressBar.visibility = View.VISIBLE
+        btnTakePhoto.isEnabled = false
+        btnPickGallery.isEnabled = false
+
         lifecycleScope.launch {
+            val visionService = GeminiVisionService(this@MainActivity, apiKey, modelName)
+            val result = visionService.analyzeFoodImage(imageUri)
+
+            progressBar.visibility = View.GONE
+            btnTakePhoto.isEnabled = true
+            btnPickGallery.isEnabled = true
+
+            result.onSuccess { estimation ->
+                statusText.text = "✅ Analysis complete! Please verify values below."
+                showMealConfirmationDialog(imageUri, estimation)
+            }.onFailure { exception ->
+                statusText.text = "❌ Error analyzing food: ${exception.localizedMessage}"
+                Toast.makeText(this@MainActivity, "Analysis failed: ${exception.message}", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun showMealConfirmationDialog(imageUri: Uri, estimation: MealEstimation) {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_confirm_meal, null)
+
+        val imgPreview = dialogView.findViewById<ImageView>(R.id.imgMealPreview)
+        val etMealName = dialogView.findViewById<EditText>(R.id.etMealName)
+        val etCalories = dialogView.findViewById<EditText>(R.id.etCalories)
+        val etProtein = dialogView.findViewById<EditText>(R.id.etProtein)
+        val etCarbs = dialogView.findViewById<EditText>(R.id.etCarbs)
+        val etFat = dialogView.findViewById<EditText>(R.id.etFat)
+        val tvNotes = dialogView.findViewById<TextView>(R.id.tvNotes)
+        val btnCancel = dialogView.findViewById<Button>(R.id.btnCancelMeal)
+        val btnSave = dialogView.findViewById<Button>(R.id.btnSaveMeal)
+
+        imgPreview.setImageURI(imageUri)
+        etMealName.setText(estimation.mealName)
+        etCalories.setText(estimation.calories.toInt().toString())
+        etProtein.setText(estimation.proteinG.toInt().toString())
+        etCarbs.setText(estimation.carbG.toInt().toString())
+        etFat.setText(estimation.fatG.toInt().toString())
+        tvNotes.text = estimation.notes
+
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setCancelable(false)
+            .create()
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        btnSave.setOnClickListener {
+            val name = etMealName.text.toString().ifBlank { "Meal" }
+            val calories = etCalories.text.toString().toDoubleOrNull() ?: 0.0
+            val protein = etProtein.text.toString().toDoubleOrNull() ?: 0.0
+            val carbs = etCarbs.text.toString().toDoubleOrNull() ?: 0.0
+            val fat = etFat.text.toString().toDoubleOrNull() ?: 0.0
+
+            dialog.dismiss()
+            logMealToHealthConnect(name, calories, protein, carbs, fat, estimation.notes)
+        }
+
+        dialog.show()
+    }
+
+    private fun logMealToHealthConnect(
+        name: String,
+        calories: Double,
+        protein: Double,
+        carbs: Double,
+        fat: Double,
+        notes: String
+    ) {
+        statusText.text = "⏳ Logging meal to Health Connect..."
+        progressBar.visibility = View.VISIBLE
+
+        lifecycleScope.launch {
+            var syncedSuccess = false
             try {
-                statusText.text = "⏳ Checking connection..."
-                if (!checkServerHealth()) {
-                    statusText.text = "❌ Gateway offline (Check Tailscale)"
-                    syncButton.isEnabled = true
-                    return@launch
+                val hcClient = HealthConnectClient.getOrCreate(this@MainActivity)
+                val granted = hcClient.permissionController.getGrantedPermissions()
+
+                if (!granted.containsAll(PERMISSIONS)) {
+                    requestPermissionsLauncher.launch(PERMISSIONS)
                 }
-                
-                statusText.text = "⏳ Authenticating..."
-                val token = login()
-                if (token == null) {
-                    statusText.text = "❌ Login failed - check Tailscale"
-                    syncButton.isEnabled = true
-                    return@launch
-                }
-                
-                val fetched = fetchNutrition(token)
-                if (fetched.isEmpty()) {
-                    statusText.text = "ℹ️ No meals to sync"
-                    syncButton.isEnabled = true
-                    return@launch
-                }
-                
-                val recordsToInsert = fetched.map { it.second }
-                val idsToMark = fetched.map { it.first }.filter { it.isNotEmpty() }
-                
-                val successCount = writeToHealthConnect(recordsToInsert)
-                
-                if (successCount > 0 && idsToMark.isNotEmpty()) {
-                    markRecordsAsSynced(token, idsToMark)
-                }
-                
-                statusText.text = "✅ Synced $successCount/${fetched.size} meals to Samsung Health"
-                
+
+                val now = Instant.now()
+                val zoneOffset = ZoneOffset.systemDefault().rules.getOffset(now)
+
+                val nutritionRecord = NutritionRecord(
+                    startTime = now.minusSeconds(60),
+                    endTime = now,
+                    startZoneOffset = zoneOffset,
+                    endZoneOffset = zoneOffset,
+                    name = name,
+                    energy = Energy.kilocalories(calories),
+                    protein = Mass.grams(protein),
+                    totalCarbohydrate = Mass.grams(carbs),
+                    totalFat = Mass.grams(fat)
+                )
+
+                hcClient.insertRecords(listOf(nutritionRecord))
+                syncedSuccess = true
+                statusText.text = "🎉 Logged $name ($calories kcal) to Health Connect & Samsung Health!"
             } catch (e: Exception) {
-                statusText.text = "❌ Error: ${e.message}"
+                statusText.text = "⚠️ Saved locally (Health Connect write failed: ${e.message})"
             } finally {
-                syncButton.isEnabled = true
+                progressBar.visibility = View.GONE
+
+                // Save locally
+                val mealRecord = LocalMealRecord(
+                    id = System.currentTimeMillis().toString(),
+                    mealName = name,
+                    calories = calories,
+                    proteinG = protein,
+                    carbG = carbs,
+                    fatG = fat,
+                    notes = notes,
+                    timestampIso = Instant.now().toString(),
+                    syncedToHealthConnect = syncedSuccess
+                )
+                localRepo.saveMeal(mealRecord)
+                refreshHistoryList()
             }
         }
     }
-    
-    private suspend fun login(): String? = withContext(Dispatchers.IO) {
-        try {
-            val json = JSONObject().apply {
-                put("username", USERNAME)
-                put("password", PASSWORD)
-            }
-            
-            val request = Request.Builder()
-                .url("$HCGATEWAY_URL/api/v2/login")
-                .post(json.toString().toRequestBody("application/json".toMediaType()))
-                .build()
-            
-            client.newCall(request).execute().use { response ->
-                if (!response.isSuccessful) {
-                    return@withContext null
+
+    private fun refreshHistoryList() {
+        val meals = localRepo.getMeals()
+        val adapter = object : ArrayAdapter<LocalMealRecord>(this, R.layout.item_meal, meals) {
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.item_meal, parent, false)
+                val item = getItem(position) ?: return view
+
+                val tvTitle = view.findViewById<TextView>(R.id.tvMealTitle)
+                val tvCalories = view.findViewById<TextView>(R.id.tvMealCalories)
+                val tvMacros = view.findViewById<TextView>(R.id.tvMealMacros)
+                val tvTime = view.findViewById<TextView>(R.id.tvMealTime)
+
+                tvTitle.text = item.mealName
+                tvCalories.text = "${item.calories.toInt()} kcal"
+                tvMacros.text = "P: ${item.proteinG.toInt()}g  C: ${item.carbG.toInt()}g  F: ${item.fatG.toInt()}g"
+
+                try {
+                    val instant = Instant.parse(item.timestampIso)
+                    val formatted = DateTimeFormatter.ofPattern("MMM d, h:mm a")
+                        .withZone(ZoneOffset.systemDefault())
+                        .format(instant)
+                    tvTime.text = formatted
+                } catch (e: Exception) {
+                    tvTime.text = item.timestampIso
                 }
-                
-                val body = response.body?.string() ?: return@withContext null
-                val data = JSONObject(body)
-                
-                if (data.optBoolean("success", false)) {
-                    data.getString("token")
-                } else {
-                    null
-                }
+
+                return view
             }
-        } catch (e: Exception) {
-            null
         }
+
+        listViewHistory.adapter = adapter
     }
-    
-    private suspend fun fetchNutrition(token: String): List<Pair<String, NutritionRecord>> = withContext(Dispatchers.IO) {
-        try {
-            val request = Request.Builder()
-                .url("$HCGATEWAY_URL/api/v2/read/nutrition")
-                .header("Authorization", "Bearer $token")
-                .build()
-            
-            client.newCall(request).execute().use { response ->
-                if (!response.isSuccessful) {
-                    return@withContext emptyList()
-                }
-                
-                val body = response.body?.string() ?: return@withContext emptyList()
-                val records: org.json.JSONArray = try {
-                    val data = JSONObject(body)
-                    if (data.has("success") && !data.optBoolean("success", false)) {
-                        return@withContext emptyList()
-                    }
-                    data.optJSONArray("records") ?: org.json.JSONArray()
-                } catch (e: org.json.JSONException) {
-                    try {
-                        org.json.JSONArray(body)
-                    } catch (ex: Exception) {
-                        return@withContext emptyList()
-                    }
-                }
-                
-                val result = mutableListOf<Pair<String, NutritionRecord>>()
-                
-                for (i in 0 until records.length()) {
-                    try {
-                        val record = records.getJSONObject(i)
-                        val id = record.optString("id", "")
-                        val nutritionData = record.getJSONObject("data")
-                        
-                        val startTime = Instant.parse(nutritionData.getString("timestamp_iso"))
-                        val zoneOffset = ZoneOffset.systemDefault().rules.getOffset(Instant.now())
-                        
-                        val nutritionRecord = NutritionRecord(
-                            startTime = startTime,
-                            endTime = startTime.plusSeconds(1),
-                            startZoneOffset = zoneOffset,
-                            endZoneOffset = zoneOffset,
-                            name = nutritionData.optString("meal_name", "Meal"),
-                            energy = Energy.kilocalories(nutritionData.optDouble("calories", 0.0)),
-                            protein = Mass.grams(nutritionData.optDouble("protein_g", 0.0)),
-                            totalCarbohydrate = Mass.grams(nutritionData.optDouble("carbohydrate_g", 0.0)),
-                            totalFat = Mass.grams(nutritionData.optDouble("fat_g", 0.0))
-                        )
-                        
-                        result.add(Pair(id, nutritionRecord))
-                    } catch (e: Exception) {
-                        // Skip invalid records
-                    }
-                }
-                
-                result
-            }
-        } catch (e: Exception) {
-            emptyList()
+
+    private fun showSettingsDialog() {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_settings, null)
+        val etApiKey = dialogView.findViewById<EditText>(R.id.etApiKey)
+        val etModelName = dialogView.findViewById<EditText>(R.id.etModelName)
+        val btnCancel = dialogView.findViewById<Button>(R.id.btnCancelSettings)
+        val btnSave = dialogView.findViewById<Button>(R.id.btnSaveSettings)
+
+        val prefs = getSharedPreferences("KazuhiraPrefs", MODE_PRIVATE)
+        etApiKey.setText(prefs.getString("GEMINI_API_KEY", "AIzaSyA8uAMWwiGiTG4JXA0TOWnemYo5iuIIzDw"))
+        etModelName.setText(prefs.getString("GEMINI_MODEL", "gemini-2.5-flash"))
+
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .create()
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
         }
-    }
-    
-    private suspend fun writeToHealthConnect(records: List<NutritionRecord>): Int = withContext(Dispatchers.IO) {
-        try {
-            val healthConnectClient = HealthConnectClient.getOrCreate(this@MainActivity)
-            healthConnectClient.insertRecords(records)
-            records.size
-        } catch (e: Exception) {
-            0
+
+        btnSave.setOnClickListener {
+            val key = etApiKey.text.toString().trim()
+            val model = etModelName.text.toString().trim().ifBlank { "gemini-2.5-flash" }
+
+            prefs.edit()
+                .putString("GEMINI_API_KEY", key)
+                .putString("GEMINI_MODEL", model)
+                .apply()
+
+            Toast.makeText(this, "Settings saved!", Toast.LENGTH_SHORT).show()
+            dialog.dismiss()
         }
-    }
-    
-    private suspend fun checkServerHealth(): Boolean = withContext(Dispatchers.IO) {
-        try {
-            val request = Request.Builder()
-                .url("$HCGATEWAY_URL/health")
-                .get()
-                .build()
-            
-            client.newCall(request).execute().use { response ->
-                response.isSuccessful
-            }
-        } catch (e: Exception) {
-            false
-        }
-    }
-    
-    private suspend fun markRecordsAsSynced(token: String, ids: List<String>) = withContext(Dispatchers.IO) {
-        try {
-            val jsonArray = org.json.JSONArray(ids)
-            val json = JSONObject().apply {
-                put("record_ids", jsonArray)
-            }
-            val request = Request.Builder()
-                .url("$HCGATEWAY_URL/api/v2/mark_synced/nutrition")
-                .header("Authorization", "Bearer $token")
-                .post(json.toString().toRequestBody("application/json".toMediaType()))
-                .build()
-            
-            client.newCall(request).execute().use { response ->
-                // Fire and forget - even if it fails, it will retry next sync
-            }
-        } catch (e: Exception) {
-            // Ignore
-        }
+
+        dialog.show()
     }
 }
