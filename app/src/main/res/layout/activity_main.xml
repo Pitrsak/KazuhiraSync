@@ -4,102 +4,80 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
+    android:padding="20dp"
     android:background="@color/idroid_bg">
 
-    <!-- Top iDroid Status Bar -->
-    <RelativeLayout
+    <!-- Top Header Bar -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="12dp"
-        android:layout_marginBottom="12dp">
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="24dp">
+
+        <ImageView
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:src="@drawable/ic_launcher_foreground"
+            android:layout_marginEnd="12dp" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_alignParentStart="true"
-            android:layout_toStartOf="@id/btnSettings">
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-            <!-- Kazuhira Vector Logo -->
-            <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/ic_launcher_foreground"
-                android:layout_marginEnd="12dp" />
-
-            <LinearLayout
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:text="Kazuhira Sync"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/idroid_text_main" />
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="iDROID"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/idroid_amber"
-                        android:fontFamily="sans-serif-black" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=" // MOTHER BASE LOGISTICS"
-                        android:textSize="11sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/idroid_cyan" />
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/tvModelSubtitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="MODEL: GEMINI-3.5-FLASH-LITE"
-                    android:textSize="11sp"
-                    android:textColor="@color/idroid_text_dim"
-                    android:fontFamily="monospace" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/tvModelSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="iDROID SYSTEM // GEMINI-3.5-FLASH-LITE"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:textColor="@color/idroid_cyan"
+                android:fontFamily="monospace" />
         </LinearLayout>
 
         <ImageButton
             android:id="@+id/btnSettings"
             android:layout_width="44dp"
             android:layout_height="44dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Settings"
             android:src="@android:drawable/ic_menu_preferences"
             app:tint="@color/idroid_amber" />
-    </RelativeLayout>
+    </LinearLayout>
 
-    <!-- iDroid Tactical Card: SCANNER -->
+    <!-- Main Scanner Card -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@drawable/bg_idroid_card"
-        android:padding="16dp"
-        android:layout_marginBottom="16dp">
+        android:padding="18dp"
+        android:layout_marginBottom="20dp">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp">
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="14dp">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="[ SYSTEM SCAN // FOOD INTEL ]"
-                android:textSize="13sp"
+                android:textSize="12sp"
                 android:textStyle="bold"
                 android:textColor="@color/idroid_cyan"
                 android:fontFamily="monospace" />
@@ -107,21 +85,19 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
                 android:text="STATUS: ONLINE"
-                android:textSize="11sp"
+                android:textSize="10sp"
                 android:textStyle="bold"
                 android:textColor="@color/idroid_green"
                 android:fontFamily="monospace" />
-        </RelativeLayout>
+        </LinearLayout>
 
-        <!-- Buttons Row -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:weightSum="2"
-            android:layout_marginBottom="12dp">
+            android:layout_marginBottom="14dp">
 
             <Button
                 android:id="@+id/btnTakePhoto"
@@ -130,9 +106,9 @@
                 android:layout_weight="1"
                 android:layout_marginEnd="6dp"
                 android:text="📷 CAMERA SCAN"
-                android:textSize="13sp"
+                android:textSize="12sp"
                 android:textStyle="bold"
-                android:textColor="#080D14"
+                android:textColor="#070B12"
                 android:backgroundTint="@color/idroid_amber"
                 android:paddingVertical="12dp" />
 
@@ -144,7 +120,7 @@
                 android:layout_weight="1"
                 android:layout_marginStart="6dp"
                 android:text="🖼️ INTEL FILE"
-                android:textSize="13sp"
+                android:textSize="12sp"
                 android:textStyle="bold"
                 android:textColor="@color/idroid_cyan"
                 app:strokeColor="@color/idroid_cyan"
@@ -166,7 +142,7 @@
             android:layout_height="wrap_content"
             android:text="Awaiting target acquisition. Select or capture food photo."
             android:textSize="12sp"
-            android:textColor="@color/idroid_text_main"
+            android:textColor="@color/idroid_text_dim"
             android:textAlignment="center"
             android:fontFamily="sans-serif-medium" />
     </LinearLayout>
@@ -176,11 +152,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="[ SUPPLY LOG // RATION HISTORY ]"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:textStyle="bold"
         android:textColor="@color/idroid_amber"
         android:fontFamily="monospace"
-        android:layout_marginBottom="8dp" />
+        android:layout_marginBottom="10dp" />
 
     <ListView
         android:id="@+id/listViewHistory"

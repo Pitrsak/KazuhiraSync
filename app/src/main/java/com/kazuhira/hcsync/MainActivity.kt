@@ -132,7 +132,7 @@ class MainActivity : AppCompatActivity() {
     private fun updateModelSubtitle() {
         val prefs = getSharedPreferences("KazuhiraPrefs", MODE_PRIVATE)
         val currentModel = prefs.getString("GEMINI_MODEL", "gemini-3.5-flash-lite") ?: "gemini-3.5-flash-lite"
-        tvModelSubtitle.text = "AI Model: $currentModel"
+        tvModelSubtitle.text = "iDROID SYSTEM // ${currentModel.uppercase()}"
     }
 
     private fun handleIncomingIntent(intent: Intent?) {
