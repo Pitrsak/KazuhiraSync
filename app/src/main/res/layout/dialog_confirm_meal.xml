@@ -4,191 +4,248 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="20dp"
-    android:background="@color/idroid_bg">
+    android:background="@drawable/bg_idroid_root">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:background="@drawable/bg_idroid_card"
+        android:padding="18dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="[ CONFIRM RATION INTEL ]"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@color/idroid_amber"
-            android:fontFamily="monospace"
-            android:layout_marginBottom="14dp" />
-
-        <ImageView
-            android:id="@+id/imgMealPreview"
-            android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:scaleType="centerCrop"
-            android:background="@color/idroid_card"
-            android:layout_marginBottom="16dp" />
-
-        <!-- Meal Name -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="RATION DESIGNATION"
-            android:textSize="11sp"
-            android:textStyle="bold"
-            android:textColor="@color/idroid_cyan"
-            android:fontFamily="monospace" />
-
-        <EditText
-            android:id="@+id/etMealName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textCapWords"
-            android:textColor="@color/idroid_text_main"
-            android:backgroundTint="@color/idroid_cyan"
-            android:layout_marginBottom="12dp" />
-
-        <!-- Calories -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="CALORIC VALUE (KCAL)"
-            android:textSize="11sp"
-            android:textStyle="bold"
-            android:textColor="@color/idroid_amber"
-            android:fontFamily="monospace" />
-
-        <EditText
-            android:id="@+id/etCalories"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="numberDecimal"
-            android:textColor="@color/idroid_amber"
-            android:backgroundTint="@color/idroid_amber"
-            android:fontFamily="monospace"
-            android:layout_marginBottom="12dp" />
-
-        <!-- Macros Grid -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="3"
-            android:layout_marginBottom="12dp">
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:paddingEnd="4dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="PROTEIN (G)"
-                    android:textSize="10sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/idroid_green"
-                    android:fontFamily="monospace" />
-                <EditText
-                    android:id="@+id/etProtein"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
-                    android:textColor="@color/idroid_text_main"
-                    android:backgroundTint="@color/idroid_green" />
-            </LinearLayout>
+            <View
+                android:layout_width="40dp"
+                android:layout_height="2dp"
+                android:background="@color/idroid_amber"
+                android:layout_marginBottom="10dp" />
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:paddingHorizontal="2dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="CARBS (G)"
-                    android:textSize="10sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/idroid_blue"
-                    android:fontFamily="monospace" />
-                <EditText
-                    android:id="@+id/etCarbs"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
-                    android:textColor="@color/idroid_text_main"
-                    android:backgroundTint="@color/idroid_blue" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:paddingStart="4dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="FAT (G)"
-                    android:textSize="10sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/idroid_amber"
-                    android:fontFamily="monospace" />
-                <EditText
-                    android:id="@+id/etFat"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
-                    android:textColor="@color/idroid_text_main"
-                    android:backgroundTint="@color/idroid_amber" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <!-- Notes -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="KAZUHIRA ANALYSIS NOTES"
-            android:textSize="11sp"
-            android:textStyle="bold"
-            android:textColor="@color/idroid_text_dim"
-            android:fontFamily="monospace" />
-
-        <TextView
-            android:id="@+id/tvNotes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:textColor="@color/idroid_text_dim"
-            android:layout_marginBottom="20dp" />
-
-        <!-- Buttons -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="end">
-
-            <Button
-                android:id="@+id/btnCancelMeal"
-                style="?attr/materialButtonOutlinedStyle"
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ABORT"
+                android:text="[ CONFIRM RATION INTEL ]"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/idroid_amber"
+                android:fontFamily="monospace"
+                android:layout_marginBottom="14dp" />
+
+            <ImageView
+                android:id="@+id/imgMealPreview"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:scaleType="centerCrop"
+                android:background="@color/idroid_bg"
+                android:layout_marginBottom="16dp"
+                android:contentDescription="Meal preview" />
+
+            <!-- Meal Name -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="RATION DESIGNATION"
+                android:textSize="11sp"
+                android:textStyle="bold"
                 android:textColor="@color/idroid_cyan"
-                app:strokeColor="@color/idroid_cyan"
-                android:layout_marginEnd="8dp" />
+                android:fontFamily="monospace" />
 
-            <Button
-                android:id="@+id/btnSaveMeal"
+            <EditText
+                android:id="@+id/etMealName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapWords"
+                android:textColor="@color/idroid_text_main"
+                android:textColorHint="@color/idroid_text_faint"
+                android:backgroundTint="@color/idroid_cyan"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Calories -->
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="LOG TO HEALTH CONNECT"
-                android:textColor="#080D14"
-                android:backgroundTint="@color/idroid_amber" />
+                android:text="CALORIC VALUE (KCAL)"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:textColor="@color/idroid_amber"
+                android:fontFamily="monospace" />
+
+            <EditText
+                android:id="@+id/etCalories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:textColor="@color/idroid_amber"
+                android:textColorHint="@color/idroid_text_faint"
+                android:backgroundTint="@color/idroid_amber"
+                android:fontFamily="monospace"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Macros Grid -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="3"
+                android:layout_marginBottom="12dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingEnd="4dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="PROTEIN (G)"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/idroid_green"
+                        android:fontFamily="monospace" />
+                    <EditText
+                        android:id="@+id/etProtein"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal"
+                        android:textColor="@color/idroid_text_main"
+                        android:textColorHint="@color/idroid_text_faint"
+                        android:backgroundTint="@color/idroid_green" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="2dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="CARBS (G)"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/idroid_blue"
+                        android:fontFamily="monospace" />
+                    <EditText
+                        android:id="@+id/etCarbs"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal"
+                        android:textColor="@color/idroid_text_main"
+                        android:textColorHint="@color/idroid_text_faint"
+                        android:backgroundTint="@color/idroid_blue" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingStart="4dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="FAT (G)"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/idroid_amber"
+                        android:fontFamily="monospace" />
+                    <EditText
+                        android:id="@+id/etFat"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal"
+                        android:textColor="@color/idroid_text_main"
+                        android:textColorHint="@color/idroid_text_faint"
+                        android:backgroundTint="@color/idroid_amber" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Notes -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="KAZUHIRA ANALYSIS NOTES"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:textColor="@color/idroid_text_dim"
+                android:fontFamily="monospace" />
+
+            <TextView
+                android:id="@+id/tvNotes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="@color/idroid_text_dim"
+                android:layout_marginBottom="20dp" />
+
+            <!-- Buttons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="end">
+
+                <Button
+                    android:id="@+id/btnCancelMeal"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ABORT"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.08"
+                    android:textColor="@color/idroid_cyan"
+                    app:backgroundTint="@android:color/transparent"
+                    app:strokeColor="@color/idroid_cyan"
+                    app:strokeWidth="1.5dp"
+                    app:cornerRadius="4dp"
+                    android:layout_marginEnd="8dp" />
+
+                <Button
+                    android:id="@+id/btnSaveMeal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="LOG TO HEALTH CONNECT"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.05"
+                    android:textColor="#080D14"
+                    app:backgroundTint="@color/idroid_amber"
+                    app:cornerRadius="4dp"
+                    app:strokeWidth="0dp" />
+            </LinearLayout>
         </LinearLayout>
 
-    </LinearLayout>
+        <!-- Viewfinder corner brackets -->
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/ic_corner_tl"
+            android:layout_gravity="start|top"
+            android:layout_margin="5dp"
+            android:contentDescription="@null" />
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/ic_corner_tr"
+            android:layout_gravity="end|top"
+            android:layout_margin="5dp"
+            android:contentDescription="@null" />
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/ic_corner_bl"
+            android:layout_gravity="start|bottom"
+            android:layout_margin="5dp"
+            android:contentDescription="@null" />
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/ic_corner_br"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="5dp"
+            android:contentDescription="@null" />
+    </FrameLayout>
 </ScrollView>
