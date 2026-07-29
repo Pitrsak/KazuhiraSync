@@ -5,68 +5,55 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
 
-    <!-- Outer Tactical Target Circle -->
+    <!-- Minimalist Tactical Reticle Ring -->
     <path
-        android:pathData="M54,18 A36,36 0 1,1 18,54 A36,36 0 0,1 54,18 Z"
-        android:strokeColor="#00E5FF"
-        android:strokeWidth="2" />
-
-    <!-- Tactical Reticle Crosshairs -->
-    <path
-        android:pathData="M54,10 L54,16 M54,92 L54,98 M10,54 L16,54 M92,54 L98,54"
-        android:strokeColor="#FFAA00"
-        android:strokeWidth="2"
-        android:strokeLineCap="round" />
+        android:pathData="M54,16 A38,38 0 1,1 16,54 A38,38 0 0,1 54,16 Z"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.5" />
 
     <!-- Corner Reticle Brackets -->
     <path
-        android:pathData="M26,34 L26,26 L34,26 M82,34 L82,26 L74,26 M26,74 L26,82 L34,82 M82,74 L82,82 L74,82"
-        android:strokeColor="#FFAA00"
-        android:strokeWidth="2.5"
+        android:pathData="M24,32 L24,24 L32,24 M84,32 L84,24 L76,24 M24,76 L24,84 L32,84 M84,76 L84,84 L76,84"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
         android:strokeLineCap="square" />
 
-    <!-- Kazuhira Beret Cap -->
+    <!-- Minimalist Kazuhira Beret Cap Outline -->
     <path
-        android:pathData="M32,44 C32,34 46,30 64,32 C78,34 84,40 80,48 L32,48 Z"
-        android:fillColor="#0D1929"
-        android:strokeColor="#00E5FF"
-        android:strokeWidth="1.5" />
+        android:pathData="M32,42 C32,32 46,28 64,30 C78,32 84,38 80,46 L32,46 Z"
+        android:fillColor="#0A0A0A"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2" />
 
     <!-- Beret Cap Band -->
     <path
-        android:pathData="M34,48 L78,48 L76,51 L36,51 Z"
-        android:fillColor="#FFAA00" />
-
-    <!-- Kazuhira Face Base -->
-    <path
-        android:pathData="M38,51 L74,51 C74,51 72,70 56,74 C44,74 38,66 38,51 Z"
-        android:fillColor="#FDE68A" />
-
-    <!-- Left Sunglasses Lens -->
-    <path
-        android:pathData="M40,55 C40,52 50,52 50,55 C50,62 40,62 40,55 Z"
-        android:fillColor="#090D16"
-        android:strokeColor="#FFAA00"
-        android:strokeWidth="1.5" />
-
-    <!-- Right Sunglasses Lens -->
-    <path
-        android:pathData="M54,55 C54,52 64,52 64,55 C64,62 54,62 54,55 Z"
-        android:fillColor="#090D16"
-        android:strokeColor="#FFAA00"
-        android:strokeWidth="1.5" />
-
-    <!-- Sunglasses Bridge -->
-    <path
-        android:pathData="M50,55 L54,55"
-        android:strokeColor="#FFAA00"
+        android:pathData="M34,46 L78,46"
+        android:strokeColor="#FFFFFF"
         android:strokeWidth="2" />
 
-    <!-- Tactical Collar -->
+    <!-- Aviator Glasses Silhouette -->
+    <!-- Left Lens -->
     <path
-        android:pathData="M34,70 L46,84 L66,84 L74,70 L60,68 L56,74 L48,68 Z"
-        android:fillColor="#1E293B"
-        android:strokeColor="#00E5FF"
-        android:strokeWidth="1.5" />
+        android:pathData="M38,54 C38,50 49,50 49,54 C49,61 38,61 38,54 Z"
+        android:fillColor="#FFFFFF" />
+
+    <!-- Right Lens -->
+    <path
+        android:pathData="M55,54 C55,50 66,50 66,54 C66,61 55,61 55,54 Z"
+        android:fillColor="#FFFFFF" />
+
+    <!-- Glasses Bridge -->
+    <path
+        android:pathData="M49,53 L55,53"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2" />
+
+    <!-- Tactical Collar Outline -->
+    <path
+        android:pathData="M32,68 L46,82 L62,82 L76,68 M46,82 L46,68 M62,82 L62,68"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
 
 </vector>
