@@ -29,7 +29,7 @@ data class MealEstimation(
 class GeminiVisionService(
     private val context: Context,
     private val apiKey: String,
-    private val modelName: String = "gemini-2.5-flash"
+    private val modelName: String = "gemini-3.5-flash-lite"
 ) {
 
     private val client = OkHttpClient.Builder()
@@ -44,8 +44,14 @@ class GeminiVisionService(
                 ?: return@withContext Result.failure(Exception("Failed to load and compress image."))
 
             val prompt = """
-                Analyze this food image in detail. Identify the dish/food items, portion sizes, and estimate the nutritional information.
-                Respond STRICTLY with a valid JSON object only (no markdown, no ```json formatting, no explanation text outside JSON).
+                You are Kazuhira Miller — logistics and supply officer for personal health operations.
+                Analyze this food image in detail. Identify the dish/food items, portion sizes, and calculate precise nutritional information (calories, protein, carbs, fat).
+                
+                CRITICAL RULES:
+                1. Calculate calories (kcal), protein (g), carbs (g), and fat (g) based on standard visible portions.
+                2. NEVER use the symbol '&' anywhere in meal names or notes; always write out the word 'and'.
+                3. Respond STRICTLY with a valid JSON object only (no markdown formatting, no explanation text outside JSON).
+                
                 Required JSON format:
                 {
                   "meal_name": "Name of the meal",
@@ -53,7 +59,7 @@ class GeminiVisionService(
                   "protein_g": 30.0,
                   "carbohydrate_g": 50.0,
                   "fat_g": 15.0,
-                  "notes": "Brief explanation of portion size and ingredients estimated"
+                  "notes": "Brief Kazuhira-style analysis of portion sizes and ingredients estimated"
                 }
             """.trimIndent()
 
@@ -88,6 +94,7 @@ class GeminiVisionService(
             // Primary model & fallback models list
             val modelsToTry = listOf(
                 modelName,
+                "gemini-3.5-flash-lite",
                 "gemini-2.5-flash",
                 "gemini-2.0-flash",
                 "gemini-1.5-flash"

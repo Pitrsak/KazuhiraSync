@@ -30,6 +30,7 @@ import java.time.format.DateTimeFormatter
 class MainActivity : AppCompatActivity() {
 
     private lateinit var statusText: TextView
+    private lateinit var tvModelSubtitle: TextView
     private lateinit var progressBar: ProgressBar
     private lateinit var btnTakePhoto: Button
     private lateinit var btnPickGallery: Button
@@ -57,11 +58,14 @@ class MainActivity : AppCompatActivity() {
         initDefaultPrefs()
 
         statusText = findViewById(R.id.statusText)
+        tvModelSubtitle = findViewById(R.id.tvModelSubtitle)
         progressBar = findViewById(R.id.progressBar)
         btnTakePhoto = findViewById(R.id.btnTakePhoto)
         btnPickGallery = findViewById(R.id.btnPickGallery)
         btnSettings = findViewById(R.id.btnSettings)
         listViewHistory = findViewById(R.id.listViewHistory)
+
+        updateModelSubtitle()
 
         // Health Connect Permissions Contract
         val requestPermissionActivityContract = PermissionController.createRequestPermissionResultContract()
@@ -117,9 +121,18 @@ class MainActivity : AppCompatActivity() {
         if (!prefs.contains("GEMINI_API_KEY")) {
             prefs.edit()
                 .putString("GEMINI_API_KEY", "AIzaSyA8uAMWwiGiTG4JXA0TOWnemYo5iuIIzDw")
-                .putString("GEMINI_MODEL", "gemini-2.5-flash")
+                .putString("GEMINI_MODEL", "gemini-3.5-flash-lite")
                 .apply()
+        } else if (prefs.getString("GEMINI_MODEL", "") == "gemini-2.5-flash") {
+            // Update default to gemini-3.5-flash-lite
+            prefs.edit().putString("GEMINI_MODEL", "gemini-3.5-flash-lite").apply()
         }
+    }
+
+    private fun updateModelSubtitle() {
+        val prefs = getSharedPreferences("KazuhiraPrefs", MODE_PRIVATE)
+        val currentModel = prefs.getString("GEMINI_MODEL", "gemini-3.5-flash-lite") ?: "gemini-3.5-flash-lite"
+        tvModelSubtitle.text = "AI Model: $currentModel"
     }
 
     private fun handleIncomingIntent(intent: Intent?) {
@@ -153,7 +166,7 @@ class MainActivity : AppCompatActivity() {
     private fun processFoodImage(imageUri: Uri) {
         val prefs = getSharedPreferences("KazuhiraPrefs", MODE_PRIVATE)
         val apiKey = prefs.getString("GEMINI_API_KEY", "") ?: ""
-        val modelName = prefs.getString("GEMINI_MODEL", "gemini-2.5-flash") ?: "gemini-2.5-flash"
+        val modelName = prefs.getString("GEMINI_MODEL", "gemini-3.5-flash-lite") ?: "gemini-3.5-flash-lite"
 
         if (apiKey.isBlank()) {
             Toast.makeText(this, "Please configure your Google AI API key in Settings first", Toast.LENGTH_LONG).show()
@@ -161,7 +174,7 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        statusText.text = "🧠 Analyzing meal photo with Gemini AI ($modelName)..."
+        statusText.text = "🧠 Kazuhira is analyzing meal photo ($modelName)..."
         progressBar.visibility = View.VISIBLE
         btnTakePhoto.isEnabled = false
         btnPickGallery.isEnabled = false
@@ -198,12 +211,16 @@ class MainActivity : AppCompatActivity() {
         val btnSave = dialogView.findViewById<Button>(R.id.btnSaveMeal)
 
         imgPreview.setImageURI(imageUri)
-        etMealName.setText(estimation.mealName)
+        // Ensure no raw & symbols in meal name or notes
+        val cleanName = estimation.mealName.replace("&", "and")
+        val cleanNotes = estimation.notes.replace("&", "and")
+
+        etMealName.setText(cleanName)
         etCalories.setText(estimation.calories.toInt().toString())
         etProtein.setText(estimation.proteinG.toInt().toString())
         etCarbs.setText(estimation.carbG.toInt().toString())
         etFat.setText(estimation.fatG.toInt().toString())
-        tvNotes.text = estimation.notes
+        tvNotes.text = cleanNotes
 
         val dialog = AlertDialog.Builder(this)
             .setView(dialogView)
@@ -215,14 +232,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnSave.setOnClickListener {
-            val name = etMealName.text.toString().ifBlank { "Meal" }
+            val name = etMealName.text.toString().ifBlank { "Meal" }.replace("&", "and")
             val calories = etCalories.text.toString().toDoubleOrNull() ?: 0.0
             val protein = etProtein.text.toString().toDoubleOrNull() ?: 0.0
             val carbs = etCarbs.text.toString().toDoubleOrNull() ?: 0.0
             val fat = etFat.text.toString().toDoubleOrNull() ?: 0.0
 
             dialog.dismiss()
-            logMealToHealthConnect(name, calories, protein, carbs, fat, estimation.notes)
+            logMealToHealthConnect(name, calories, protein, carbs, fat, cleanNotes)
         }
 
         dialog.show()
@@ -299,12 +316,16 @@ class MainActivity : AppCompatActivity() {
 
                 val tvTitle = view.findViewById<TextView>(R.id.tvMealTitle)
                 val tvCalories = view.findViewById<TextView>(R.id.tvMealCalories)
-                val tvMacros = view.findViewById<TextView>(R.id.tvMealMacros)
+                val tvProteinBadge = view.findViewById<TextView>(R.id.tvProteinBadge)
+                val tvCarbBadge = view.findViewById<TextView>(R.id.tvCarbBadge)
+                val tvFatBadge = view.findViewById<TextView>(R.id.tvFatBadge)
                 val tvTime = view.findViewById<TextView>(R.id.tvMealTime)
 
                 tvTitle.text = item.mealName
                 tvCalories.text = "${item.calories.toInt()} kcal"
-                tvMacros.text = "P: ${item.proteinG.toInt()}g  C: ${item.carbG.toInt()}g  F: ${item.fatG.toInt()}g"
+                tvProteinBadge.text = "P: ${item.proteinG.toInt()}g"
+                tvCarbBadge.text = "C: ${item.carbG.toInt()}g"
+                tvFatBadge.text = "F: ${item.fatG.toInt()}g"
 
                 try {
                     val instant = Instant.parse(item.timestampIso)
@@ -326,13 +347,46 @@ class MainActivity : AppCompatActivity() {
     private fun showSettingsDialog() {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_settings, null)
         val etApiKey = dialogView.findViewById<EditText>(R.id.etApiKey)
+        val spinnerModelPreset = dialogView.findViewById<Spinner>(R.id.spinnerModelPreset)
         val etModelName = dialogView.findViewById<EditText>(R.id.etModelName)
         val btnCancel = dialogView.findViewById<Button>(R.id.btnCancelSettings)
         val btnSave = dialogView.findViewById<Button>(R.id.btnSaveSettings)
 
         val prefs = getSharedPreferences("KazuhiraPrefs", MODE_PRIVATE)
-        etApiKey.setText(prefs.getString("GEMINI_API_KEY", "AIzaSyA8uAMWwiGiTG4JXA0TOWnemYo5iuIIzDw"))
-        etModelName.setText(prefs.getString("GEMINI_MODEL", "gemini-2.5-flash"))
+        val currentApiKey = prefs.getString("GEMINI_API_KEY", "AIzaSyA8uAMWwiGiTG4JXA0TOWnemYo5iuIIzDw")
+        val currentModel = prefs.getString("GEMINI_MODEL", "gemini-3.5-flash-lite") ?: "gemini-3.5-flash-lite"
+
+        etApiKey.setText(currentApiKey)
+        etModelName.setText(currentModel)
+
+        val modelPresets = listOf(
+            "gemini-3.5-flash-lite",
+            "gemini-2.5-flash",
+            "gemini-2.0-flash",
+            "gemini-1.5-flash",
+            "Custom..."
+        )
+
+        val spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, modelPresets)
+        spinnerModelPreset.adapter = spinnerAdapter
+
+        val presetIndex = modelPresets.indexOf(currentModel)
+        if (presetIndex >= 0) {
+            spinnerModelPreset.setSelection(presetIndex)
+        } else {
+            spinnerModelPreset.setSelection(4) // Custom
+        }
+
+        spinnerModelPreset.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val selected = modelPresets[position]
+                if (selected != "Custom...") {
+                    etModelName.setText(selected)
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
 
         val dialog = AlertDialog.Builder(this)
             .setView(dialogView)
@@ -344,13 +398,14 @@ class MainActivity : AppCompatActivity() {
 
         btnSave.setOnClickListener {
             val key = etApiKey.text.toString().trim()
-            val model = etModelName.text.toString().trim().ifBlank { "gemini-2.5-flash" }
+            val model = etModelName.text.toString().trim().ifBlank { "gemini-3.5-flash-lite" }
 
             prefs.edit()
                 .putString("GEMINI_API_KEY", key)
                 .putString("GEMINI_MODEL", model)
                 .apply()
 
+            updateModelSubtitle()
             Toast.makeText(this, "Settings saved!", Toast.LENGTH_SHORT).show()
             dialog.dismiss()
         }
