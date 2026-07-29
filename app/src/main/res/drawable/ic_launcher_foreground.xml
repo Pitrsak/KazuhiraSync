@@ -9,8 +9,7 @@
     <path
         android:pathData="M54,14 A40,40 0 1,1 14,54 A40,40 0 0,1 54,14 Z"
         android:strokeColor="#00E5FF"
-        android:strokeWidth="1.5"
-        android:strokeDasharray="4 2" />
+        android:strokeWidth="1.5" />
 
     <!-- Corner Brackets [ ] -->
     <path
