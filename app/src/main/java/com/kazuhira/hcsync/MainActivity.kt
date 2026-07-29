@@ -36,6 +36,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnPickGallery: Button
     private lateinit var btnSettings: ImageButton
     private lateinit var listViewHistory: ListView
+    private lateinit var tvTodayCalories: TextView
+    private lateinit var tvTodayCount: TextView
+    private lateinit var tvTodayProtein: TextView
+    private lateinit var tvTodayCarbs: TextView
+    private lateinit var tvTodayFat: TextView
 
     private lateinit var localRepo: LocalMealRepository
     private var tempPhotoUri: Uri? = null
@@ -64,6 +69,11 @@ class MainActivity : AppCompatActivity() {
         btnPickGallery = findViewById(R.id.btnPickGallery)
         btnSettings = findViewById(R.id.btnSettings)
         listViewHistory = findViewById(R.id.listViewHistory)
+        tvTodayCalories = findViewById(R.id.tvTodayCalories)
+        tvTodayCount = findViewById(R.id.tvTodayCount)
+        tvTodayProtein = findViewById(R.id.tvTodayProtein)
+        tvTodayCarbs = findViewById(R.id.tvTodayCarbs)
+        tvTodayFat = findViewById(R.id.tvTodayFat)
 
         updateModelSubtitle()
 
@@ -309,6 +319,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun refreshHistoryList() {
         val meals = localRepo.getMeals()
+        updateTodaySummary(meals)
         val adapter = object : ArrayAdapter<LocalMealRecord>(this, R.layout.item_meal, meals) {
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                 val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.item_meal, parent, false)
@@ -342,6 +353,27 @@ class MainActivity : AppCompatActivity() {
         }
 
         listViewHistory.adapter = adapter
+    }
+
+    private fun updateTodaySummary(meals: List<LocalMealRecord>) {
+        val today = java.time.LocalDate.now()
+        val zone = ZoneOffset.systemDefault()
+        val todayMeals = meals.filter {
+            try {
+                Instant.parse(it.timestampIso).atZone(zone).toLocalDate() == today
+            } catch (e: Exception) {
+                false
+            }
+        }
+        val sumCal = todayMeals.sumOf { it.calories }
+        val sumP = todayMeals.sumOf { it.proteinG }
+        val sumC = todayMeals.sumOf { it.carbG }
+        val sumF = todayMeals.sumOf { it.fatG }
+        tvTodayCalories.text = sumCal.toInt().toString()
+        tvTodayCount.text = "${todayMeals.size} RATION${if (todayMeals.size == 1) "" else "S"}"
+        tvTodayProtein.text = "${sumP.toInt()}g"
+        tvTodayCarbs.text = "${sumC.toInt()}g"
+        tvTodayFat.text = "${sumF.toInt()}g"
     }
 
     private fun showSettingsDialog() {

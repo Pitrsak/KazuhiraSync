@@ -1,143 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:background="@drawable/bg_idroid_card"
-    android:padding="14dp"
+    android:padding="16dp"
     android:layout_marginVertical="4dp">
 
-    <LinearLayout
+    <!-- Top accent bar -->
+    <View
+        android:layout_width="32dp"
+        android:layout_height="2dp"
+        android:background="@color/idroid_amber"
+        android:layout_marginBottom="10dp" />
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_marginBottom="10dp">
 
-        <!-- Top accent bar -->
-        <View
-            android:layout_width="36dp"
-            android:layout_height="2dp"
-            android:background="@color/idroid_amber"
-            android:layout_marginBottom="8dp" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp">
+            android:orientation="vertical"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@id/tvMealCalories"
+            android:layout_centerVertical="true">
 
             <TextView
                 android:id="@+id/tvMealTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_toStartOf="@id/tvMealCalories"
-                android:text="RATION: GRILLED CHICKEN"
+                android:text="Grilled Chicken"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 android:textColor="@color/idroid_text_main"
-                android:fontFamily="sans-serif-medium" />
-
-            <TextView
-                android:id="@+id/tvMealCalories"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:text="550 KCAL"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:textColor="@color/idroid_amber"
-                android:fontFamily="monospace" />
-        </RelativeLayout>
-
-        <!-- Macro Badges Row -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-
-            <TextView
-                android:id="@+id/tvProteinBadge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="P: 35g"
-                android:textSize="11sp"
-                android:textStyle="bold"
-                android:textColor="@color/idroid_green"
-                android:background="@color/idroid_cyan_dim"
-                android:paddingHorizontal="6dp"
-                android:paddingVertical="3dp"
-                android:layout_marginEnd="6dp"
-                android:fontFamily="monospace" />
-
-            <TextView
-                android:id="@+id/tvCarbBadge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="C: 50g"
-                android:textSize="11sp"
-                android:textStyle="bold"
-                android:textColor="@color/idroid_blue"
-                android:background="@color/idroid_cyan_dim"
-                android:paddingHorizontal="6dp"
-                android:paddingVertical="3dp"
-                android:layout_marginEnd="6dp"
-                android:fontFamily="monospace" />
-
-            <TextView
-                android:id="@+id/tvFatBadge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="F: 15g"
-                android:textSize="11sp"
-                android:textStyle="bold"
-                android:textColor="@color/idroid_amber"
-                android:background="@color/idroid_amber_dim"
-                android:paddingHorizontal="6dp"
-                android:paddingVertical="3dp"
-                android:fontFamily="monospace" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+                android:fontFamily="sans-serif-medium"
+                android:maxLines="1"
+                android:ellipsize="end" />
 
             <TextView
                 android:id="@+id/tvMealTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="12:30 ZULU"
-                android:textSize="11sp"
+                android:text="12:30"
+                android:textSize="10sp"
                 android:textColor="@color/idroid_text_dim"
-                android:fontFamily="monospace" />
+                android:fontFamily="monospace"
+                android:layout_marginTop="2dp" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvMealCalories"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:text="550"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/idroid_amber"
+            android:fontFamily="monospace" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/idroid_border"
+        android:layout_marginBottom="10dp" />
+
+    <!-- Macro Badges Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tvProteinBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="P 35g"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:textColor="@color/idroid_green"
+            android:background="@color/idroid_cyan_dim"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp"
+            android:layout_marginEnd="6dp"
+            android:fontFamily="monospace" />
+
+        <TextView
+            android:id="@+id/tvCarbBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="C 50g"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:textColor="@color/idroid_blue"
+            android:background="@color/idroid_cyan_dim"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp"
+            android:layout_marginEnd="6dp"
+            android:fontFamily="monospace" />
+
+        <TextView
+            android:id="@+id/tvFatBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="F 15g"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:textColor="@color/idroid_amber"
+            android:background="@color/idroid_amber_dim"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp"
+            android:fontFamily="monospace" />
     </LinearLayout>
 
-    <!-- Viewfinder corner brackets -->
-    <ImageView
-        android:layout_width="16dp"
-        android:layout_height="16dp"
-        android:src="@drawable/ic_corner_tl"
-        android:layout_gravity="start|top"
-        android:layout_margin="4dp"
-        android:contentDescription="@null" />
-    <ImageView
-        android:layout_width="16dp"
-        android:layout_height="16dp"
-        android:src="@drawable/ic_corner_tr"
-        android:layout_gravity="end|top"
-        android:layout_margin="4dp"
-        android:contentDescription="@null" />
-    <ImageView
-        android:layout_width="16dp"
-        android:layout_height="16dp"
-        android:src="@drawable/ic_corner_bl"
-        android:layout_gravity="start|bottom"
-        android:layout_margin="4dp"
-        android:contentDescription="@null" />
-    <ImageView
-        android:layout_width="16dp"
-        android:layout_height="16dp"
-        android:src="@drawable/ic_corner_br"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="4dp"
-        android:contentDescription="@null" />
-</FrameLayout>
+</LinearLayout>

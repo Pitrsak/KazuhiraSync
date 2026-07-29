@@ -5,58 +5,43 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
 
-    <!-- Simplified Kazuhira Miller: white face, swept hair, aviator shades, mustache.
-         All content stays within the adaptive-icon safe zone (radius 36 of center 54). -->
+    <!-- Bold minimalist Kazuhira Miller emblem: swept hair + aviator sunglasses.
+         Everything sits inside the adaptive-icon safe zone (radius 36 of center 54). -->
 
-    <!-- Head -->
+    <!-- Hair / brow swoosh -->
     <path
-        android:pathData="M54,34 A21,25 0 0,1 54,84 A21,25 0 0,1 54,34 Z"
-        android:fillColor="#F1F5F9" />
-
-    <!-- Swept hair (crown) -->
-    <path
-        android:pathData="M33,52 C33,39 41,33 54,33 C67,33 75,39 75,52 C70,47 62,45 54,45 C46,45 38,47 33,52 Z"
-        android:fillColor="#94A3B8" />
-
-    <!-- Hair strand detail -->
-    <path
-        android:pathData="M40,44 C46,40 54,40 60,43"
-        android:strokeColor="#7C8AA0"
-        android:strokeWidth="2"
+        android:pathData="M34,42 C46,34 62,34 74,42"
+        android:strokeColor="#9CA3AF"
+        android:strokeWidth="5"
         android:strokeLineCap="round" />
 
-    <!-- Aviator sunglasses: left lens -->
-    <path
-        android:pathData="M35,57 C35,52 44,51 47,55 C50,59 47,66 41,66 C36,66 35,62 35,57 Z"
-        android:fillColor="#0A0A0A" />
+    <!-- Aviator sunglasses: single white silhouette (two teardrop lenses + bridge + arms) -->
 
-    <!-- Aviator sunglasses: right lens -->
+    <!-- Left lens (outer corner droops down-left) -->
     <path
-        android:pathData="M73,57 C73,52 64,51 61,55 C58,59 61,66 67,66 C72,66 73,62 73,57 Z"
-        android:fillColor="#0A0A0A" />
+        android:pathData="M37,47 L50,47 C54,47 57,52 56,60 C55,68 47,70 41,67 C34,64 32,58 33,51 C33,48 35,47 37,47 Z"
+        android:fillColor="#F1F5F9" />
 
-    <!-- Glasses bridge -->
+    <!-- Right lens (outer corner droops down-right) -->
     <path
-        android:pathData="M47,54 L61,54 L61,57 L47,57 Z"
-        android:fillColor="#0A0A0A" />
+        android:pathData="M71,47 L58,47 C54,47 51,52 52,60 C53,68 61,70 67,67 C74,64 76,58 75,51 C75,48 73,47 71,47 Z"
+        android:fillColor="#F1F5F9" />
+
+    <!-- Bridge -->
+    <path
+        android:pathData="M50,47 L58,47 L58,52 L50,52 Z"
+        android:fillColor="#F1F5F9" />
 
     <!-- Glasses arms -->
     <path
-        android:pathData="M35,56 L33,53"
-        android:strokeColor="#0A0A0A"
-        android:strokeWidth="2"
+        android:pathData="M37,50 L32,46"
+        android:strokeColor="#F1F5F9"
+        android:strokeWidth="3"
         android:strokeLineCap="round" />
     <path
-        android:pathData="M73,56 L75,53"
-        android:strokeColor="#0A0A0A"
-        android:strokeWidth="2"
-        android:strokeLineCap="round" />
-
-    <!-- Mustache -->
-    <path
-        android:pathData="M44,65 C50,67 58,67 64,65"
-        android:strokeColor="#334155"
-        android:strokeWidth="2.5"
+        android:pathData="M71,50 L76,46"
+        android:strokeColor="#F1F5F9"
+        android:strokeWidth="3"
         android:strokeLineCap="round" />
 
 </vector>
