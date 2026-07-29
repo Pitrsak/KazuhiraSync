@@ -1,39 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="24dp">
+    android:padding="24dp"
+    android:background="@color/idroid_bg">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Settings"
-        android:textSize="22sp"
+        android:text="[ SYSTEM CONFIGURATION ]"
+        android:textSize="18sp"
         android:textStyle="bold"
+        android:textColor="@color/idroid_amber"
+        android:fontFamily="monospace"
         android:layout_marginBottom="18dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Google AI API Key"
-        android:textSize="13sp"
-        android:textStyle="bold" />
+        android:text="GOOGLE AI API KEY"
+        android:textSize="11sp"
+        android:textStyle="bold"
+        android:textColor="@color/idroid_cyan"
+        android:fontFamily="monospace" />
 
     <EditText
         android:id="@+id/etApiKey"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
+        android:textColor="@color/idroid_text_main"
+        android:backgroundTint="@color/idroid_cyan"
         android:hint="Enter Gemini API key"
         android:layout_marginBottom="16dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Select Gemini Model"
-        android:textSize="13sp"
-        android:textStyle="bold" />
+        android:text="GEMINI MODEL PRESET"
+        android:textSize="11sp"
+        android:textStyle="bold"
+        android:textColor="@color/idroid_amber"
+        android:fontFamily="monospace" />
 
     <Spinner
         android:id="@+id/spinnerModelPreset"
@@ -44,15 +54,18 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Custom Model Name (if selected above)"
-        android:textSize="11sp"
-        android:alpha="0.7" />
+        android:text="CUSTOM MODEL NAME"
+        android:textSize="10sp"
+        android:textColor="@color/idroid_text_dim"
+        android:fontFamily="monospace" />
 
     <EditText
         android:id="@+id/etModelName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="text"
+        android:textColor="@color/idroid_text_main"
+        android:backgroundTint="@color/idroid_amber"
         android:hint="e.g. gemini-3.5-flash-lite"
         android:layout_marginBottom="24dp" />
 
@@ -67,14 +80,18 @@
             style="?attr/materialButtonOutlinedStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cancel"
+            android:text="CANCEL"
+            android:textColor="@color/idroid_cyan"
+            app:strokeColor="@color/idroid_cyan"
             android:layout_marginEnd="8dp" />
 
         <Button
             android:id="@+id/btnSaveSettings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Save" />
+            android:text="SAVE CONFIG"
+            android:textColor="#080D14"
+            android:backgroundTint="@color/idroid_amber" />
     </LinearLayout>
 
 </LinearLayout>

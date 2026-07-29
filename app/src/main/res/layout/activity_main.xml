@@ -4,14 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="20dp"
-    android:background="?android:attr/colorBackground">
+    android:padding="16dp"
+    android:background="@color/idroid_bg">
 
-    <!-- Header Bar -->
+    <!-- Top iDroid Status Bar -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp">
+        android:paddingBottom="12dp"
+        android:layout_marginBottom="12dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -21,9 +22,10 @@
             android:layout_alignParentStart="true"
             android:layout_toStartOf="@id/btnSettings">
 
+            <!-- Kazuhira Vector Logo -->
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:src="@drawable/ic_launcher_foreground"
                 android:layout_marginEnd="12dp" />
 
@@ -32,20 +34,38 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Kazuhira Sync"
-                    android:textSize="22sp"
-                    android:textStyle="bold" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="iDROID"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/idroid_amber"
+                        android:fontFamily="sans-serif-black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" // MOTHER BASE LOGISTICS"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/idroid_cyan" />
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/tvModelSubtitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="AI Model: gemini-3.5-flash-lite"
-                    android:textSize="12sp"
-                    android:alpha="0.7" />
+                    android:text="MODEL: GEMINI-3.5-FLASH-LITE"
+                    android:textSize="11sp"
+                    android:textColor="@color/idroid_text_dim"
+                    android:fontFamily="monospace" />
             </LinearLayout>
         </LinearLayout>
 
@@ -57,85 +77,110 @@
             android:layout_centerVertical="true"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Settings"
-            android:src="@android:drawable/ic_menu_preferences" />
+            android:src="@android:drawable/ic_menu_preferences"
+            app:tint="@color/idroid_amber" />
     </RelativeLayout>
 
-    <!-- Action Buttons Box -->
-    <androidx.cardview.widget.CardView
+    <!-- iDroid Tactical Card: SCANNER -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        app:cardCornerRadius="18dp"
-        app:cardElevation="4dp">
+        android:orientation="vertical"
+        android:background="@drawable/bg_idroid_card"
+        android:padding="16dp"
+        android:layout_marginBottom="16dp">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="[ SYSTEM SCAN // FOOD INTEL ]"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:textColor="@color/idroid_cyan"
+                android:fontFamily="monospace" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:text="STATUS: ONLINE"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:textColor="@color/idroid_green"
+                android:fontFamily="monospace" />
+        </RelativeLayout>
+
+        <!-- Buttons Row -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="20dp">
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:layout_marginBottom="12dp">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <Button
+                android:id="@+id/btnTakePhoto"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Evaluate Meal Photo"
-                android:textSize="17sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="16dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2"
-                android:layout_marginBottom="16dp">
-
-                <Button
-                    android:id="@+id/btnTakePhoto"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="6dp"
-                    android:text="📷 Camera"
-                    android:paddingVertical="14dp" />
-
-                <Button
-                    android:id="@+id/btnPickGallery"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="6dp"
-                    android:text="🖼️ Gallery"
-                    android:paddingVertical="14dp" />
-            </LinearLayout>
-
-            <ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:visibility="gone"
-                android:layout_marginBottom="8dp" />
-
-            <TextView
-                android:id="@+id/statusText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Ready. Snap or share a meal photo to calculate calories."
+                android:layout_weight="1"
+                android:layout_marginEnd="6dp"
+                android:text="📷 CAMERA SCAN"
                 android:textSize="13sp"
-                android:textAlignment="center"
-                android:alpha="0.8" />
+                android:textStyle="bold"
+                android:textColor="#080D14"
+                android:backgroundTint="@color/idroid_amber"
+                android:paddingVertical="12dp" />
+
+            <Button
+                android:id="@+id/btnPickGallery"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="6dp"
+                android:text="🖼️ INTEL FILE"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:textColor="@color/idroid_cyan"
+                app:strokeColor="@color/idroid_cyan"
+                android:paddingVertical="12dp" />
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:indeterminateTint="@color/idroid_cyan"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/statusText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Awaiting target acquisition. Select or capture food photo."
+            android:textSize="12sp"
+            android:textColor="@color/idroid_text_main"
+            android:textAlignment="center"
+            android:fontFamily="sans-serif-medium" />
+    </LinearLayout>
 
     <!-- History Header -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Logged Meals History"
-        android:textSize="18sp"
+        android:text="[ SUPPLY LOG // RATION HISTORY ]"
+        android:textSize="13sp"
         android:textStyle="bold"
-        android:layout_marginBottom="12dp" />
+        android:textColor="@color/idroid_amber"
+        android:fontFamily="monospace"
+        android:layout_marginBottom="8dp" />
 
     <ListView
         android:id="@+id/listViewHistory"

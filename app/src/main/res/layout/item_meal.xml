@@ -1,103 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="4dp"
-    android:layout_marginVertical="6dp"
-    app:cardCornerRadius="14dp"
-    app:cardElevation="2dp">
+    android:orientation="vertical"
+    android:background="@drawable/bg_idroid_card"
+    android:padding="14dp"
+    android:layout_marginVertical="4dp">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:id="@+id/tvMealTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@id/tvMealCalories"
+            android:text="RATION: GRILLED CHICKEN"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@color/idroid_text_main"
+            android:fontFamily="sans-serif-medium" />
+
+        <TextView
+            android:id="@+id/tvMealCalories"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="550 KCAL"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@color/idroid_amber"
+            android:fontFamily="monospace" />
+    </RelativeLayout>
+
+    <!-- Macro Badges Row -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/tvProteinBadge"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp">
+            android:text="P: 35g"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:textColor="@color/idroid_green"
+            android:background="@color/idroid_cyan_dim"
+            android:paddingHorizontal="6dp"
+            android:paddingVertical="3dp"
+            android:layout_marginEnd="6dp"
+            android:fontFamily="monospace" />
 
-            <TextView
-                android:id="@+id/tvMealTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_toStartOf="@id/tvMealCalories"
-                android:text="Grilled Chicken Bowl"
-                android:textSize="17sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvMealCalories"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:text="550 kcal"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="#EF4444" />
-        </RelativeLayout>
-
-        <!-- Macro badges row -->
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/tvCarbBadge"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:text="C: 50g"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:textColor="@color/idroid_blue"
+            android:background="@color/idroid_cyan_dim"
+            android:paddingHorizontal="6dp"
+            android:paddingVertical="3dp"
+            android:layout_marginEnd="6dp"
+            android:fontFamily="monospace" />
 
-            <TextView
-                android:id="@+id/tvProteinBadge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="P: 35g"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:textColor="#10B981"
-                android:background="#1510B981"
-                android:paddingHorizontal="8dp"
-                android:paddingVertical="4dp"
-                android:layout_marginEnd="6dp" />
+        <TextView
+            android:id="@+id/tvFatBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="F: 15g"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:textColor="@color/idroid_amber"
+            android:background="@color/idroid_amber_dim"
+            android:paddingHorizontal="6dp"
+            android:paddingVertical="3dp"
+            android:fontFamily="monospace" />
 
-            <TextView
-                android:id="@+id/tvCarbBadge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="C: 50g"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:textColor="#3B82F6"
-                android:background="#153B82F6"
-                android:paddingHorizontal="8dp"
-                android:paddingVertical="4dp"
-                android:layout_marginEnd="6dp" />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
-            <TextView
-                android:id="@+id/tvFatBadge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="F: 15g"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:textColor="#F59E0B"
-                android:background="#15F59E0B"
-                android:paddingHorizontal="8dp"
-                android:paddingVertical="4dp" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
-            <TextView
-                android:id="@+id/tvMealTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="12:30 PM"
-                android:textSize="11sp"
-                android:alpha="0.6" />
-        </LinearLayout>
-
+        <TextView
+            android:id="@+id/tvMealTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="12:30 ZULU"
+            android:textSize="11sp"
+            android:textColor="@color/idroid_text_dim"
+            android:fontFamily="monospace" />
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+
+</LinearLayout>
