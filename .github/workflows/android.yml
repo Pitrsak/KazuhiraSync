@@ -1,11 +1,15 @@
-name: Android CI
+name: Android CI & Release
 
 on:
   push:
     branches: [ "main", "master" ]
+    tags: [ "v*" ]
   pull_request:
     branches: [ "main", "master" ]
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -27,8 +31,21 @@ jobs:
     - name: Build with Gradle
       run: gradle assembleDebug
 
-    - name: Upload APK
+    - name: Prepare APK Asset
+      run: cp app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/KazuhiraSync.apk
+
+    - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: app-debug
-        path: app/build/outputs/apk/debug/app-debug.apk
+        name: KazuhiraSync-apk
+        path: app/build/outputs/apk/debug/KazuhiraSync.apk
+
+    - name: Create GitHub Release
+      if: startsWith(github.ref, 'refs/tags/v')
+      uses: softprops/action-gh-release@v2
+      with:
+        files: app/build/outputs/apk/debug/KazuhiraSync.apk
+        name: Kazuhira Sync ${{ github.ref_name }}
+        draft: false
+        prerelease: false
+        generate_release_notes: true

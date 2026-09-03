@@ -25,25 +25,20 @@ Kazuhira Sync is a fully local Android app that evaluates food photos using Goog
 
 ---
 
-## Quick Build Instructions
+## Installation
 
-### Option 1: GitHub Actions (Easiest)
-1. Push this folder to a GitHub repository
-2. Go to **Actions** → **Android CI** → **Run workflow**
-3. Download the `app-debug.apk` artifact
-
-### Option 2: Android Studio
-1. File → Open → Select this repository folder
-2. Wait for Gradle sync
-3. **Build** → **Build Bundle(s) / APK(s)** → **Build APK(s)**
-4. Find APK at: `app/build/outputs/apk/debug/app-debug.apk`
+### Pre-built APK
+1. Download **`KazuhiraSync.apk`** from the latest GitHub Release:
+   https://github.com/Pitrsak/KazuhiraSync/releases/latest
+2. Open and install on your phone.
+3. Grant Health Connect & Camera permissions when prompted.
 
 ---
 
-## Installation
-
-1. Transfer `app-debug.apk` to your phone.
-2. Install APK.
-3. Grant Health Connect & Camera permissions when prompted.
+## Build from Source (Android Studio)
+1. Open this repository folder in Android Studio.
+2. Allow Gradle to sync dependencies.
+3. Select **Build** → **Build Bundle(s) / APK(s)** → **Build APK(s)**.
+4. Output APK will be at: `app/build/outputs/apk/debug/app-debug.apk`.
 
 *Kazuhira Sync v2.0.0 - Local AI Edition*

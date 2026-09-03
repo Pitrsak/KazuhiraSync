@@ -49,27 +49,27 @@
 
 ---
 
-## 🛠️ Building & Installing
+## 📥 Download & Quick Install
 
-### Option 1: GitHub Actions (Recommended)
-Every push to `main` triggers an automated build via GitHub Actions.
-1. Go to the **Actions** tab of your repository.
-2. Select the latest **Android CI** run.
-3. Download the `app-debug` artifact (contains `app-debug.apk`).
-4. Transfer and install on your phone.
+### Direct Download (No building required)
+1. Navigate to **[Releases](https://github.com/Pitrsak/KazuhiraSync/releases/latest)** on your Android device.
+2. Download **`KazuhiraSync.apk`** from the latest release assets.
+3. Open the downloaded file to install (allow "Install unknown apps" if prompted).
+4. Launch **Kazuhira Sync**, set up your API key in Settings (⚙️), and grant Health Connect & Camera permissions.
 
-### Option 2: Build Locally with Android Studio
+---
+
+## 🛠️ Building from Source (For Developers)
+
+If you wish to compile the application yourself:
 1. Clone this repository:
    ```bash
    git clone https://github.com/Pitrsak/KazuhiraSync.git
    ```
-2. Open the project folder in **Android Studio** (Hedgehog or newer recommended).
-3. Let Gradle synchronize dependencies.
+2. Open the project in **Android Studio** (Hedgehog or newer recommended).
+3. Allow Gradle to synchronize dependencies.
 4. Run `Build` → `Build Bundle(s) / APK(s)` → `Build APK(s)`.
-5. Find the generated APK at:
-   ```
-   app/build/outputs/apk/debug/app-debug.apk
-   ```
+5. Find the compiled APK at `app/build/outputs/apk/debug/app-debug.apk`.
 
 ---
 
