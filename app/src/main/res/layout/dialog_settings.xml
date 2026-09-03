@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="20dp"
+    android:padding="16dp"
     android:background="@drawable/bg_idroid_root">
 
     <LinearLayout
@@ -11,34 +11,32 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@drawable/bg_idroid_card"
-        android:padding="20dp">
+        android:padding="18dp">
 
         <View
-            android:layout_width="40dp"
+            android:layout_width="36dp"
             android:layout_height="2dp"
             android:background="@color/idroid_amber"
-            android:layout_marginBottom="12dp" />
+            android:layout_marginBottom="10dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="SYSTEM CONFIGURATION"
             android:textSize="16sp"
-            android:textStyle="bold"
             android:letterSpacing="0.08"
             android:textColor="@color/idroid_amber"
-            android:fontFamily="monospace"
-            android:layout_marginBottom="18dp" />
+            android:fontFamily="@font/rajdhani_bold"
+            android:layout_marginBottom="16dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="GOOGLE AI API KEY"
-            android:textSize="10sp"
-            android:textStyle="bold"
+            android:textSize="11sp"
             android:letterSpacing="0.1"
             android:textColor="@color/idroid_cyan"
-            android:fontFamily="monospace" />
+            android:fontFamily="@font/rajdhani_bold" />
 
         <EditText
             android:id="@+id/etApiKey"
@@ -49,17 +47,17 @@
             android:textColorHint="@color/idroid_text_faint"
             android:backgroundTint="@color/idroid_cyan"
             android:hint="Enter Gemini API key"
-            android:layout_marginBottom="16dp" />
+            android:fontFamily="@font/share_tech_mono"
+            android:layout_marginBottom="14dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="GEMINI MODEL PRESET"
-            android:textSize="10sp"
-            android:textStyle="bold"
+            android:textSize="11sp"
             android:letterSpacing="0.1"
             android:textColor="@color/idroid_amber"
-            android:fontFamily="monospace" />
+            android:fontFamily="@font/rajdhani_bold" />
 
         <Spinner
             android:id="@+id/spinnerModelPreset"
@@ -71,9 +69,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="CUSTOM MODEL NAME"
-            android:textSize="9sp"
+            android:textSize="10sp"
             android:textColor="@color/idroid_text_dim"
-            android:fontFamily="monospace" />
+            android:fontFamily="@font/share_tech_mono" />
 
         <EditText
             android:id="@+id/etModelName"
@@ -84,7 +82,8 @@
             android:textColorHint="@color/idroid_text_faint"
             android:backgroundTint="@color/idroid_amber"
             android:hint="e.g. gemini-3.5-flash-lite"
-            android:layout_marginBottom="22dp" />
+            android:fontFamily="@font/share_tech_mono"
+            android:layout_marginBottom="20dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -98,13 +97,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="CANCEL"
-                android:textStyle="bold"
+                android:fontFamily="@font/rajdhani_bold"
                 android:letterSpacing="0.08"
                 android:textColor="@color/idroid_cyan"
                 app:backgroundTint="@android:color/transparent"
                 app:strokeColor="@color/idroid_cyan"
-                app:strokeWidth="1.5dp"
-                app:cornerRadius="8dp"
+                app:strokeWidth="1.2dp"
+                app:cornerRadius="3dp"
                 android:layout_marginEnd="8dp" />
 
             <Button
@@ -112,11 +111,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="SAVE CONFIG"
-                android:textStyle="bold"
+                android:fontFamily="@font/rajdhani_bold"
                 android:letterSpacing="0.06"
-                android:textColor="#080D14"
+                android:textColor="#060C14"
                 app:backgroundTint="@color/idroid_amber"
-                app:cornerRadius="8dp"
+                app:cornerRadius="3dp"
                 app:strokeWidth="0dp" />
         </LinearLayout>
     </LinearLayout>

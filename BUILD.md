@@ -11,8 +11,9 @@ Kazuhira Sync is a fully local Android app that evaluates food photos using Goog
 
 1. **Open Kazuhira Sync app** (or share any food photo from Samsung Gallery / Camera directly to Kazuhira Sync).
 2. **Capture or Select Photo**:
-   - Tap 📷 **Camera** to snap a meal photo.
-   - Tap 🖼️ **Gallery** to select an existing photo.
+   - The optical camera feed is continuously active in the background with the authentic MGSV iDroid holographic overlay (grid matrix, scanlines, noise, HUD brackets).
+   - Tap ⚡ **CAPTURE TARGET SCAN** to immediately analyze the target from the live camera stream.
+   - Tap 📁 **LOAD INTEL FILE** to select an existing photo from Gallery.
 3. **Review & Confirm**: The app uses Gemini AI to estimate meal name, calories, protein, carbs, and fat. Adjust any numbers if needed.
 4. **Tap "LOG MEAL"**: The meal is saved locally and written straight to **Health Connect** / **Samsung Health**.
 

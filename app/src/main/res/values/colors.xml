@@ -1,18 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Backgrounds & Translucent Hologram Layers -->
     <color name="idroid_bg">#070B12</color>
-    <color name="idroid_card">#0D1624</color>
-    <color name="idroid_amber">#FFAA00</color>
-    <color name="idroid_amber_dim">#33FFAA00</color>
-    <color name="idroid_cyan">#00E5FF</color>
-    <color name="idroid_cyan_dim">#2200E5FF</color>
-    <color name="idroid_green">#10B981</color>
-    <color name="idroid_blue">#3B82F6</color>
-    <color name="idroid_red">#FF3B30</color>
-    <color name="idroid_border">#1C2A3E</color>
-    <color name="idroid_text_main">#F1F5F9</color>
-    <color name="idroid_text_dim">#7D8EA4</color>
-    <color name="idroid_text_faint">#4A5A70</color>
-    <color name="idroid_grad_top">#0B1320</color>
-    <color name="idroid_grad_bottom">#04060A</color>
+    <color name="idroid_holo_tint">#52040D18</color>
+    <color name="idroid_holo_vignette">#8001050A</color>
+    <color name="idroid_card">#3D081928</color>
+    <color name="idroid_card_selected">#5913344E</color>
+    <color name="idroid_hud_box">#44091A2A</color>
+
+    <!-- iDroid Signature Accents -->
+    <color name="idroid_cyan">#38D3FF</color>
+    <color name="idroid_cyan_glow">#DCF7FF</color>
+    <color name="idroid_cyan_dim">#2600E5FF</color>
+    <color name="idroid_cyan_faint">#1A00E5FF</color>
+
+    <color name="idroid_amber">#FFCA18</color>
+    <color name="idroid_amber_glow">#FFE866</color>
+    <color name="idroid_amber_dim">#33FFCA18</color>
+
+    <color name="idroid_green">#1AE680</color>
+    <color name="idroid_blue">#3B9EF6</color>
+    <color name="idroid_red">#FF453A</color>
+
+    <!-- Borders & Dividers -->
+    <color name="idroid_border">#2C5578</color>
+    <color name="idroid_border_glow">#67C3EB</color>
+    <color name="idroid_border_dim">#1A3955</color>
+
+    <!-- Typography -->
+    <color name="idroid_text_main">#E2F5FD</color>
+    <color name="idroid_text_dim">#6D9DB8</color>
+    <color name="idroid_text_faint">#3F657F</color>
+
+    <!-- Gradients & Overlay effects -->
+    <color name="idroid_grad_top">#0A131F</color>
+    <color name="idroid_grad_bottom">#03060A</color>
+    <color name="idroid_grid_dot">#2659A5D6</color>
+    <color name="idroid_scanline">#0E00E5FF</color>
 </resources>

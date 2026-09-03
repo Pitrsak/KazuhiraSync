@@ -1,6 +1,8 @@
 package com.kazuhira.hcsync
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,6 +13,13 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
+import androidx.camera.core.Preview
+import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.view.PreviewView
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.health.connect.client.HealthConnectClient
 import androidx.health.connect.client.PermissionController
@@ -29,6 +38,7 @@ import java.time.format.DateTimeFormatter
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var cameraPreviewView: PreviewView
     private lateinit var statusText: TextView
     private lateinit var tvModelSubtitle: TextView
     private lateinit var progressBar: ProgressBar
@@ -41,16 +51,20 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvTodayProtein: TextView
     private lateinit var tvTodayCarbs: TextView
     private lateinit var tvTodayFat: TextView
+    private var tvHudClock: TextView? = null
+    private var tvHudGmp: TextView? = null
 
     private lateinit var localRepo: LocalMealRepository
     private var tempPhotoUri: Uri? = null
+    private var imageCapture: ImageCapture? = null
 
     // Launchers
     private lateinit var cameraLauncher: ActivityResultLauncher<Uri>
     private lateinit var galleryLauncher: ActivityResultLauncher<String>
     private lateinit var requestPermissionsLauncher: ActivityResultLauncher<Set<String>>
+    private lateinit var requestCameraPermissionLauncher: ActivityResultLauncher<String>
 
-    private val PERMISSIONS = setOf(
+    private val HEALTH_PERMISSIONS = setOf(
         HealthPermission.getReadPermission(NutritionRecord::class),
         HealthPermission.getWritePermission(NutritionRecord::class)
     )
@@ -62,6 +76,7 @@ class MainActivity : AppCompatActivity() {
         localRepo = LocalMealRepository(this)
         initDefaultPrefs()
 
+        cameraPreviewView = findViewById(R.id.cameraPreviewView)
         statusText = findViewById(R.id.statusText)
         tvModelSubtitle = findViewById(R.id.tvModelSubtitle)
         progressBar = findViewById(R.id.progressBar)
@@ -74,20 +89,32 @@ class MainActivity : AppCompatActivity() {
         tvTodayProtein = findViewById(R.id.tvTodayProtein)
         tvTodayCarbs = findViewById(R.id.tvTodayCarbs)
         tvTodayFat = findViewById(R.id.tvTodayFat)
+        tvHudClock = findViewById(R.id.tvHudClock)
+        tvHudGmp = findViewById(R.id.tvHudGmp)
 
         updateModelSubtitle()
+        updateHudClock()
 
         // Health Connect Permissions Contract
         val requestPermissionActivityContract = PermissionController.createRequestPermissionResultContract()
         requestPermissionsLauncher = registerForActivityResult(requestPermissionActivityContract) { granted ->
-            if (granted.containsAll(PERMISSIONS)) {
+            if (granted.containsAll(HEALTH_PERMISSIONS)) {
                 Toast.makeText(this, "Health Connect permissions granted!", Toast.LENGTH_SHORT).show()
             } else {
                 statusText.text = "⚠️ Health Connect permissions not granted"
             }
         }
 
-        // Camera Launcher
+        // Camera Permission Launcher for always-on optical feed
+        requestCameraPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                startCamera()
+            } else {
+                statusText.text = "Optical feed standby (camera permission denied). Tap SCAN to retry."
+            }
+        }
+
+        // Fallback System Camera Launcher
         cameraLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
             if (success && tempPhotoUri != null) {
                 processFoodImage(tempPhotoUri!!)
@@ -103,8 +130,21 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // Check & request camera permission on startup to start always-on background feed
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            startCamera()
+        } else {
+            requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+        }
+
         btnTakePhoto.setOnClickListener {
-            launchCamera()
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+            } else if (imageCapture != null) {
+                captureLiveTargetPhoto()
+            } else {
+                launchCamera()
+            }
         }
 
         btnPickGallery.setOnClickListener {
@@ -121,9 +161,88 @@ class MainActivity : AppCompatActivity() {
         handleIncomingIntent(intent)
     }
 
+    override fun onResume() {
+        super.onResume()
+        updateHudClock()
+    }
+
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         handleIncomingIntent(intent)
+    }
+
+    private fun startCamera() {
+        val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
+        cameraProviderFuture.addListener({
+            try {
+                val cameraProvider = cameraProviderFuture.get()
+
+                val preview = Preview.Builder().build().also {
+                    it.setSurfaceProvider(cameraPreviewView.surfaceProvider)
+                }
+
+                imageCapture = ImageCapture.Builder()
+                    .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+                    .build()
+
+                val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+
+                cameraProvider.unbindAll()
+                cameraProvider.bindToLifecycle(
+                    this,
+                    cameraSelector,
+                    preview,
+                    imageCapture
+                )
+                statusText.text = "Optical feed online. Ready for target acquisition."
+            } catch (e: Exception) {
+                statusText.text = "Optical sensor error: ${e.message}"
+            }
+        }, ContextCompat.getMainExecutor(this))
+    }
+
+    private fun captureLiveTargetPhoto() {
+        val capture = imageCapture ?: run {
+            launchCamera()
+            return
+        }
+
+        val photoFile = File(cacheDir, "food_photo_${System.currentTimeMillis()}.jpg")
+        val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
+
+        statusText.text = "⚡ Acquiring target scan..."
+        progressBar.visibility = View.VISIBLE
+        btnTakePhoto.isEnabled = false
+
+        capture.takePicture(
+            outputOptions,
+            ContextCompat.getMainExecutor(this),
+            object : ImageCapture.OnImageSavedCallback {
+                override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+                    btnTakePhoto.isEnabled = true
+                    val savedUri = Uri.fromFile(photoFile)
+                    processFoodImage(savedUri)
+                }
+
+                override fun onError(exception: ImageCaptureException) {
+                    btnTakePhoto.isEnabled = true
+                    progressBar.visibility = View.GONE
+                    statusText.text = "Capture error: ${exception.message}. Fallback to camera..."
+                    launchCamera()
+                }
+            }
+        )
+    }
+
+    private fun updateHudClock() {
+        try {
+            val formatted = DateTimeFormatter.ofPattern("HH:mm")
+                .withZone(ZoneOffset.systemDefault())
+                .format(Instant.now())
+            tvHudClock?.text = formatted
+        } catch (e: Exception) {
+            tvHudClock?.text = "--:--"
+        }
     }
 
     private fun initDefaultPrefs() {
@@ -142,7 +261,7 @@ class MainActivity : AppCompatActivity() {
     private fun updateModelSubtitle() {
         val prefs = getSharedPreferences("KazuhiraPrefs", MODE_PRIVATE)
         val currentModel = prefs.getString("GEMINI_MODEL", "gemini-3.5-flash-lite") ?: "gemini-3.5-flash-lite"
-        tvModelSubtitle.text = "iDROID SYSTEM // ${currentModel.uppercase()}"
+        tvModelSubtitle.text = "KAZUHIRA SYNC // ${currentModel.uppercase()}"
     }
 
     private fun handleIncomingIntent(intent: Intent?) {
@@ -153,7 +272,7 @@ class MainActivity : AppCompatActivity() {
         if (Intent.ACTION_SEND == action && type != null && type.startsWith("image/")) {
             val imageUri = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
             if (imageUri != null) {
-                statusText.text = "Processing shared image..."
+                statusText.text = "Processing shared intel image..."
                 processFoodImage(imageUri)
             }
         }
@@ -184,7 +303,7 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        statusText.text = "🧠 Kazuhira is analyzing meal photo ($modelName)..."
+        statusText.text = "🧠 Kazuhira is analyzing target intel ($modelName)..."
         progressBar.visibility = View.VISIBLE
         btnTakePhoto.isEnabled = false
         btnPickGallery.isEnabled = false
@@ -198,10 +317,10 @@ class MainActivity : AppCompatActivity() {
             btnPickGallery.isEnabled = true
 
             result.onSuccess { estimation ->
-                statusText.text = "✅ Analysis complete! Please verify values below."
+                statusText.text = "✅ Target analysis complete! Confirm data below."
                 showMealConfirmationDialog(imageUri, estimation)
             }.onFailure { exception ->
-                statusText.text = "❌ Error analyzing food: ${exception.localizedMessage}"
+                statusText.text = "❌ Intel extraction error: ${exception.localizedMessage}"
                 Toast.makeText(this@MainActivity, "Analysis failed: ${exception.message}", Toast.LENGTH_LONG).show()
             }
         }
@@ -263,7 +382,7 @@ class MainActivity : AppCompatActivity() {
         fat: Double,
         notes: String
     ) {
-        statusText.text = "⏳ Logging meal to Health Connect..."
+        statusText.text = "⏳ Logging ration intel to Health Connect..."
         progressBar.visibility = View.VISIBLE
 
         lifecycleScope.launch {
@@ -272,8 +391,8 @@ class MainActivity : AppCompatActivity() {
                 val hcClient = HealthConnectClient.getOrCreate(this@MainActivity)
                 val granted = hcClient.permissionController.getGrantedPermissions()
 
-                if (!granted.containsAll(PERMISSIONS)) {
-                    requestPermissionsLauncher.launch(PERMISSIONS)
+                if (!granted.containsAll(HEALTH_PERMISSIONS)) {
+                    requestPermissionsLauncher.launch(HEALTH_PERMISSIONS)
                 }
 
                 val now = Instant.now()
@@ -295,7 +414,7 @@ class MainActivity : AppCompatActivity() {
                 syncedSuccess = true
                 statusText.text = "🎉 Logged $name ($calories kcal) to Health Connect & Samsung Health!"
             } catch (e: Exception) {
-                statusText.text = "⚠️ Saved locally (Health Connect write failed: ${e.message})"
+                statusText.text = "⚠️ Saved locally (Health Connect write: ${e.message})"
             } finally {
                 progressBar.visibility = View.GONE
 
@@ -374,6 +493,8 @@ class MainActivity : AppCompatActivity() {
         tvTodayProtein.text = "${sumP.toInt()}g"
         tvTodayCarbs.text = "${sumC.toInt()}g"
         tvTodayFat.text = "${sumF.toInt()}g"
+        tvHudGmp?.text = "KCAL ${sumCal.toInt()}"
+        updateHudClock()
     }
 
     private fun showSettingsDialog() {
