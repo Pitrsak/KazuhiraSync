@@ -73,100 +73,40 @@
                 app:tint="@color/idroid_cyan" />
         </LinearLayout>
 
-        <!-- ===================== MGSV Navigation Bracket Tabs ===================== -->
+        <!-- ===================== Tactical Status Subheader ===================== -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
             android:layout_marginBottom="12dp">
 
-            <!-- Active tab yellow indicator dot -->
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="6dp"
-                    android:layout_weight="1" />
-                <View
-                    android:layout_width="6dp"
-                    android:layout_height="6dp"
-                    android:background="@drawable/bg_dot_yellow" />
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="6dp"
-                    android:layout_weight="2" />
-            </LinearLayout>
-
-            <!-- Bracket Line with Tabs -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="[LB]"
-                    android:textSize="9sp"
-                    android:fontFamily="@font/share_tech_mono"
-                    android:textColor="@color/idroid_text_dim"
-                    android:layout_marginEnd="6dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="MOTHER BASE"
-                    android:textSize="11sp"
-                    android:fontFamily="@font/rajdhani_bold"
-                    android:letterSpacing="0.12"
-                    android:textColor="@color/idroid_text_dim"
-                    android:layout_marginEnd="12dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="|"
-                    android:textSize="11sp"
-                    android:textColor="@color/idroid_border"
-                    android:layout_marginEnd="12dp" />
-
-                <!-- Active Tab: MISSIONS / RATIONS -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="MISSIONS"
-                    android:textSize="12sp"
-                    android:fontFamily="@font/rajdhani_bold"
-                    android:letterSpacing="0.14"
-                    android:textColor="@color/idroid_cyan_glow"
-                    android:shadowColor="@color/idroid_cyan"
-                    android:shadowRadius="6" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1"
-                    android:background="@color/idroid_border_glow"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="[RB]"
-                    android:textSize="9sp"
-                    android:fontFamily="@font/share_tech_mono"
-                    android:textColor="@color/idroid_text_dim" />
-            </LinearLayout>
+                android:text="OPERATIONAL INTEL"
+                android:textSize="11sp"
+                android:fontFamily="@font/rajdhani_bold"
+                android:letterSpacing="0.14"
+                android:textColor="@color/idroid_cyan_glow" />
 
             <View
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="1dp"
+                android:layout_weight="1"
                 android:background="@color/idroid_border"
-                android:layout_marginTop="3dp" />
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="8dp" />
+
+            <TextView
+                android:id="@+id/tvOpticalStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="OPTICAL HUD // ACTIVE"
+                android:textSize="9.5sp"
+                android:fontFamily="@font/share_tech_mono"
+                android:letterSpacing="0.08"
+                android:textColor="@color/idroid_text_dim" />
         </LinearLayout>
 
         <!-- ===================== Today Summary Card ===================== -->
@@ -488,7 +428,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="👑 GMP"
+                android:text="⚡ TODAY"
                 android:textSize="9sp"
                 android:fontFamily="@font/share_tech_mono"
                 android:textColor="@color/idroid_amber" />

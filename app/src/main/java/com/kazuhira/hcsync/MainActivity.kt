@@ -247,21 +247,33 @@ class MainActivity : AppCompatActivity() {
 
     private fun initDefaultPrefs() {
         val prefs = getSharedPreferences("KazuhiraPrefs", MODE_PRIVATE)
-        if (!prefs.contains("GEMINI_API_KEY")) {
-            prefs.edit()
-                .putString("GEMINI_API_KEY", "AIzaSyA8uAMWwiGiTG4JXA0TOWnemYo5iuIIzDw")
-                .putString("GEMINI_MODEL", "gemini-3.5-flash-lite")
-                .apply()
-        } else if (prefs.getString("GEMINI_MODEL", "") == "gemini-2.5-flash") {
-            // Update default to gemini-3.5-flash-lite
-            prefs.edit().putString("GEMINI_MODEL", "gemini-3.5-flash-lite").apply()
+        val editor = prefs.edit()
+
+        // Clean up any legacy hardcoded key
+        val legacyKey = prefs.getString("GEMINI_API_KEY", null) ?: prefs.getString("API_KEY", null)
+        if (legacyKey == "AIzaSyA8uAMWwiGiTG4JXA0TOWnemYo5iuIIzDw") {
+            editor.putString("API_KEY", "").putString("GEMINI_API_KEY", "")
         }
+
+        if (!prefs.contains("AI_PROVIDER")) {
+            editor.putString("AI_PROVIDER", "gemini")
+        }
+        if (!prefs.contains("API_KEY") && !prefs.contains("GEMINI_API_KEY")) {
+            editor.putString("API_KEY", "")
+        }
+        if (!prefs.contains("MODEL_NAME")) {
+            val legacyModel = prefs.getString("GEMINI_MODEL", "gemini-2.5-flash") ?: "gemini-2.5-flash"
+            editor.putString("MODEL_NAME", legacyModel)
+        }
+        editor.apply()
     }
 
     private fun updateModelSubtitle() {
         val prefs = getSharedPreferences("KazuhiraPrefs", MODE_PRIVATE)
-        val currentModel = prefs.getString("GEMINI_MODEL", "gemini-3.5-flash-lite") ?: "gemini-3.5-flash-lite"
-        tvModelSubtitle.text = "KAZUHIRA SYNC // ${currentModel.uppercase()}"
+        val provider = prefs.getString("AI_PROVIDER", "gemini") ?: "gemini"
+        val currentModel = prefs.getString("MODEL_NAME", prefs.getString("GEMINI_MODEL", "gemini-2.5-flash")) ?: "gemini-2.5-flash"
+        val provTag = if (provider.equals("openrouter", ignoreCase = true)) "OPENROUTER" else "GEMINI"
+        tvModelSubtitle.text = "KAZUHIRA SYNC // $provTag : ${currentModel.uppercase()}"
     }
 
     private fun handleIncomingIntent(intent: Intent?) {
@@ -294,11 +306,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun processFoodImage(imageUri: Uri) {
         val prefs = getSharedPreferences("KazuhiraPrefs", MODE_PRIVATE)
-        val apiKey = prefs.getString("GEMINI_API_KEY", "") ?: ""
-        val modelName = prefs.getString("GEMINI_MODEL", "gemini-3.5-flash-lite") ?: "gemini-3.5-flash-lite"
+        val provider = prefs.getString("AI_PROVIDER", "gemini") ?: "gemini"
+        val apiKey = prefs.getString("API_KEY", prefs.getString("GEMINI_API_KEY", "")) ?: ""
+        val modelName = prefs.getString("MODEL_NAME", prefs.getString("GEMINI_MODEL", "gemini-2.5-flash")) ?: "gemini-2.5-flash"
 
         if (apiKey.isBlank()) {
-            Toast.makeText(this, "Please configure your Google AI API key in Settings first", Toast.LENGTH_LONG).show()
+            val providerName = if (provider.equals("openrouter", ignoreCase = true)) "OpenRouter" else "Google AI (Gemini)"
+            Toast.makeText(this, "Please configure your $providerName API key in Settings (⚙️) first", Toast.LENGTH_LONG).show()
             showSettingsDialog()
             return
         }
@@ -309,7 +323,7 @@ class MainActivity : AppCompatActivity() {
         btnPickGallery.isEnabled = false
 
         lifecycleScope.launch {
-            val visionService = GeminiVisionService(this@MainActivity, apiKey, modelName)
+            val visionService = GeminiVisionService(this@MainActivity, apiKey, modelName, provider)
             val result = visionService.analyzeFoodImage(imageUri)
 
             progressBar.visibility = View.GONE
@@ -499,6 +513,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun showSettingsDialog() {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_settings, null)
+        val spinnerProvider = dialogView.findViewById<Spinner>(R.id.spinnerProvider)
+        val tvApiKeyLabel = dialogView.findViewById<TextView>(R.id.tvApiKeyLabel)
         val etApiKey = dialogView.findViewById<EditText>(R.id.etApiKey)
         val spinnerModelPreset = dialogView.findViewById<Spinner>(R.id.spinnerModelPreset)
         val etModelName = dialogView.findViewById<EditText>(R.id.etModelName)
@@ -506,38 +522,79 @@ class MainActivity : AppCompatActivity() {
         val btnSave = dialogView.findViewById<Button>(R.id.btnSaveSettings)
 
         val prefs = getSharedPreferences("KazuhiraPrefs", MODE_PRIVATE)
-        val currentApiKey = prefs.getString("GEMINI_API_KEY", "AIzaSyA8uAMWwiGiTG4JXA0TOWnemYo5iuIIzDw")
-        val currentModel = prefs.getString("GEMINI_MODEL", "gemini-3.5-flash-lite") ?: "gemini-3.5-flash-lite"
+        val currentProvider = prefs.getString("AI_PROVIDER", "gemini") ?: "gemini"
+        val currentApiKey = prefs.getString("API_KEY", prefs.getString("GEMINI_API_KEY", "")) ?: ""
+        val currentModel = prefs.getString("MODEL_NAME", prefs.getString("GEMINI_MODEL", "gemini-2.5-flash")) ?: "gemini-2.5-flash"
 
         etApiKey.setText(currentApiKey)
         etModelName.setText(currentModel)
 
-        val modelPresets = listOf(
-            "gemini-3.5-flash-lite",
-            "gemini-3.5-flash",
-            "gemini-3.0-flash",
+        val providerOptions = listOf("Google Gemini (Direct)", "OpenRouter")
+        val providerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, providerOptions)
+        spinnerProvider.adapter = providerAdapter
+
+        if (currentProvider.equals("openrouter", ignoreCase = true)) {
+            spinnerProvider.setSelection(1)
+        } else {
+            spinnerProvider.setSelection(0)
+        }
+
+        val geminiPresets = listOf(
             "gemini-2.5-flash",
+            "gemini-2.0-flash",
+            "gemini-1.5-flash",
+            "Custom..."
+        )
+        val openRouterPresets = listOf(
+            "google/gemini-2.5-flash",
+            "openai/gpt-4o-mini",
+            "anthropic/claude-3.5-haiku",
+            "meta-llama/llama-3.2-11b-vision-instruct",
             "Custom..."
         )
 
-        val spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, modelPresets)
-        spinnerModelPreset.adapter = spinnerAdapter
+        fun updateModelPresets(isGemini: Boolean) {
+            val presets = if (isGemini) geminiPresets else openRouterPresets
+            tvApiKeyLabel.text = if (isGemini) "GOOGLE AI API KEY" else "OPENROUTER API KEY"
+            etApiKey.hint = if (isGemini) "Paste Gemini API key (AIza...)" else "Paste OpenRouter key (sk-or-v1-...)"
 
-        val presetIndex = modelPresets.indexOf(currentModel)
-        if (presetIndex >= 0) {
-            spinnerModelPreset.setSelection(presetIndex)
-        } else {
-            spinnerModelPreset.setSelection(4) // Custom
-        }
+            val modelAdapter = ArrayAdapter(this@MainActivity, android.R.layout.simple_spinner_dropdown_item, presets)
+            spinnerModelPreset.adapter = modelAdapter
 
-        spinnerModelPreset.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val selected = modelPresets[position]
-                if (selected != "Custom...") {
-                    etModelName.setText(selected)
-                }
+            val cur = etModelName.text.toString().trim()
+            val idx = presets.indexOf(cur)
+            if (idx >= 0) {
+                spinnerModelPreset.setSelection(idx)
+            } else {
+                spinnerModelPreset.setSelection(presets.size - 1) // Custom...
             }
 
+            spinnerModelPreset.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    val sel = presets[position]
+                    if (sel != "Custom...") {
+                        etModelName.setText(sel)
+                    }
+                }
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+            }
+        }
+
+        updateModelPresets(!currentProvider.equals("openrouter", ignoreCase = true))
+
+        spinnerProvider.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val isGemini = position == 0
+                val presets = if (isGemini) geminiPresets else openRouterPresets
+                val defaultModel = presets[0]
+                val curModel = etModelName.text.toString().trim()
+                val currentIsGemini = !curModel.contains("/")
+
+                if (isGemini != currentIsGemini) {
+                    etModelName.setText(defaultModel)
+                }
+                updateModelPresets(isGemini)
+            }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
@@ -550,10 +607,17 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnSave.setOnClickListener {
+            val isGemini = spinnerProvider.selectedItemPosition == 0
+            val providerKey = if (isGemini) "gemini" else "openrouter"
             val key = etApiKey.text.toString().trim()
-            val model = etModelName.text.toString().trim().ifBlank { "gemini-3.5-flash-lite" }
+            val model = etModelName.text.toString().trim().ifBlank {
+                if (isGemini) "gemini-2.5-flash" else "google/gemini-2.5-flash"
+            }
 
             prefs.edit()
+                .putString("AI_PROVIDER", providerKey)
+                .putString("API_KEY", key)
+                .putString("MODEL_NAME", model)
                 .putString("GEMINI_API_KEY", key)
                 .putString("GEMINI_MODEL", model)
                 .apply()

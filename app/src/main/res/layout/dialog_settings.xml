@@ -29,10 +29,28 @@
             android:fontFamily="@font/rajdhani_bold"
             android:layout_marginBottom="16dp" />
 
+        <!-- Provider Selection -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="GOOGLE AI API KEY"
+            android:text="AI PROVIDER"
+            android:textSize="11sp"
+            android:letterSpacing="0.1"
+            android:textColor="@color/idroid_cyan"
+            android:fontFamily="@font/rajdhani_bold" />
+
+        <Spinner
+            android:id="@+id/spinnerProvider"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="12dp" />
+
+        <!-- API Key -->
+        <TextView
+            android:id="@+id/tvApiKeyLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="API KEY"
             android:textSize="11sp"
             android:letterSpacing="0.1"
             android:textColor="@color/idroid_cyan"
@@ -46,14 +64,16 @@
             android:textColor="@color/idroid_text_main"
             android:textColorHint="@color/idroid_text_faint"
             android:backgroundTint="@color/idroid_cyan"
-            android:hint="Enter Gemini API key"
+            android:hint="Paste your API key here"
             android:fontFamily="@font/share_tech_mono"
             android:layout_marginBottom="14dp" />
 
+        <!-- Model Preset -->
         <TextView
+            android:id="@+id/tvModelPresetLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="GEMINI MODEL PRESET"
+            android:text="VISION MODEL PRESET"
             android:textSize="11sp"
             android:letterSpacing="0.1"
             android:textColor="@color/idroid_amber"
@@ -68,7 +88,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="CUSTOM MODEL NAME"
+            android:text="CUSTOM MODEL IDENTIFIER"
             android:textSize="10sp"
             android:textColor="@color/idroid_text_dim"
             android:fontFamily="@font/share_tech_mono" />
@@ -81,10 +101,11 @@
             android:textColor="@color/idroid_text_main"
             android:textColorHint="@color/idroid_text_faint"
             android:backgroundTint="@color/idroid_amber"
-            android:hint="e.g. gemini-3.5-flash-lite"
+            android:hint="e.g. gemini-2.5-flash or google/gemini-2.5-flash"
             android:fontFamily="@font/share_tech_mono"
             android:layout_marginBottom="20dp" />
 
+        <!-- Actions -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

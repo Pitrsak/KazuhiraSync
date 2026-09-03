@@ -26,10 +26,14 @@ data class MealEstimation(
     val notes: String
 )
 
+/**
+ * Multi-provider Vision AI Service supporting both Google Gemini and OpenRouter.
+ */
 class GeminiVisionService(
     private val context: Context,
     private val apiKey: String,
-    private val modelName: String = "gemini-3.5-flash-lite"
+    private val modelName: String = "gemini-2.5-flash",
+    private val provider: String = "gemini" // "gemini" or "openrouter"
 ) {
 
     private val client = OkHttpClient.Builder()
@@ -41,7 +45,7 @@ class GeminiVisionService(
     suspend fun analyzeFoodImage(imageUri: Uri): Result<MealEstimation> = withContext(Dispatchers.IO) {
         try {
             val base64Image = readAndCompressImage(imageUri)
-                ?: return@withContext Result.failure(Exception("Failed to load and compress image."))
+                ?: return@withContext Result.failure(Exception("Failed to load and compress target image."))
 
             val prompt = """
                 You are Kazuhira Miller — logistics and supply officer for personal health operations.
@@ -63,103 +67,164 @@ class GeminiVisionService(
                 }
             """.trimIndent()
 
-            val jsonBody = JSONObject().apply {
-                val contentsArray = JSONArray().apply {
-                    val contentObj = JSONObject().apply {
-                        val partsArray = JSONArray().apply {
-                            // Text prompt part
-                            put(JSONObject().apply { put("text", prompt) })
-                            // Image part
-                            put(JSONObject().apply {
-                                put("inline_data", JSONObject().apply {
-                                    put("mime_type", "image/jpeg")
-                                    put("data", base64Image)
-                                })
-                            })
-                        }
-                        put("parts", partsArray)
-                    }
-                    put(contentObj)
-                }
-                put("contents", contentsArray)
-
-                // Optional system instruction / generation config
-                val generationConfig = JSONObject().apply {
-                    put("temperature", 0.2)
-                    put("response_mime_type", "application/json")
-                }
-                put("generationConfig", generationConfig)
+            if (provider.equals("openrouter", ignoreCase = true)) {
+                analyzeWithOpenRouter(prompt, base64Image)
+            } else {
+                analyzeWithGemini(prompt, base64Image)
             }
-
-            // Primary model & fallback models list
-            val modelsToTry = listOf(
-                modelName,
-                "gemini-3.5-flash-lite",
-                "gemini-3.5-flash",
-                "gemini-3.0-flash",
-                "gemini-2.5-flash"
-            ).distinct()
-
-            var lastException: Exception? = null
-
-            for (model in modelsToTry) {
-                try {
-                    val url = "https://generativelanguage.googleapis.com/v1beta/models/$model:generateContent?key=$apiKey"
-                    val request = Request.Builder()
-                        .url(url)
-                        .post(jsonBody.toString().toRequestBody("application/json".toMediaType()))
-                        .build()
-
-                    client.newCall(request).execute().use { response ->
-                        val responseStr = response.body?.string() ?: ""
-                        if (!response.isSuccessful) {
-                            lastException = Exception("Gemini API Error ($model - ${response.code}): $responseStr")
-                            return@use
-                        }
-
-                        val responseJson = JSONObject(responseStr)
-                        val candidates = responseJson.optJSONArray("candidates")
-                        if (candidates == null || candidates.length() == 0) {
-                            lastException = Exception("No candidates returned from Gemini API")
-                            return@use
-                        }
-
-                        val firstCandidate = candidates.getJSONObject(0)
-                        val content = firstCandidate.getJSONObject("content")
-                        val parts = content.getJSONArray("parts")
-                        var textResult = parts.getJSONObject(0).getString("text").trim()
-
-                        // Clean up markdown code blocks if present
-                        if (textResult.startsWith("```json")) {
-                            textResult = textResult.substring(7)
-                        } else if (textResult.startsWith("```")) {
-                            textResult = textResult.substring(3)
-                        }
-                        if (textResult.endsWith("```")) {
-                            textResult = textResult.substring(0, textResult.length - 3)
-                        }
-                        textResult = textResult.trim()
-
-                        val parsedJson = JSONObject(textResult)
-                        val estimation = MealEstimation(
-                            mealName = parsedJson.optString("meal_name", "Logged Meal"),
-                            calories = parsedJson.optDouble("calories", 0.0),
-                            proteinG = parsedJson.optDouble("protein_g", 0.0),
-                            carbG = parsedJson.optDouble("carbohydrate_g", 0.0),
-                            fatG = parsedJson.optDouble("fat_g", 0.0),
-                            notes = parsedJson.optString("notes", "")
-                        )
-                        return@withContext Result.success(estimation)
-                    }
-                } catch (e: Exception) {
-                    lastException = e
-                }
-            }
-
-            return@withContext Result.failure(lastException ?: Exception("Failed to analyze image with Gemini API"))
-
         } catch (e: Exception) {
             Result.failure(e)
+        }
+    }
+
+    private fun analyzeWithOpenRouter(prompt: String, base64Image: String): Result<MealEstimation> {
+        val targetModel = modelName.ifBlank { "google/gemini-2.5-flash" }
+
+        val jsonBody = JSONObject().apply {
+            put("model", targetModel)
+            val messages = JSONArray().apply {
+                val userMsg = JSONObject().apply {
+                    put("role", "user")
+                    val contentParts = JSONArray().apply {
+                        put(JSONObject().apply {
+                            put("type", "text")
+                            put("text", prompt)
+                        })
+                        put(JSONObject().apply {
+                            put("type", "image_url")
+                            put("image_url", JSONObject().apply {
+                                put("url", "data:image/jpeg;base64,$base64Image")
+                            })
+                        })
+                    }
+                    put("content", contentParts)
+                }
+                put(userMsg)
+            }
+            put("messages", messages)
+        }
+
+        val request = Request.Builder()
+            .url("https://openrouter.ai/api/v1/chat/completions")
+            .addHeader("Authorization", "Bearer $apiKey")
+            .addHeader("HTTP-Referer", "https://github.com/Pitrsak/KazuhiraSync")
+            .addHeader("X-Title", "KazuhiraSync")
+            .addHeader("Content-Type", "application/json")
+            .post(jsonBody.toString().toRequestBody("application/json".toMediaType()))
+            .build()
+
+        client.newCall(request).execute().use { response ->
+            val responseStr = response.body?.string() ?: ""
+            if (!response.isSuccessful) {
+                return Result.failure(Exception("OpenRouter Error (${response.code}): $responseStr"))
+            }
+
+            val responseJson = JSONObject(responseStr)
+            val choices = responseJson.optJSONArray("choices")
+            if (choices == null || choices.length() == 0) {
+                val errorObj = responseJson.optJSONObject("error")
+                val errMsg = errorObj?.optString("message") ?: "No response from OpenRouter"
+                return Result.failure(Exception("OpenRouter Error: $errMsg"))
+            }
+
+            val messageObj = choices.getJSONObject(0).getJSONObject("message")
+            val rawText = messageObj.getString("content")
+            return parseEstimationJson(rawText)
+        }
+    }
+
+    private fun analyzeWithGemini(prompt: String, base64Image: String): Result<MealEstimation> {
+        val jsonBody = JSONObject().apply {
+            val contentsArray = JSONArray().apply {
+                val contentObj = JSONObject().apply {
+                    val partsArray = JSONArray().apply {
+                        put(JSONObject().apply { put("text", prompt) })
+                        put(JSONObject().apply {
+                            put("inline_data", JSONObject().apply {
+                                put("mime_type", "image/jpeg")
+                                put("data", base64Image)
+                            })
+                        })
+                    }
+                    put("parts", partsArray)
+                }
+                put(contentObj)
+            }
+            put("contents", contentsArray)
+
+            val generationConfig = JSONObject().apply {
+                put("temperature", 0.2)
+                put("response_mime_type", "application/json")
+            }
+            put("generationConfig", generationConfig)
+        }
+
+        val modelsToTry = listOf(
+            modelName.ifBlank { "gemini-2.5-flash" },
+            "gemini-2.5-flash",
+            "gemini-2.0-flash",
+            "gemini-1.5-flash"
+        ).distinct()
+
+        var lastException: Exception? = null
+
+        for (model in modelsToTry) {
+            try {
+                val url = "https://generativelanguage.googleapis.com/v1beta/models/$model:generateContent?key=$apiKey"
+                val request = Request.Builder()
+                    .url(url)
+                    .post(jsonBody.toString().toRequestBody("application/json".toMediaType()))
+                    .build()
+
+                client.newCall(request).execute().use { response ->
+                    val responseStr = response.body?.string() ?: ""
+                    if (!response.isSuccessful) {
+                        lastException = Exception("Gemini API Error ($model - ${response.code}): $responseStr")
+                        return@use
+                    }
+
+                    val responseJson = JSONObject(responseStr)
+                    val candidates = responseJson.optJSONArray("candidates")
+                    if (candidates == null || candidates.length() == 0) {
+                        lastException = Exception("No candidates returned from Gemini API")
+                        return@use
+                    }
+
+                    val firstCandidate = candidates.getJSONObject(0)
+                    val content = firstCandidate.getJSONObject("content")
+                    val parts = content.getJSONArray("parts")
+                    val rawText = parts.getJSONObject(0).getString("text")
+                    return parseEstimationJson(rawText)
+                }
+            } catch (e: Exception) {
+                lastException = e
+            }
+        }
+
+        return Result.failure(lastException ?: Exception("Failed to analyze image with Gemini API"))
+    }
+
+    private fun parseEstimationJson(rawText: String): Result<MealEstimation> {
+        try {
+            var text = rawText.trim()
+            val start = text.indexOf('{')
+            val end = text.lastIndexOf('}')
+            if (start >= 0 && end > start) {
+                text = text.substring(start, end + 1)
+            }
+
+            val parsedJson = JSONObject(text)
+            val estimation = MealEstimation(
+                mealName = parsedJson.optString("meal_name", "Logged Meal"),
+                calories = parsedJson.optDouble("calories", 0.0),
+                proteinG = parsedJson.optDouble("protein_g", 0.0),
+                carbG = parsedJson.optDouble("carbohydrate_g", 0.0),
+                fatG = parsedJson.optDouble("fat_g", 0.0),
+                notes = parsedJson.optString("notes", "")
+            )
+            return Result.success(estimation)
+        } catch (e: Exception) {
+            return Result.failure(Exception("Failed to parse meal nutrition data: ${e.message}"))
         }
     }
 
