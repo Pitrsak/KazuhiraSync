@@ -262,8 +262,12 @@ class MainActivity : AppCompatActivity() {
             editor.putString("API_KEY", "")
         }
         if (!prefs.contains("MODEL_NAME")) {
-            val legacyModel = prefs.getString("GEMINI_MODEL", "gemini-2.5-flash") ?: "gemini-2.5-flash"
-            editor.putString("MODEL_NAME", legacyModel)
+            editor.putString("MODEL_NAME", "gemini-3.8-flash")
+        } else {
+            val cur = prefs.getString("MODEL_NAME", "") ?: ""
+            if (cur == "gemini-2.5-flash" || cur == "gemini-3.5-flash-lite") {
+                editor.putString("MODEL_NAME", "gemini-3.8-flash")
+            }
         }
         editor.apply()
     }
@@ -271,7 +275,7 @@ class MainActivity : AppCompatActivity() {
     private fun updateModelSubtitle() {
         val prefs = getSharedPreferences("KazuhiraPrefs", MODE_PRIVATE)
         val provider = prefs.getString("AI_PROVIDER", "gemini") ?: "gemini"
-        val currentModel = prefs.getString("MODEL_NAME", prefs.getString("GEMINI_MODEL", "gemini-2.5-flash")) ?: "gemini-2.5-flash"
+        val currentModel = prefs.getString("MODEL_NAME", prefs.getString("GEMINI_MODEL", "gemini-3.8-flash")) ?: "gemini-3.8-flash"
         val provTag = if (provider.equals("openrouter", ignoreCase = true)) "OPENROUTER" else "GEMINI"
         tvModelSubtitle.text = "KAZUHIRA SYNC // $provTag : ${currentModel.uppercase()}"
     }
@@ -308,7 +312,7 @@ class MainActivity : AppCompatActivity() {
         val prefs = getSharedPreferences("KazuhiraPrefs", MODE_PRIVATE)
         val provider = prefs.getString("AI_PROVIDER", "gemini") ?: "gemini"
         val apiKey = prefs.getString("API_KEY", prefs.getString("GEMINI_API_KEY", "")) ?: ""
-        val modelName = prefs.getString("MODEL_NAME", prefs.getString("GEMINI_MODEL", "gemini-2.5-flash")) ?: "gemini-2.5-flash"
+        val modelName = prefs.getString("MODEL_NAME", prefs.getString("GEMINI_MODEL", "gemini-3.8-flash")) ?: "gemini-3.8-flash"
 
         if (apiKey.isBlank()) {
             val providerName = if (provider.equals("openrouter", ignoreCase = true)) "OpenRouter" else "Google AI (Gemini)"
@@ -524,7 +528,7 @@ class MainActivity : AppCompatActivity() {
         val prefs = getSharedPreferences("KazuhiraPrefs", MODE_PRIVATE)
         val currentProvider = prefs.getString("AI_PROVIDER", "gemini") ?: "gemini"
         val currentApiKey = prefs.getString("API_KEY", prefs.getString("GEMINI_API_KEY", "")) ?: ""
-        val currentModel = prefs.getString("MODEL_NAME", prefs.getString("GEMINI_MODEL", "gemini-2.5-flash")) ?: "gemini-2.5-flash"
+        val currentModel = prefs.getString("MODEL_NAME", prefs.getString("GEMINI_MODEL", "gemini-3.8-flash")) ?: "gemini-3.8-flash"
 
         etApiKey.setText(currentApiKey)
         etModelName.setText(currentModel)
@@ -540,13 +544,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         val geminiPresets = listOf(
+            "gemini-3.8-flash",
+            "gemini-3.5-flash-lite",
+            "gemini-3.5-flash",
             "gemini-2.5-flash",
-            "gemini-2.0-flash",
-            "gemini-1.5-flash",
             "Custom..."
         )
         val openRouterPresets = listOf(
-            "google/gemini-2.5-flash",
+            "google/gemini-3.8-flash",
+            "google/gemini-3.5-flash-lite",
+            "google/gemini-flash-latest",
             "openai/gpt-4o-mini",
             "anthropic/claude-3.5-haiku",
             "meta-llama/llama-3.2-11b-vision-instruct",
@@ -611,7 +618,7 @@ class MainActivity : AppCompatActivity() {
             val providerKey = if (isGemini) "gemini" else "openrouter"
             val key = etApiKey.text.toString().trim()
             val model = etModelName.text.toString().trim().ifBlank {
-                if (isGemini) "gemini-2.5-flash" else "google/gemini-2.5-flash"
+                if (isGemini) "gemini-3.8-flash" else "google/gemini-3.8-flash"
             }
 
             prefs.edit()

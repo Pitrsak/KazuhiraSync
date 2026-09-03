@@ -32,7 +32,7 @@ data class MealEstimation(
 class GeminiVisionService(
     private val context: Context,
     private val apiKey: String,
-    private val modelName: String = "gemini-2.5-flash",
+    private val modelName: String = "gemini-3.8-flash",
     private val provider: String = "gemini" // "gemini" or "openrouter"
 ) {
 
@@ -78,7 +78,7 @@ class GeminiVisionService(
     }
 
     private fun analyzeWithOpenRouter(prompt: String, base64Image: String): Result<MealEstimation> {
-        val targetModel = modelName.ifBlank { "google/gemini-2.5-flash" }
+        val targetModel = modelName.ifBlank { "google/gemini-3.8-flash" }
 
         val jsonBody = JSONObject().apply {
             put("model", targetModel)
@@ -160,10 +160,11 @@ class GeminiVisionService(
         }
 
         val modelsToTry = listOf(
-            modelName.ifBlank { "gemini-2.5-flash" },
-            "gemini-2.5-flash",
-            "gemini-2.0-flash",
-            "gemini-1.5-flash"
+            modelName.ifBlank { "gemini-3.8-flash" },
+            "gemini-3.8-flash",
+            "gemini-3.5-flash-lite",
+            "gemini-3.5-flash",
+            "gemini-2.5-flash"
         ).distinct()
 
         var lastException: Exception? = null

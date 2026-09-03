@@ -25,9 +25,9 @@
 - **Live Tactical HUD:** Bottom-right corner heads-up display tracking real-time clock and daily caloric intake.
 
 ### 🧠 Dual Vision AI Providers
-- **Google Gemini (Direct):** Fast on-device requests to `gemini-2.5-flash`, `gemini-2.0-flash`, `gemini-1.5-flash`, or custom models via Google AI Studio.
-- **OpenRouter Support:** Use any multimodal model available on OpenRouter (`google/gemini-2.5-flash`, `openai/gpt-4o-mini`, `anthropic/claude-3.5-haiku`, `meta-llama/llama-3.2-11b-vision-instruct`, etc.).
-- **Zero Hardcoded Secrets:** Bring your own API key; keys are stored exclusively in your device's private `EncryptedSharedPreferences`.
+- **Google Gemini (Direct):** Fast on-device requests to `gemini-3.8-flash` (latest speed-tier flagship), `gemini-3.5-flash-lite` (ultra-fast & cheap), `gemini-3.5-flash`, or custom models via Google AI Studio.
+- **OpenRouter Support:** Use any multimodal model available on OpenRouter (`google/gemini-3.8-flash`, `google/gemini-3.5-flash-lite`, `google/gemini-flash-latest`, `openai/gpt-4o-mini`, `anthropic/claude-3.5-haiku`, `meta-llama/llama-3.2-11b-vision-instruct`, etc.).
+- **Zero Hardcoded Secrets:** Bring your own API key; keys are stored exclusively in your device's private storage.
 
 ### ⚡ Seamless Nutrition Workflow
 1. **Target Acquisition:** Point the camera at your meal and tap `⚡ CAPTURE TARGET SCAN` to snap a photo directly from the live feed, or tap `📁 LOAD INTEL FILE` to import an existing photo from Gallery.

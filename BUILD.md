@@ -21,7 +21,7 @@ Kazuhira Sync is a fully local Android app that evaluates food photos using Goog
 
 ## Configuration
 
-- Tap ⚙️ **Settings** in the top right corner to customize your Google AI API key or change the Gemini model (defaults to `gemini-2.5-flash`).
+- Tap ⚙️ **Settings** in the top right corner to customize your Google AI / OpenRouter API key or select your model (defaults to `gemini-3.8-flash`).
 
 ---
 
