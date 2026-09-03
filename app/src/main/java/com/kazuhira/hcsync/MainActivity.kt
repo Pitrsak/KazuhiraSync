@@ -262,12 +262,8 @@ class MainActivity : AppCompatActivity() {
             editor.putString("API_KEY", "")
         }
         if (!prefs.contains("MODEL_NAME")) {
-            editor.putString("MODEL_NAME", "gemini-3.8-flash")
-        } else {
-            val cur = prefs.getString("MODEL_NAME", "") ?: ""
-            if (cur == "gemini-2.5-flash" || cur == "gemini-3.5-flash-lite") {
-                editor.putString("MODEL_NAME", "gemini-3.8-flash")
-            }
+            val legacyModel = prefs.getString("GEMINI_MODEL", "gemini-3.8-flash") ?: "gemini-3.8-flash"
+            editor.putString("MODEL_NAME", legacyModel)
         }
         editor.apply()
     }
