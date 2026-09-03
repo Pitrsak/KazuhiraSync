@@ -19,6 +19,7 @@ import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
+import androidx.concurrent.futures.await
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.health.connect.client.HealthConnectClient
@@ -172,10 +173,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startCamera() {
-        val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
-        cameraProviderFuture.addListener({
+        lifecycleScope.launch {
             try {
-                val cameraProvider = cameraProviderFuture.get()
+                val cameraProvider = ProcessCameraProvider.getInstance(this@MainActivity).await()
 
                 val preview = Preview.Builder().build().also {
                     it.setSurfaceProvider(cameraPreviewView.surfaceProvider)
@@ -189,7 +189,7 @@ class MainActivity : AppCompatActivity() {
 
                 cameraProvider.unbindAll()
                 cameraProvider.bindToLifecycle(
-                    this,
+                    this@MainActivity,
                     cameraSelector,
                     preview,
                     imageCapture
@@ -198,7 +198,7 @@ class MainActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 statusText.text = "Optical sensor error: ${e.message}"
             }
-        }, ContextCompat.getMainExecutor(this))
+        }
     }
 
     private fun captureLiveTargetPhoto() {
