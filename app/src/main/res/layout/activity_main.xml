@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:clipToPadding="false"
     android:background="@drawable/bg_idroid_root">
 
     <!-- Layer 1: Always-on Camera Feed -->
@@ -23,6 +25,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         android:paddingStart="14dp"
         android:paddingEnd="14dp"
         android:paddingTop="12dp"
@@ -69,8 +73,7 @@
                 android:layout_height="38dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="Settings"
-                android:src="@android:drawable/ic_menu_preferences"
-                app:tint="@color/idroid_cyan" />
+                android:src="@drawable/ic_idroid_settings" />
         </LinearLayout>
 
         <!-- ===================== Tactical Status Subheader ===================== -->
@@ -117,6 +120,8 @@
             android:orientation="vertical"
             android:background="@drawable/bg_idroid_card"
             android:padding="14dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="2dp"
             android:layout_marginBottom="10dp">
 
             <LinearLayout
@@ -275,6 +280,8 @@
             android:orientation="vertical"
             android:background="@drawable/bg_idroid_card"
             android:padding="14dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="2dp"
             android:layout_marginBottom="10dp">
 
             <LinearLayout

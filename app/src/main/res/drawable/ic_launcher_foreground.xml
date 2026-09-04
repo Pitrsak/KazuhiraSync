@@ -5,43 +5,135 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
 
-    <!-- Bold minimalist Kazuhira Miller emblem: swept hair + aviator sunglasses.
-         Everything sits inside the adaptive-icon safe zone (radius 36 of center 54). -->
-
-    <!-- Hair / brow swoosh -->
+    <!-- ================================================================ -->
+    <!-- Tactical HUD Corner Brackets (iDroid Reticle)                    -->
+    <!-- ================================================================ -->
     <path
-        android:pathData="M34,42 C46,34 62,34 74,42"
-        android:strokeColor="#9CA3AF"
-        android:strokeWidth="5"
+        android:pathData="M24,32 L24,24 L32,24"
+        android:strokeColor="#5500E5FF"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="square" />
+    <path
+        android:pathData="M84,32 L84,24 L76,24"
+        android:strokeColor="#5500E5FF"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="square" />
+    <path
+        android:pathData="M24,76 L24,84 L32,84"
+        android:strokeColor="#5500E5FF"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="square" />
+    <path
+        android:pathData="M84,76 L84,84 L76,84"
+        android:strokeColor="#5500E5FF"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="square" />
+
+    <!-- ================================================================ -->
+    <!-- Military Uniform & Signature Yellow Cravat/Neckerchief           -->
+    <!-- ================================================================ -->
+    <!-- Olive Drab Military Shirt & Collar -->
+    <path
+        android:pathData="M32,86 L36,75 L47,74 L45,86 Z"
+        android:fillColor="#1E281F" />
+    <path
+        android:pathData="M76,86 L72,75 L61,74 L63,86 Z"
+        android:fillColor="#1E281F" />
+
+    <!-- Neck & Jawline -->
+    <path
+        android:pathData="M44,65 L64,65 L60,76 L48,76 Z"
+        android:fillColor="#C8976C" />
+    <path
+        android:pathData="M48,68 C48,72 60,72 60,68 Z"
+        android:fillColor="#AF7F57" />
+
+    <!-- Signature Yellow Neckerchief / Cravat (Mother Base / Miller) -->
+    <path
+        android:pathData="M47,74 L54,84 L61,74 L57,71 L51,71 Z"
+        android:fillColor="#E5A93B" />
+    <path
+        android:pathData="M51,77 L54,84 L57,77 L54,75 Z"
+        android:fillColor="#F59E0B" />
+
+    <!-- ================================================================ -->
+    <!-- Kazuhira Miller Swept Blonde Hair                                -->
+    <!-- ================================================================ -->
+    <!-- Base Hair Volume & Back Silhouette -->
+    <path
+        android:pathData="M30,52 C26,43 28,31 40,25 C48,21 62,21 72,27 C80,33 82,44 78,52 C75,44 71,35 62,31 C52,27 41,32 36,41 C33,45 32,49 30,52 Z"
+        android:fillColor="#A1741D" />
+
+    <!-- Main Golden Hair Swoop -->
+    <path
+        android:pathData="M32,47 C30,37 36,27 48,24 C58,22 68,25 74,31 C78,35 78,41 76,46 C72,38 65,33 56,32 C46,31 38,36 35,43 C34,45 33,47 32,47 Z"
+        android:fillColor="#DDA133" />
+
+    <!-- Front Highlights & Locks -->
+    <path
+        android:pathData="M38,35 C45,27 56,26 66,30 C60,29 52,30 46,34 C41,37 39,42 38,46 C37,41 37,38 38,35 Z"
+        android:fillColor="#FACC15" />
+    <path
+        android:pathData="M46,29 C53,27 62,30 66,34 C59,33 52,33 47,37 Z"
+        android:fillColor="#FEF08A" />
+
+    <!-- ================================================================ -->
+    <!-- Aviator Sunglasses: Frames & Teardrop Lenses                     -->
+    <!-- ================================================================ -->
+    <!-- Double Bridge & Brow Bar -->
+    <path
+        android:pathData="M40,46 L68,46"
+        android:strokeColor="#0F172A"
+        android:strokeWidth="2.2"
+        android:strokeLineCap="round" />
+    <path
+        android:pathData="M50,50 L58,50"
+        android:strokeColor="#0F172A"
+        android:strokeWidth="1.8" />
+
+    <!-- Left Lens -->
+    <path
+        android:pathData="M38,48 L50,48 C54,48 56,53 55,60 C54,66 48,68 43,65 C37,62 35,57 36,51 C36,49 37,48 38,48 Z"
+        android:fillColor="#060C14"
+        android:strokeColor="#1E293B"
+        android:strokeWidth="1.2" />
+
+    <!-- Right Lens -->
+    <path
+        android:pathData="M70,48 L58,48 C54,48 52,53 53,60 C54,66 60,68 65,65 C71,62 73,57 72,51 C72,49 71,48 70,48 Z"
+        android:fillColor="#060C14"
+        android:strokeColor="#1E293B"
+        android:strokeWidth="1.2" />
+
+    <!-- Glasses Temple Arms -->
+    <path
+        android:pathData="M37,49 L31,45"
+        android:strokeColor="#0F172A"
+        android:strokeWidth="2"
+        android:strokeLineCap="round" />
+    <path
+        android:pathData="M71,49 L77,45"
+        android:strokeColor="#0F172A"
+        android:strokeWidth="2"
         android:strokeLineCap="round" />
 
-    <!-- Aviator sunglasses: single white silhouette (two teardrop lenses + bridge + arms) -->
+    <!-- ================================================================ -->
+    <!-- Holographic iDroid Reflection on Aviator Lenses                  -->
+    <!-- ================================================================ -->
+    <!-- Left Lens Glare -->
+    <path
+        android:pathData="M40,55 L47,48 L49,48 L42,58 Z"
+        android:fillColor="#00E5FF" />
+    <path
+        android:pathData="M43,62 L48,56 L49,57 L45,64 Z"
+        android:fillColor="#5500E5FF" />
 
-    <!-- Left lens (outer corner droops down-left) -->
+    <!-- Right Lens Glare -->
     <path
-        android:pathData="M37,47 L50,47 C54,47 57,52 56,60 C55,68 47,70 41,67 C34,64 32,58 33,51 C33,48 35,47 37,47 Z"
-        android:fillColor="#F1F5F9" />
-
-    <!-- Right lens (outer corner droops down-right) -->
+        android:pathData="M60,55 L67,48 L69,48 L62,58 Z"
+        android:fillColor="#00E5FF" />
     <path
-        android:pathData="M71,47 L58,47 C54,47 51,52 52,60 C53,68 61,70 67,67 C74,64 76,58 75,51 C75,48 73,47 71,47 Z"
-        android:fillColor="#F1F5F9" />
-
-    <!-- Bridge -->
-    <path
-        android:pathData="M50,47 L58,47 L58,52 L50,52 Z"
-        android:fillColor="#F1F5F9" />
-
-    <!-- Glasses arms -->
-    <path
-        android:pathData="M37,50 L32,46"
-        android:strokeColor="#F1F5F9"
-        android:strokeWidth="3"
-        android:strokeLineCap="round" />
-    <path
-        android:pathData="M71,50 L76,46"
-        android:strokeColor="#F1F5F9"
-        android:strokeWidth="3"
-        android:strokeLineCap="round" />
+        android:pathData="M63,62 L68,56 L69,57 L65,64 Z"
+        android:fillColor="#5500E5FF" />
 
 </vector>

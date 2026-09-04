@@ -38,9 +38,9 @@ class IdroidParallaxManager(private val context: Context) : SensorEventListener 
         val rotationFactor: Float     // Max rotation in degrees
     )
 
-    fun registerView(view: View, translationDp: Float = 14f, rotationDeg: Float = 4f) {
+    fun registerView(view: View, translationDp: Float = 10f, rotationDeg: Float = 3f) {
         val density = context.resources.displayMetrics.density
-        view.cameraDistance = 8000f * density
+        view.cameraDistance = 16000f * density
         targetViews.add(ParallaxTarget(view, translationDp * density, rotationDeg))
     }
 
@@ -89,8 +89,8 @@ class IdroidParallaxManager(private val context: Context) : SensorEventListener 
         }
 
         // Calculate delta from adaptive baseline and clamp to avoid extreme shifts
-        val deltaRoll = (roll - baseRoll).coerceIn(-0.35f, 0.35f)
-        val deltaPitch = (pitch - basePitch).coerceIn(-0.35f, 0.35f)
+        val deltaRoll = (roll - baseRoll).coerceIn(-0.25f, 0.25f)
+        val deltaPitch = (pitch - basePitch).coerceIn(-0.25f, 0.25f)
 
         // Smooth low-pass filter (lerp) for 60/120fps fluid response with zero jitter
         smoothRoll += (deltaRoll - smoothRoll) * 0.18f

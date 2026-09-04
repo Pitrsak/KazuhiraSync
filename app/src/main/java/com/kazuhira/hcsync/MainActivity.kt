@@ -92,13 +92,13 @@ class MainActivity : AppCompatActivity() {
 
         parallaxManager = IdroidParallaxManager(this)
         findViewById<View>(R.id.cardTodaySummary)?.let {
-            parallaxManager.registerView(it, translationDp = 12f, rotationDeg = 3.5f)
+            parallaxManager.registerView(it, translationDp = 6f, rotationDeg = 2.5f)
         }
         findViewById<View>(R.id.cardAcquireTarget)?.let {
-            parallaxManager.registerView(it, translationDp = 16f, rotationDeg = 4.5f)
+            parallaxManager.registerView(it, translationDp = 8f, rotationDeg = 3.0f)
         }
         findViewById<View>(R.id.listViewHistory)?.let {
-            parallaxManager.registerView(it, translationDp = 8f, rotationDeg = 2.0f)
+            parallaxManager.registerView(it, translationDp = 4f, rotationDeg = 1.5f)
         }
 
         updateModelSubtitle()

@@ -11,12 +11,25 @@ android {
         applicationId "com.kazuhira.hcsync"
         minSdk 28
         targetSdk 34
-        versionCode 8
-        versionName "2.0.3"
+        versionCode 9
+        versionName "2.0.4"
+    }
+
+    signingConfigs {
+        release {
+            storeFile file("kazuhira.keystore")
+            storePassword "kazuhira123"
+            keyAlias "kazuhirasync"
+            keyPassword "kazuhira123"
+        }
     }
 
     buildTypes {
+        debug {
+            signingConfig signingConfigs.release
+        }
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
