@@ -111,6 +111,7 @@
 
         <!-- ===================== Today Summary Card ===================== -->
         <LinearLayout
+            android:id="@+id/cardTodaySummary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -268,6 +269,7 @@
 
         <!-- ===================== Target Acquisition / Scan Card ===================== -->
         <LinearLayout
+            android:id="@+id/cardAcquireTarget"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -394,54 +396,6 @@
             android:scrollbars="vertical"
             android:scrollbarThumbVertical="@color/idroid_border_glow" />
 
-    </LinearLayout>
-
-    <!-- Layer 4: Tactical Bottom-Right HUD (replicating MGSV GMP / Time display) -->
-    <LinearLayout
-        android:id="@+id/layoutBottomHud"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="12dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/bg_idroid_hud_box"
-        android:paddingHorizontal="10dp"
-        android:paddingVertical="5dp"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-
-            <TextView
-                android:id="@+id/tvHudClock"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="22:02"
-                android:textSize="10sp"
-                android:fontFamily="@font/share_tech_mono"
-                android:textColor="@color/idroid_text_main"
-                android:layout_marginEnd="8dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="⚡ TODAY"
-                android:textSize="9sp"
-                android:fontFamily="@font/share_tech_mono"
-                android:textColor="@color/idroid_amber" />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/tvHudGmp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="KCAL 0"
-            android:textSize="11sp"
-            android:fontFamily="@font/share_tech_mono"
-            android:textColor="@color/idroid_cyan_glow" />
     </LinearLayout>
 
 </FrameLayout>

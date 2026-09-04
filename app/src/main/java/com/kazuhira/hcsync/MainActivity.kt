@@ -52,8 +52,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvTodayProtein: TextView
     private lateinit var tvTodayCarbs: TextView
     private lateinit var tvTodayFat: TextView
-    private var tvHudClock: TextView? = null
-    private var tvHudGmp: TextView? = null
+    private lateinit var parallaxManager: IdroidParallaxManager
 
     private lateinit var localRepo: LocalMealRepository
     private var tempPhotoUri: Uri? = null
@@ -90,11 +89,19 @@ class MainActivity : AppCompatActivity() {
         tvTodayProtein = findViewById(R.id.tvTodayProtein)
         tvTodayCarbs = findViewById(R.id.tvTodayCarbs)
         tvTodayFat = findViewById(R.id.tvTodayFat)
-        tvHudClock = findViewById(R.id.tvHudClock)
-        tvHudGmp = findViewById(R.id.tvHudGmp)
+
+        parallaxManager = IdroidParallaxManager(this)
+        findViewById<View>(R.id.cardTodaySummary)?.let {
+            parallaxManager.registerView(it, translationDp = 12f, rotationDeg = 3.5f)
+        }
+        findViewById<View>(R.id.cardAcquireTarget)?.let {
+            parallaxManager.registerView(it, translationDp = 16f, rotationDeg = 4.5f)
+        }
+        findViewById<View>(R.id.listViewHistory)?.let {
+            parallaxManager.registerView(it, translationDp = 8f, rotationDeg = 2.0f)
+        }
 
         updateModelSubtitle()
-        updateHudClock()
 
         // Health Connect Permissions Contract
         val requestPermissionActivityContract = PermissionController.createRequestPermissionResultContract()
@@ -164,7 +171,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        updateHudClock()
+        parallaxManager.start()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        parallaxManager.stop()
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -234,16 +246,6 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    private fun updateHudClock() {
-        try {
-            val formatted = DateTimeFormatter.ofPattern("HH:mm")
-                .withZone(ZoneOffset.systemDefault())
-                .format(Instant.now())
-            tvHudClock?.text = formatted
-        } catch (e: Exception) {
-            tvHudClock?.text = "--:--"
-        }
-    }
 
     private fun initDefaultPrefs() {
         val prefs = getSharedPreferences("KazuhiraPrefs", MODE_PRIVATE)
@@ -334,8 +336,19 @@ class MainActivity : AppCompatActivity() {
                 statusText.text = "✅ Target analysis complete! Confirm data below."
                 showMealConfirmationDialog(imageUri, estimation)
             }.onFailure { exception ->
-                statusText.text = "❌ Intel extraction error: ${exception.localizedMessage}"
-                Toast.makeText(this@MainActivity, "Analysis failed: ${exception.message}", Toast.LENGTH_LONG).show()
+                val errorMsg = when {
+                    exception is java.net.UnknownHostException ||
+                    exception.message?.contains("Unable to resolve host", ignoreCase = true) == true ||
+                    exception.message?.contains("Comms offline", ignoreCase = true) == true ->
+                        "Tactical link offline: Check Wi-Fi or mobile data connection."
+                    exception.message?.contains("API key not valid", ignoreCase = true) == true ||
+                    exception.message?.contains("403") == true ->
+                        "Invalid API Key: Check Settings (⚙️)."
+                    else ->
+                        "Intel extraction error: ${exception.localizedMessage ?: "Unknown error"}"
+                }
+                statusText.text = "❌ $errorMsg"
+                Toast.makeText(this@MainActivity, errorMsg, Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -507,8 +520,6 @@ class MainActivity : AppCompatActivity() {
         tvTodayProtein.text = "${sumP.toInt()}g"
         tvTodayCarbs.text = "${sumC.toInt()}g"
         tvTodayFat.text = "${sumF.toInt()}g"
-        tvHudGmp?.text = "KCAL ${sumCal.toInt()}"
-        updateHudClock()
     }
 
     private fun showSettingsDialog() {

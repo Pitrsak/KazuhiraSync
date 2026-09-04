@@ -113,23 +113,33 @@ class GeminiVisionService(
             .post(jsonBody.toString().toRequestBody("application/json".toMediaType()))
             .build()
 
-        client.newCall(request).execute().use { response ->
-            val responseStr = response.body?.string() ?: ""
-            if (!response.isSuccessful) {
-                return Result.failure(Exception("OpenRouter Error (${response.code}): $responseStr"))
-            }
+        try {
+            client.newCall(request).execute().use { response ->
+                val responseStr = response.body?.string() ?: ""
+                if (!response.isSuccessful) {
+                    return Result.failure(Exception("OpenRouter Error (${response.code}): $responseStr"))
+                }
 
-            val responseJson = JSONObject(responseStr)
-            val choices = responseJson.optJSONArray("choices")
-            if (choices == null || choices.length() == 0) {
-                val errorObj = responseJson.optJSONObject("error")
-                val errMsg = errorObj?.optString("message") ?: "No response from OpenRouter"
-                return Result.failure(Exception("OpenRouter Error: $errMsg"))
-            }
+                val responseJson = JSONObject(responseStr)
+                val choices = responseJson.optJSONArray("choices")
+                if (choices == null || choices.length() == 0) {
+                    val errorObj = responseJson.optJSONObject("error")
+                    val errMsg = errorObj?.optString("message") ?: "No response from OpenRouter"
+                    return Result.failure(Exception("OpenRouter Error: $errMsg"))
+                }
 
-            val messageObj = choices.getJSONObject(0).getJSONObject("message")
-            val rawText = messageObj.getString("content")
-            return parseEstimationJson(rawText)
+                val messageObj = choices.getJSONObject(0).getJSONObject("message")
+                val rawText = messageObj.getString("content")
+                return parseEstimationJson(rawText)
+            }
+        } catch (e: java.net.UnknownHostException) {
+            return Result.failure(Exception("Comms offline: Unable to resolve host. Check device Wi-Fi or mobile data."))
+        } catch (e: java.net.ConnectException) {
+            return Result.failure(Exception("Comms offline: Connection refused. Check device network connection."))
+        } catch (e: java.net.SocketTimeoutException) {
+            return Result.failure(Exception("Comms timeout: Server took too long to respond. Please retry."))
+        } catch (e: Exception) {
+            return Result.failure(e)
         }
     }
 
@@ -197,6 +207,12 @@ class GeminiVisionService(
                     val rawText = parts.getJSONObject(0).getString("text")
                     return parseEstimationJson(rawText)
                 }
+            } catch (e: java.net.UnknownHostException) {
+                return Result.failure(Exception("Comms offline: Unable to resolve Google AI servers. Check device Wi-Fi or mobile data."))
+            } catch (e: java.net.ConnectException) {
+                return Result.failure(Exception("Comms offline: Connection refused. Check device network connection."))
+            } catch (e: java.net.SocketTimeoutException) {
+                lastException = Exception("Comms timeout: Server took too long to respond on $model.")
             } catch (e: Exception) {
                 lastException = e
             }
