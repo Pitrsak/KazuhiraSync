@@ -5,44 +5,44 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
 
-    <!-- Swept hair swoosh in Kazuhira military gold -->
+    <!-- Swept hair swoosh -->
     <path
         android:pathData="M34,41 C46,33 62,33 74,41"
-        android:strokeColor="#E5A93B"
+        android:strokeColor="#FFFFFF"
         android:strokeWidth="4.5"
         android:strokeLineCap="round" />
 
     <!-- Aviator sunglasses top brow bar -->
     <path
         android:pathData="M40,46 L68,46"
-        android:strokeColor="#F8FAFC"
+        android:strokeColor="#FFFFFF"
         android:strokeWidth="2.5"
         android:strokeLineCap="round" />
 
     <!-- Left lens (teardrop aviator) -->
     <path
         android:pathData="M37,48 L50,48 C54,48 57,53 56,61 C55,69 47,71 41,68 C34,65 32,59 33,52 C33,49 35,48 37,48 Z"
-        android:fillColor="#F8FAFC" />
+        android:fillColor="#FFFFFF" />
 
     <!-- Right lens (teardrop aviator) -->
     <path
         android:pathData="M71,48 L58,48 C54,48 51,53 52,61 C53,69 61,71 67,68 C74,65 76,59 75,52 C75,49 73,48 71,48 Z"
-        android:fillColor="#F8FAFC" />
+        android:fillColor="#FFFFFF" />
 
     <!-- Nose bridge -->
     <path
         android:pathData="M50,48 L58,48 L58,53 L50,53 Z"
-        android:fillColor="#F8FAFC" />
+        android:fillColor="#FFFFFF" />
 
     <!-- Temple arms -->
     <path
         android:pathData="M37,51 L31,47"
-        android:strokeColor="#F8FAFC"
+        android:strokeColor="#FFFFFF"
         android:strokeWidth="2.5"
         android:strokeLineCap="round" />
     <path
         android:pathData="M71,51 L77,47"
-        android:strokeColor="#F8FAFC"
+        android:strokeColor="#FFFFFF"
         android:strokeWidth="2.5"
         android:strokeLineCap="round" />
 
