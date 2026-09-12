@@ -4,7 +4,6 @@ import android.content.Context
 import org.json.JSONArray
 import org.json.JSONObject
 import java.time.Instant
-import java.time.format.DateTimeFormatter
 
 data class LocalMealRecord(
     val id: String,
@@ -46,16 +45,18 @@ class LocalMealRepository(context: Context) {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        // Return latest first
-        return result.reversed()
+        // Ensure most recent meals are always at the top of the list
+        return result.distinctBy { it.id }.sortedByDescending { it.timestampIso }
     }
 
     fun saveMeal(meal: LocalMealRecord) {
         val currentMeals = getMeals().toMutableList()
-        currentMeals.add(0, meal) // Add to top
+        currentMeals.add(0, meal)
+
+        val sortedMeals = currentMeals.distinctBy { it.id }.sortedByDescending { it.timestampIso }
 
         val array = JSONArray()
-        for (m in currentMeals.take(100)) { // Keep last 100 meals
+        for (m in sortedMeals.take(100)) { // Keep last 100 meals
             val obj = JSONObject().apply {
                 put("id", m.id)
                 put("mealName", m.mealName)

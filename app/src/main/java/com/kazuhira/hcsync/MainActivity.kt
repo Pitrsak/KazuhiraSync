@@ -97,6 +97,9 @@ class MainActivity : AppCompatActivity() {
         findViewById<View>(R.id.cardAcquireTarget)?.let {
             parallaxManager.registerView(it, translationDp = 8f, rotationDeg = 3.0f)
         }
+        findViewById<View>(R.id.layoutRationSection)?.let {
+            parallaxManager.registerView(it, translationDp = 4f, rotationDeg = 2.0f)
+        }
 
         updateModelSubtitle()
 
