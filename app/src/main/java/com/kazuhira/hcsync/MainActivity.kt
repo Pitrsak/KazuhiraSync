@@ -97,9 +97,6 @@ class MainActivity : AppCompatActivity() {
         findViewById<View>(R.id.cardAcquireTarget)?.let {
             parallaxManager.registerView(it, translationDp = 8f, rotationDeg = 3.0f)
         }
-        findViewById<View>(R.id.listViewHistory)?.let {
-            parallaxManager.registerView(it, translationDp = 4f, rotationDeg = 1.5f)
-        }
 
         updateModelSubtitle()
 
@@ -109,7 +106,7 @@ class MainActivity : AppCompatActivity() {
             if (granted.containsAll(HEALTH_PERMISSIONS)) {
                 Toast.makeText(this, "Health Connect permissions granted!", Toast.LENGTH_SHORT).show()
             } else {
-                statusText.text = "⚠️ Health Connect permissions not granted"
+                statusText.text = "[WARN] Health Connect permissions not granted"
             }
         }
 
@@ -222,7 +219,7 @@ class MainActivity : AppCompatActivity() {
         val photoFile = File(cacheDir, "food_photo_${System.currentTimeMillis()}.jpg")
         val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
 
-        statusText.text = "⚡ Acquiring target scan..."
+        statusText.text = "Acquiring target scan..."
         progressBar.visibility = View.VISIBLE
         btnTakePhoto.isEnabled = false
 
@@ -314,12 +311,12 @@ class MainActivity : AppCompatActivity() {
 
         if (apiKey.isBlank()) {
             val providerName = if (provider.equals("openrouter", ignoreCase = true)) "OpenRouter" else "Google AI (Gemini)"
-            Toast.makeText(this, "Please configure your $providerName API key in Settings (⚙️) first", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Please configure your $providerName API key in Settings first", Toast.LENGTH_LONG).show()
             showSettingsDialog()
             return
         }
 
-        statusText.text = "🧠 Kazuhira is analyzing target intel ($modelName)..."
+        statusText.text = "Kazuhira is analyzing target intel ($modelName)..."
         progressBar.visibility = View.VISIBLE
         btnTakePhoto.isEnabled = false
         btnPickGallery.isEnabled = false
@@ -333,7 +330,7 @@ class MainActivity : AppCompatActivity() {
             btnPickGallery.isEnabled = true
 
             result.onSuccess { estimation ->
-                statusText.text = "✅ Target analysis complete! Confirm data below."
+                statusText.text = "Target analysis complete. Confirm data below."
                 showMealConfirmationDialog(imageUri, estimation)
             }.onFailure { exception ->
                 val errorMsg = when {
@@ -343,11 +340,11 @@ class MainActivity : AppCompatActivity() {
                         "Tactical link offline: Check Wi-Fi or mobile data connection."
                     exception.message?.contains("API key not valid", ignoreCase = true) == true ||
                     exception.message?.contains("403") == true ->
-                        "Invalid API Key: Check Settings (⚙️)."
+                        "Invalid API Key: Check Settings."
                     else ->
                         "Intel extraction error: ${exception.localizedMessage ?: "Unknown error"}"
                 }
-                statusText.text = "❌ $errorMsg"
+                statusText.text = "$errorMsg"
                 Toast.makeText(this@MainActivity, errorMsg, Toast.LENGTH_LONG).show()
             }
         }
@@ -409,7 +406,7 @@ class MainActivity : AppCompatActivity() {
         fat: Double,
         notes: String
     ) {
-        statusText.text = "⏳ Logging ration intel to Health Connect..."
+        statusText.text = "Logging ration intel to Health Connect..."
         progressBar.visibility = View.VISIBLE
 
         lifecycleScope.launch {
@@ -439,9 +436,9 @@ class MainActivity : AppCompatActivity() {
 
                 hcClient.insertRecords(listOf(nutritionRecord))
                 syncedSuccess = true
-                statusText.text = "🎉 Logged $name ($calories kcal) to Health Connect & Samsung Health!"
+                statusText.text = "Logged $name ($calories kcal) to Health Connect and Samsung Health."
             } catch (e: Exception) {
-                statusText.text = "⚠️ Saved locally (Health Connect write: ${e.message})"
+                statusText.text = "[WARN] Saved locally (Health Connect write: ${e.message})"
             } finally {
                 progressBar.visibility = View.GONE
 

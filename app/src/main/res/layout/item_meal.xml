@@ -69,7 +69,7 @@
             android:text="550"
             android:textSize="20sp"
             android:fontFamily="@font/share_tech_mono"
-            android:textColor="@color/idroid_amber" />
+            android:textColor="@color/idroid_cyan_bright" />
     </RelativeLayout>
 
     <View
@@ -78,7 +78,7 @@
         android:background="@color/idroid_border"
         android:layout_marginBottom="8dp" />
 
-    <!-- Macro Badges Row -->
+    <!-- Macro Badges Row (MGSV shades of blue/cyan) -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -91,8 +91,8 @@
             android:layout_height="wrap_content"
             android:text="P 35g"
             android:textSize="10sp"
-            android:textColor="@color/idroid_green"
-            android:background="@color/idroid_cyan_dim"
+            android:textColor="@color/idroid_macro_protein"
+            android:background="@color/idroid_cyan_badge_bg"
             android:paddingHorizontal="7dp"
             android:paddingVertical="3dp"
             android:layout_marginEnd="6dp"
@@ -104,8 +104,8 @@
             android:layout_height="wrap_content"
             android:text="C 50g"
             android:textSize="10sp"
-            android:textColor="@color/idroid_blue"
-            android:background="@color/idroid_cyan_dim"
+            android:textColor="@color/idroid_macro_carbs"
+            android:background="@color/idroid_cyan_badge_bg"
             android:paddingHorizontal="7dp"
             android:paddingVertical="3dp"
             android:layout_marginEnd="6dp"
@@ -117,8 +117,8 @@
             android:layout_height="wrap_content"
             android:text="F 15g"
             android:textSize="10sp"
-            android:textColor="@color/idroid_amber"
-            android:background="@color/idroid_amber_dim"
+            android:textColor="@color/idroid_macro_fat"
+            android:background="@color/idroid_cyan_badge_bg"
             android:paddingHorizontal="7dp"
             android:paddingVertical="3dp"
             android:fontFamily="@font/share_tech_mono" />

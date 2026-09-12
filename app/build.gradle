@@ -11,8 +11,8 @@ android {
         applicationId "com.kazuhira.hcsync"
         minSdk 28
         targetSdk 34
-        versionCode 10
-        versionName "2.0.5"
+        versionCode 11
+        versionName "2.0.6"
     }
 
     signingConfigs {
@@ -21,6 +21,8 @@ android {
             storePassword "kazuhira123"
             keyAlias "kazuhirasync"
             keyPassword "kazuhira123"
+            v1SigningEnabled true
+            v2SigningEnabled true
         }
     }
 

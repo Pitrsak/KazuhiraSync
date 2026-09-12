@@ -48,8 +48,8 @@ class IdroidOverlayView @JvmOverloads constructor(
     private val bracketMargin = dpToPx(8f)
 
     init {
-        // Base holographic tint (semi-transparent deep blue)
-        basePaint.color = Color.parseColor("#6604101E")
+        // Base holographic tint (semi-transparent deep cyan-blue, legible over food while keeping optical feed visible)
+        basePaint.color = Color.parseColor("#8003101E")
         initNoiseShader()
     }
 
@@ -84,7 +84,7 @@ class IdroidOverlayView @JvmOverloads constructor(
                 w / 2f,
                 h / 2f,
                 radius,
-                intArrayOf(Color.TRANSPARENT, Color.parseColor("#3302060C"), Color.parseColor("#77010408")),
+                intArrayOf(Color.TRANSPARENT, Color.parseColor("#4002060C"), Color.parseColor("#88010408")),
                 floatArrayOf(0.4f, 0.75f, 1.0f),
                 Shader.TileMode.CLAMP
             )
@@ -106,7 +106,7 @@ class IdroidOverlayView @JvmOverloads constructor(
             canvas.drawRect(0f, 0f, w, h, it)
         }
 
-        // 3. Scanline grid (every 6dp)
+        // 3. Scanline grid (every 5dp)
         val step = dpToPx(5f)
         var y = 0f
         while (y < h) {

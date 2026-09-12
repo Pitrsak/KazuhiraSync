@@ -2,39 +2,52 @@
 <resources>
     <!-- Backgrounds & Translucent Hologram Layers -->
     <color name="idroid_bg">#070B12</color>
-    <color name="idroid_holo_tint">#52040D18</color>
-    <color name="idroid_holo_vignette">#8001050A</color>
-    <color name="idroid_card">#3D081928</color>
-    <color name="idroid_card_selected">#5913344E</color>
-    <color name="idroid_hud_box">#44091A2A</color>
+    <!-- Darker holographic tint and card opacity so food is subtly visible underneath while text remains crisp & readable -->
+    <color name="idroid_holo_tint">#8003101E</color>
+    <color name="idroid_holo_vignette">#9901050A</color>
+    <color name="idroid_card">#D0081C2E</color> <!-- ~82% dark translucent holographic cyan-navy glass -->
+    <color name="idroid_card_selected">#EB0F2F4A</color>
+    <color name="idroid_hud_box">#D8092238</color>
 
-    <!-- iDroid Signature Accents -->
+    <!-- iDroid Signature Blue / Cyan Accents (Authentic MGSV Monochrome Palette) -->
     <color name="idroid_cyan">#38D3FF</color>
+    <color name="idroid_cyan_bright">#A8F0FF</color>
     <color name="idroid_cyan_glow">#DCF7FF</color>
     <color name="idroid_cyan_dim">#2600E5FF</color>
     <color name="idroid_cyan_faint">#1A00E5FF</color>
+    <color name="idroid_cyan_badge_bg">#26153B52</color>
 
-    <color name="idroid_amber">#FFCA18</color>
-    <color name="idroid_amber_glow">#FFE866</color>
-    <color name="idroid_amber_dim">#33FFCA18</color>
+    <!-- Primary Action Buttons -->
+    <color name="idroid_btn_primary_bg">#1A6588</color>
+    <color name="idroid_btn_primary_text">#DCF7FF</color>
 
-    <color name="idroid_green">#1AE680</color>
-    <color name="idroid_blue">#3B9EF6</color>
-    <color name="idroid_red">#FF453A</color>
+    <!-- Tactical Shades of Blue for Macros & Key Metrics -->
+    <color name="idroid_macro_protein">#7FE8FF</color> <!-- Ice cyan -->
+    <color name="idroid_macro_carbs">#52B4FF</color>   <!-- Tactical sky blue -->
+    <color name="idroid_macro_fat">#4DD0E1</color>     <!-- Cool teal cyan -->
+
+    <!-- Remapped Legacy Colors to Blue/Cyan (so existing layouts and badges render in authentic shades of blue) -->
+    <color name="idroid_amber">#7CE7FF</color>        <!-- Shifted from yellow to holographic cyan/blue -->
+    <color name="idroid_amber_glow">#DCF7FF</color>
+    <color name="idroid_amber_dim">#26153B52</color>
+    <color name="idroid_green">#7FE8FF</color>        <!-- Shifted from neon green to ice cyan -->
+    <color name="idroid_blue">#52B4FF</color>
+    <color name="idroid_red">#FF5252</color>
 
     <!-- Borders & Dividers -->
-    <color name="idroid_border">#2C5578</color>
-    <color name="idroid_border_glow">#67C3EB</color>
-    <color name="idroid_border_dim">#1A3955</color>
+    <color name="idroid_border">#2C5D7F</color>
+    <color name="idroid_border_glow">#5CBCE6</color>
+    <color name="idroid_border_dim">#1A3E5C</color>
 
-    <!-- Typography -->
-    <color name="idroid_text_main">#E2F5FD</color>
-    <color name="idroid_text_dim">#6D9DB8</color>
-    <color name="idroid_text_faint">#3F657F</color>
+    <!-- Typography (Tactical Shades of Blue and Cyan) -->
+    <color name="idroid_text_main">#D6F4FD</color>
+    <color name="idroid_text_sub">#72BEDA</color>
+    <color name="idroid_text_dim">#4E879F</color>
+    <color name="idroid_text_faint">#2C5569</color>
 
     <!-- Gradients & Overlay effects -->
-    <color name="idroid_grad_top">#0A131F</color>
-    <color name="idroid_grad_bottom">#03060A</color>
-    <color name="idroid_grid_dot">#2659A5D6</color>
-    <color name="idroid_scanline">#0E00E5FF</color>
+    <color name="idroid_grad_top">#0A1524</color>
+    <color name="idroid_grad_bottom">#03070D</color>
+    <color name="idroid_grid_dot">#3059A5D6</color>
+    <color name="idroid_scanline">#1200E5FF</color>
 </resources>

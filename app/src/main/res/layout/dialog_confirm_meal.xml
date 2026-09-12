@@ -16,7 +16,7 @@
         <View
             android:layout_width="36dp"
             android:layout_height="2dp"
-            android:background="@color/idroid_amber"
+            android:background="@color/idroid_cyan"
             android:layout_marginBottom="10dp" />
 
         <TextView
@@ -25,7 +25,7 @@
             android:text="CONFIRM RATION INTEL"
             android:textSize="16sp"
             android:letterSpacing="0.08"
-            android:textColor="@color/idroid_amber"
+            android:textColor="@color/idroid_cyan_bright"
             android:fontFamily="@font/rajdhani_bold"
             android:layout_marginBottom="14dp" />
 
@@ -66,7 +66,7 @@
             android:text="CALORIC VALUE (KCAL)"
             android:textSize="11sp"
             android:letterSpacing="0.1"
-            android:textColor="@color/idroid_amber"
+            android:textColor="@color/idroid_cyan"
             android:fontFamily="@font/rajdhani_bold" />
 
         <EditText
@@ -74,9 +74,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
-            android:textColor="@color/idroid_amber"
+            android:textColor="@color/idroid_cyan_bright"
             android:textColorHint="@color/idroid_text_faint"
-            android:backgroundTint="@color/idroid_amber"
+            android:backgroundTint="@color/idroid_cyan"
             android:fontFamily="@font/share_tech_mono"
             android:layout_marginBottom="14dp" />
 
@@ -99,7 +99,7 @@
                     android:layout_height="wrap_content"
                     android:text="PROTEIN (G)"
                     android:textSize="10sp"
-                    android:textColor="@color/idroid_green"
+                    android:textColor="@color/idroid_macro_protein"
                     android:fontFamily="@font/rajdhani_bold" />
                 <EditText
                     android:id="@+id/etProtein"
@@ -108,7 +108,7 @@
                     android:inputType="numberDecimal"
                     android:textColor="@color/idroid_text_main"
                     android:textColorHint="@color/idroid_text_faint"
-                    android:backgroundTint="@color/idroid_green"
+                    android:backgroundTint="@color/idroid_macro_protein"
                     android:fontFamily="@font/share_tech_mono" />
             </LinearLayout>
 
@@ -123,7 +123,7 @@
                     android:layout_height="wrap_content"
                     android:text="CARBS (G)"
                     android:textSize="10sp"
-                    android:textColor="@color/idroid_blue"
+                    android:textColor="@color/idroid_macro_carbs"
                     android:fontFamily="@font/rajdhani_bold" />
                 <EditText
                     android:id="@+id/etCarbs"
@@ -132,7 +132,7 @@
                     android:inputType="numberDecimal"
                     android:textColor="@color/idroid_text_main"
                     android:textColorHint="@color/idroid_text_faint"
-                    android:backgroundTint="@color/idroid_blue"
+                    android:backgroundTint="@color/idroid_macro_carbs"
                     android:fontFamily="@font/share_tech_mono" />
             </LinearLayout>
 
@@ -147,7 +147,7 @@
                     android:layout_height="wrap_content"
                     android:text="FAT (G)"
                     android:textSize="10sp"
-                    android:textColor="@color/idroid_amber"
+                    android:textColor="@color/idroid_macro_fat"
                     android:fontFamily="@font/rajdhani_bold" />
                 <EditText
                     android:id="@+id/etFat"
@@ -156,7 +156,7 @@
                     android:inputType="numberDecimal"
                     android:textColor="@color/idroid_text_main"
                     android:textColorHint="@color/idroid_text_faint"
-                    android:backgroundTint="@color/idroid_amber"
+                    android:backgroundTint="@color/idroid_macro_fat"
                     android:fontFamily="@font/share_tech_mono" />
             </LinearLayout>
         </LinearLayout>
@@ -209,10 +209,11 @@
                 android:text="LOG TO HEALTH CONNECT"
                 android:fontFamily="@font/rajdhani_bold"
                 android:letterSpacing="0.06"
-                android:textColor="#060C14"
-                app:backgroundTint="@color/idroid_amber"
-                app:cornerRadius="3dp"
-                app:strokeWidth="0dp" />
+                android:textColor="@color/idroid_btn_primary_text"
+                app:backgroundTint="@color/idroid_btn_primary_bg"
+                app:strokeColor="@color/idroid_cyan"
+                app:strokeWidth="1dp"
+                app:cornerRadius="3dp" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
