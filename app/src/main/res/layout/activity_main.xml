@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginBottom="6dp">
+            android:layout_marginBottom="8dp">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -47,19 +47,20 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tvAppTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="iDROID VER 3.02"
-                    android:textSize="13sp"
-                    android:fontFamily="@font/share_tech_mono"
-                    android:letterSpacing="0.1"
-                    android:textColor="@color/idroid_text_dim" />
+                    android:text="KAZUHIRA SYNC // VER 2.0.8"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/rajdhani_bold"
+                    android:letterSpacing="0.08"
+                    android:textColor="@color/idroid_text_main" />
 
                 <TextView
                     android:id="@+id/tvModelSubtitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="KAZUHIRA SYNC // GEMINI-3.5-FLASH-LITE"
+                    android:text="GEMINI // GEMINI-3.8-FLASH"
                     android:textSize="10sp"
                     android:fontFamily="@font/share_tech_mono"
                     android:letterSpacing="0.06"
@@ -82,7 +83,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginBottom="6dp">
+            android:layout_marginBottom="8dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -119,7 +120,7 @@
             android:orientation="vertical"
             android:clipChildren="false"
             android:clipToPadding="false"
-            android:paddingTop="4dp"
+            android:paddingTop="2dp"
             android:paddingBottom="2dp">
 
             <!-- ===================== Today Summary Card ===================== -->
@@ -133,7 +134,7 @@
                 android:layout_marginStart="2dp"
                 android:layout_marginEnd="2dp"
                 android:layout_marginTop="2dp"
-                android:layout_marginBottom="10dp">
+                android:layout_marginBottom="8dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -293,7 +294,7 @@
                 android:padding="14dp"
                 android:layout_marginStart="2dp"
                 android:layout_marginEnd="2dp"
-                android:layout_marginBottom="10dp">
+                android:layout_marginBottom="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -389,7 +390,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="10dp"
             android:clipChildren="true"
             android:clipToPadding="true">
 
@@ -399,7 +400,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:layout_marginBottom="6dp">
+                android:layout_marginBottom="10dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -425,8 +426,8 @@
                 android:layout_weight="1"
                 android:clipChildren="true"
                 android:clipToPadding="true"
-                android:divider="@null"
-                android:dividerHeight="0dp"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="8dp"
                 android:scrollbars="vertical"
                 android:scrollbarThumbVertical="@color/idroid_border_glow"
                 android:overScrollMode="never" />

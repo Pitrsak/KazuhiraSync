@@ -5,8 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@drawable/bg_idroid_card"
-    android:padding="12dp"
-    android:layout_marginVertical="3dp">
+    android:padding="13dp">
 
     <!-- Header line with tactical diamond icon & title & calories -->
     <RelativeLayout
@@ -23,7 +22,7 @@
             android:layout_toStartOf="@id/tvMealCalories"
             android:layout_centerVertical="true">
 
-            <!-- Cyan indicator dot / diamond -->
+            <!-- Cyan indicator diamond -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

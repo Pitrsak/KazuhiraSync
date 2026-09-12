@@ -275,7 +275,8 @@ class MainActivity : AppCompatActivity() {
         val provider = prefs.getString("AI_PROVIDER", "gemini") ?: "gemini"
         val currentModel = prefs.getString("MODEL_NAME", prefs.getString("GEMINI_MODEL", "gemini-3.8-flash")) ?: "gemini-3.8-flash"
         val provTag = if (provider.equals("openrouter", ignoreCase = true)) "OPENROUTER" else "GEMINI"
-        tvModelSubtitle.text = "KAZUHIRA SYNC // $provTag : ${currentModel.uppercase()}"
+        findViewById<TextView>(R.id.tvAppTitle)?.text = "KAZUHIRA SYNC // VER ${BuildConfig.VERSION_NAME}"
+        tvModelSubtitle.text = "$provTag // ${currentModel.uppercase()}"
     }
 
     private fun handleIncomingIntent(intent: Intent?) {

@@ -11,8 +11,8 @@ android {
         applicationId "com.kazuhira.hcsync"
         minSdk 28
         targetSdk 34
-        versionCode 12
-        versionName "2.0.7"
+        versionCode 13
+        versionName "2.0.8"
     }
 
     signingConfigs {
@@ -42,6 +42,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = '17'
+    }
+    buildFeatures {
+        buildConfig true
     }
 }
 
