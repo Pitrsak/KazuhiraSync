@@ -50,7 +50,7 @@
                     android:id="@+id/tvAppTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="KAZUHIRA SYNC // VER 2.0.9"
+                    android:text="KAZUHIRA SYNC // VER 2.0.10"
                     android:textSize="14sp"
                     android:fontFamily="@font/rajdhani_bold"
                     android:letterSpacing="0.08"
