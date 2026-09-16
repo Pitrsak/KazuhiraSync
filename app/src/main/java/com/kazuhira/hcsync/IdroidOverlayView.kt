@@ -15,7 +15,6 @@ import kotlin.random.Random
  * 3. Matrix dot grid matching the in-game display.
  * 4. Procedural digital grain / noise shader.
  * 5. CRT scanline texture.
- * 6. Tactical corner HUD reticles.
  */
 class IdroidOverlayView @JvmOverloads constructor(
     context: Context,
@@ -32,20 +31,12 @@ class IdroidOverlayView @JvmOverloads constructor(
         color = ContextCompat.getColor(context, R.color.idroid_scanline)
         strokeWidth = 1f
     }
-    private val bracketPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = ContextCompat.getColor(context, R.color.idroid_border_glow)
-        strokeWidth = dpToPx(1.5f)
-        style = Paint.Style.STROKE
-        strokeCap = Paint.Cap.SQUARE
-    }
 
     private var vignettePaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private var noisePaint: Paint? = null
 
     private val gridSpacing = dpToPx(24f)
     private val dotRadius = dpToPx(1.2f)
-    private val bracketLen = dpToPx(14f)
-    private val bracketMargin = dpToPx(8f)
 
     init {
         // Base holographic tint (semi-transparent deep cyan-blue, legible over food while keeping optical feed visible)
@@ -127,30 +118,6 @@ class IdroidOverlayView @JvmOverloads constructor(
 
         // 5. Vignette gradient
         canvas.drawRect(0f, 0f, w, h, vignettePaint)
-
-        // 6. Tactical corner HUD brackets
-        drawCornerBrackets(canvas, w, h)
-    }
-
-    private fun drawCornerBrackets(canvas: Canvas, w: Float, h: Float) {
-        val m = bracketMargin
-        val len = bracketLen
-
-        // Top-Left
-        canvas.drawLine(m, m, m + len, m, bracketPaint)
-        canvas.drawLine(m, m, m, m + len, bracketPaint)
-
-        // Top-Right
-        canvas.drawLine(w - m - len, m, w - m, m, bracketPaint)
-        canvas.drawLine(w - m, m, w - m, m + len, bracketPaint)
-
-        // Bottom-Left
-        canvas.drawLine(m, h - m, m + len, h - m, bracketPaint)
-        canvas.drawLine(m, h - m - len, m, h - m, bracketPaint)
-
-        // Bottom-Right
-        canvas.drawLine(w - m - len, h - m, w - m, h - m, bracketPaint)
-        canvas.drawLine(w - m, h - m - len, w - m, h - m, bracketPaint)
     }
 
     private fun dpToPx(dp: Float): Float {
