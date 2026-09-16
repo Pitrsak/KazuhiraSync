@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Kazuhira Sync</string>
+    <string name="quick_tile_label">Scan Ration</string>
+    <string name="quick_tile_subtitle">Target Acquisition</string>
+    <string name="shortcut_scan_short">Scan Ration</string>
+    <string name="shortcut_scan_long">Acquire Ration Intel</string>
 </resources>

@@ -39,6 +39,11 @@ import java.time.format.DateTimeFormatter
 
 class MainActivity : AppCompatActivity() {
 
+    companion object {
+        const val ACTION_QUICK_SCAN = "com.kazuhira.hcsync.action.QUICK_SCAN"
+        const val EXTRA_QUICK_SCAN = "EXTRA_QUICK_SCAN"
+    }
+
     private lateinit var cameraPreviewView: PreviewView
     private lateinit var statusText: TextView
     private lateinit var tvModelSubtitle: TextView
@@ -165,7 +170,7 @@ class MainActivity : AppCompatActivity() {
 
         refreshHistoryList()
 
-        // Handle incoming intent if shared from Gallery/Camera app
+        // Handle incoming intent if shared from Gallery/Camera app or launched via Quick Settings / shortcut
         handleIncomingIntent(intent)
     }
 
@@ -284,7 +289,18 @@ class MainActivity : AppCompatActivity() {
         val action = intent.action
         val type = intent.type
 
-        if (Intent.ACTION_SEND == action && type != null && type.startsWith("image/")) {
+        if (ACTION_QUICK_SCAN == action || intent.getBooleanExtra(EXTRA_QUICK_SCAN, false)) {
+            statusText.text = "Tactical Quick Scan: Optical sensor ready. Aim at ration."
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+            }
+            btnTakePhoto.animate()
+                .scaleX(1.04f).scaleY(1.04f)
+                .setDuration(180)
+                .withEndAction {
+                    btnTakePhoto.animate().scaleX(1.0f).scaleY(1.0f).setDuration(180).start()
+                }.start()
+        } else if (Intent.ACTION_SEND == action && type != null && type.startsWith("image/")) {
             val imageUri = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
             if (imageUri != null) {
                 statusText.text = "Processing shared intel image..."

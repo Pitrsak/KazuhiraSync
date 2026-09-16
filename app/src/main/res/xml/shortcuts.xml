@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="scan_ration"
+        android:enabled="true"
+        android:icon="@drawable/ic_qs_scan_target"
+        android:shortcutShortLabel="@string/shortcut_scan_short"
+        android:shortcutLongLabel="@string/shortcut_scan_long">
+        <intent
+            android:action="com.kazuhira.hcsync.action.QUICK_SCAN"
+            android:targetPackage="com.kazuhira.hcsync"
+            android:targetClass="com.kazuhira.hcsync.MainActivity">
+            <extra
+                android:name="EXTRA_QUICK_SCAN"
+                android:value="true" />
+        </intent>
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+</shortcuts>

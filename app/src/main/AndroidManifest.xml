@@ -37,7 +37,28 @@
             <intent-filter>
                 <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
             </intent-filter>
+            <!-- Quick scan intent filter from Quick Settings tile or shortcut -->
+            <intent-filter>
+                <action android:name="com.kazuhira.hcsync.action.QUICK_SCAN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
         </activity>
+
+        <!-- Quick Settings Tile for instant ration scan -->
+        <service
+            android:name=".QuickScanTileService"
+            android:exported="true"
+            android:icon="@drawable/ic_qs_scan_target"
+            android:label="@string/quick_tile_label"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
 
         <provider
             android:name="androidx.core.content.FileProvider"
