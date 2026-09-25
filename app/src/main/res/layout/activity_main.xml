@@ -50,7 +50,7 @@
                     android:id="@+id/tvAppTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="KAZUHIRA SYNC // VER 2.1.0"
+                    android:text="KAZUHIRA SYNC // VER 2.2.0"
                     android:textSize="14sp"
                     android:fontFamily="@font/rajdhani_bold"
                     android:letterSpacing="0.08"
@@ -61,7 +61,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="GEMINI // GEMINI-3.8-FLASH"
-                    android:textSize="10sp"
+                    android:textSize="11sp"
                     android:fontFamily="@font/share_tech_mono"
                     android:letterSpacing="0.06"
                     android:textColor="@color/idroid_cyan" />
@@ -106,8 +106,8 @@
                 android:id="@+id/tvOpticalStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="OPTICAL HUD // ACTIVE"
-                android:textSize="9.5sp"
+                android:text="OPTICAL HUD // STANDBY"
+                android:textSize="11sp"
                 android:fontFamily="@font/share_tech_mono"
                 android:letterSpacing="0.08"
                 android:textColor="@color/idroid_text_dim" />
@@ -159,7 +159,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0 RATIONS"
-                        android:textSize="10sp"
+                        android:textSize="11sp"
                         android:fontFamily="@font/share_tech_mono"
                         android:textColor="@color/idroid_cyan_bright"
                         android:background="@drawable/bg_idroid_badge_yellow"
@@ -220,7 +220,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="PROTEIN"
-                            android:textSize="10sp"
+                            android:textSize="11sp"
                             android:fontFamily="@font/rajdhani_bold"
                             android:letterSpacing="0.08"
                             android:textColor="@color/idroid_macro_protein" />
@@ -244,7 +244,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="CARBS"
-                            android:textSize="10sp"
+                            android:textSize="11sp"
                             android:fontFamily="@font/rajdhani_bold"
                             android:letterSpacing="0.08"
                             android:textColor="@color/idroid_macro_carbs" />
@@ -268,7 +268,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="FAT"
-                            android:textSize="10sp"
+                            android:textSize="11sp"
                             android:fontFamily="@font/rajdhani_bold"
                             android:letterSpacing="0.08"
                             android:textColor="@color/idroid_macro_fat" />
@@ -313,19 +313,6 @@
                         android:letterSpacing="0.12"
                         android:textColor="@color/idroid_cyan" />
 
-                    <View
-                        android:layout_width="6dp"
-                        android:layout_height="6dp"
-                        android:background="@drawable/bg_dot_green"
-                        android:layout_marginEnd="6dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="OPTICAL HUD ACTIVE"
-                        android:textSize="10sp"
-                        android:fontFamily="@font/share_tech_mono"
-                        android:textColor="@color/idroid_cyan_bright" />
                 </LinearLayout>
 
                 <Button
@@ -374,8 +361,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Awaiting target acquisition. Point optical sensor at meal."
-                    android:textSize="11sp"
-                    android:textColor="@color/idroid_text_dim"
+                    android:textSize="12sp"
+                    android:textColor="@color/idroid_text_sub"
                     android:textAlignment="center"
                     android:layout_marginTop="5dp"
                     android:fontFamily="@font/share_tech_mono" />
@@ -417,6 +404,23 @@
                     android:layout_height="1dp"
                     android:layout_weight="1"
                     android:background="@color/idroid_border" />
+
+                <!-- Tap to push rations that have not reached Health Connect yet -->
+                <TextView
+                    android:id="@+id/tvPendingSync"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2 PENDING // SYNC"
+                    android:textSize="11sp"
+                    android:fontFamily="@font/share_tech_mono"
+                    android:textColor="@color/idroid_warn"
+                    android:background="@drawable/bg_idroid_warn_badge"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="3dp"
+                    android:layout_marginStart="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:visibility="gone" />
             </LinearLayout>
 
             <ListView
@@ -430,6 +434,7 @@
                 android:dividerHeight="8dp"
                 android:scrollbars="vertical"
                 android:scrollbarThumbVertical="@color/idroid_border_glow"
+                android:listSelector="@color/idroid_cyan_faint"
                 android:overScrollMode="never" />
 
         </LinearLayout>
