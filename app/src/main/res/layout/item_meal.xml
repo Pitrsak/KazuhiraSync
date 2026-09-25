@@ -22,8 +22,9 @@
             android:layout_toStartOf="@id/tvMealCalories"
             android:layout_centerVertical="true">
 
-            <!-- Cyan indicator diamond -->
+            <!-- Sync indicator diamond: filled = in Health Connect, hollow = pending -->
             <TextView
+                android:id="@+id/tvSyncDiamond"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="◆"
@@ -52,8 +53,8 @@
                     android:id="@+id/tvMealTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="12:30"
-                    android:textSize="10sp"
+                    android:text="LUNCH // 12:30"
+                    android:textSize="11sp"
                     android:textColor="@color/idroid_text_dim"
                     android:fontFamily="@font/share_tech_mono" />
             </LinearLayout>
@@ -89,7 +90,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="P 35g"
-            android:textSize="10sp"
+            android:textSize="11sp"
             android:textColor="@color/idroid_macro_protein"
             android:background="@color/idroid_cyan_badge_bg"
             android:paddingHorizontal="7dp"
@@ -102,7 +103,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="C 50g"
-            android:textSize="10sp"
+            android:textSize="11sp"
             android:textColor="@color/idroid_macro_carbs"
             android:background="@color/idroid_cyan_badge_bg"
             android:paddingHorizontal="7dp"
@@ -115,12 +116,30 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="F 15g"
-            android:textSize="10sp"
+            android:textSize="11sp"
             android:textColor="@color/idroid_macro_fat"
             android:background="@color/idroid_cyan_badge_bg"
             android:paddingHorizontal="7dp"
             android:paddingVertical="3dp"
             android:fontFamily="@font/share_tech_mono" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/tvSyncState"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PENDING SYNC"
+            android:textSize="10sp"
+            android:textColor="@color/idroid_warn"
+            android:background="@drawable/bg_idroid_warn_badge"
+            android:paddingHorizontal="6dp"
+            android:paddingVertical="2dp"
+            android:fontFamily="@font/share_tech_mono"
+            android:visibility="gone" />
     </LinearLayout>
 
 </LinearLayout>

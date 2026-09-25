@@ -19,4 +19,28 @@
         <item name="colorOnSecondary">#070B12</item>
         <item name="android:colorBackground">@color/idroid_bg</item>
     </style>
+
+    <!-- Date / time pickers for the ration mission time -->
+    <style name="IdroidPickerDialog" parent="android:Theme.Material.Dialog">
+        <item name="android:colorAccent">@color/idroid_cyan</item>
+        <item name="android:colorBackground">@color/idroid_bg</item>
+    </style>
+
+    <!-- Selectable tactical chip (meal type selector) -->
+    <style name="IdroidChip">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:letterSpacing">0.04</item>
+        <item name="android:fontFamily">@font/rajdhani_bold</item>
+        <item name="android:textColor">@color/idroid_chip_text</item>
+        <item name="android:background">@drawable/bg_idroid_chip</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
 </resources>
