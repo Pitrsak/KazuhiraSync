@@ -19,20 +19,43 @@
             android:background="@color/idroid_cyan"
             android:layout_marginBottom="10dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="CONFIRM RATION INTEL"
-            android:textSize="16sp"
-            android:letterSpacing="0.08"
-            android:textColor="@color/idroid_cyan_bright"
-            android:fontFamily="@font/rajdhani_bold"
-            android:layout_marginBottom="14dp" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="14dp">
+
+            <TextView
+                android:id="@+id/tvDialogTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="CONFIRM RATION INTEL"
+                android:textSize="16sp"
+                android:letterSpacing="0.08"
+                android:textColor="@color/idroid_cyan_bright"
+                android:fontFamily="@font/rajdhani_bold" />
+
+            <!-- AI confidence badge -->
+            <TextView
+                android:id="@+id/tvConfidence"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CONF // HIGH"
+                android:textSize="11sp"
+                android:fontFamily="@font/share_tech_mono"
+                android:textColor="@color/idroid_cyan_bright"
+                android:background="@drawable/bg_idroid_badge_yellow"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="2dp"
+                android:visibility="gone" />
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/imgMealPreview"
             android:layout_width="match_parent"
-            android:layout_height="180dp"
+            android:layout_height="170dp"
             android:scaleType="centerCrop"
             android:background="@color/idroid_bg"
             android:layout_marginBottom="16dp"
@@ -52,12 +75,111 @@
             android:id="@+id/etMealName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textCapWords"
+            android:inputType="textCapSentences"
             android:textColor="@color/idroid_text_main"
             android:textColorHint="@color/idroid_text_faint"
             android:backgroundTint="@color/idroid_cyan"
             android:fontFamily="@font/rajdhani_semibold"
-            android:layout_marginBottom="14dp" />
+            android:layout_marginBottom="12dp" />
+
+        <!-- Meal Time (tap to change) -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MISSION TIME"
+            android:textSize="11sp"
+            android:letterSpacing="0.1"
+            android:textColor="@color/idroid_cyan"
+            android:fontFamily="@font/rajdhani_bold"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:id="@+id/tvMealTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TODAY // 12:30"
+            android:textSize="14sp"
+            android:fontFamily="@font/share_tech_mono"
+            android:textColor="@color/idroid_text_main"
+            android:background="@drawable/bg_idroid_hud_box"
+            android:foreground="?attr/selectableItemBackground"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="9dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginBottom="10dp" />
+
+        <!-- Meal Type (Samsung Health diary slot) -->
+        <LinearLayout
+            android:id="@+id/layoutMealType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="14dp">
+
+            <TextView
+                android:id="@+id/chipBreakfast"
+                style="@style/IdroidChip"
+                android:layout_marginEnd="4dp"
+                android:text="BREAKFAST" />
+
+            <TextView
+                android:id="@+id/chipLunch"
+                style="@style/IdroidChip"
+                android:layout_marginHorizontal="2dp"
+                android:text="LUNCH" />
+
+            <TextView
+                android:id="@+id/chipDinner"
+                style="@style/IdroidChip"
+                android:layout_marginHorizontal="2dp"
+                android:text="DINNER" />
+
+            <TextView
+                android:id="@+id/chipSnack"
+                style="@style/IdroidChip"
+                android:layout_marginStart="4dp"
+                android:text="SNACK" />
+        </LinearLayout>
+
+        <!-- Portion Multiplier -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="PORTION MULTIPLIER"
+                android:textSize="11sp"
+                android:letterSpacing="0.1"
+                android:textColor="@color/idroid_cyan"
+                android:fontFamily="@font/rajdhani_bold" />
+
+            <TextView
+                android:id="@+id/tvPortion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="×1.00"
+                android:textSize="14sp"
+                android:fontFamily="@font/share_tech_mono"
+                android:textColor="@color/idroid_cyan_bright" />
+        </LinearLayout>
+
+        <SeekBar
+            android:id="@+id/seekPortion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="11"
+            android:progress="3"
+            android:progressTint="@color/idroid_cyan"
+            android:progressBackgroundTint="@color/idroid_border"
+            android:thumbTint="@color/idroid_cyan_bright"
+            android:paddingVertical="10dp"
+            android:layout_marginBottom="8dp" />
 
         <!-- Calories -->
         <TextView
@@ -98,7 +220,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="PROTEIN (G)"
-                    android:textSize="10sp"
+                    android:textSize="11sp"
                     android:textColor="@color/idroid_macro_protein"
                     android:fontFamily="@font/rajdhani_bold" />
                 <EditText
@@ -122,7 +244,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="CARBS (G)"
-                    android:textSize="10sp"
+                    android:textSize="11sp"
                     android:textColor="@color/idroid_macro_carbs"
                     android:fontFamily="@font/rajdhani_bold" />
                 <EditText
@@ -146,7 +268,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="FAT (G)"
-                    android:textSize="10sp"
+                    android:textSize="11sp"
                     android:textColor="@color/idroid_macro_fat"
                     android:fontFamily="@font/rajdhani_bold" />
                 <EditText
@@ -162,23 +284,94 @@
         </LinearLayout>
 
         <!-- Notes -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="ANALYSIS NOTES"
-            android:textSize="11sp"
-            android:letterSpacing="0.1"
-            android:textColor="@color/idroid_text_dim"
-            android:fontFamily="@font/rajdhani_bold" />
-
-        <TextView
-            android:id="@+id/tvNotes"
+        <LinearLayout
+            android:id="@+id/layoutNotes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:textColor="@color/idroid_text_dim"
-            android:fontFamily="@font/share_tech_mono"
-            android:layout_marginBottom="18dp" />
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ANALYSIS NOTES"
+                android:textSize="11sp"
+                android:letterSpacing="0.1"
+                android:textColor="@color/idroid_text_sub"
+                android:fontFamily="@font/rajdhani_bold" />
+
+            <TextView
+                android:id="@+id/tvNotes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="@color/idroid_text_sub"
+                android:fontFamily="@font/share_tech_mono"
+                android:layout_marginBottom="14dp" />
+        </LinearLayout>
+
+        <!-- Operator briefing: re-run the analysis with extra context -->
+        <LinearLayout
+            android:id="@+id/layoutBriefing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="BRIEF KAZ (OPTIONAL)"
+                android:textSize="11sp"
+                android:letterSpacing="0.1"
+                android:textColor="@color/idroid_cyan"
+                android:fontFamily="@font/rajdhani_bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <EditText
+                    android:id="@+id/etBriefing"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="textCapSentences|textMultiLine"
+                    android:maxLines="3"
+                    android:textSize="14sp"
+                    android:hint="e.g. 2 portions, fried in butter"
+                    android:textColor="@color/idroid_text_main"
+                    android:textColorHint="@color/idroid_text_faint"
+                    android:backgroundTint="@color/idroid_cyan"
+                    android:fontFamily="@font/rajdhani_semibold" />
+
+                <Button
+                    android:id="@+id/btnReanalyze"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="RE-SCAN"
+                    android:textSize="12sp"
+                    android:fontFamily="@font/rajdhani_bold"
+                    android:letterSpacing="0.08"
+                    android:textColor="@color/idroid_cyan"
+                    app:backgroundTint="@android:color/transparent"
+                    app:strokeColor="@color/idroid_cyan"
+                    app:strokeWidth="1.2dp"
+                    app:cornerRadius="3dp"
+                    android:layout_marginStart="8dp" />
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/progressReanalyze"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:indeterminateTint="@color/idroid_cyan"
+                android:visibility="gone" />
+        </LinearLayout>
 
         <!-- Buttons -->
         <androidx.constraintlayout.widget.ConstraintLayout

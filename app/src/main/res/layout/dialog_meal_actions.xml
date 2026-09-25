@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Actions for a logged ration: log again, edit, delete, retry sync -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp"
+    android:background="@drawable/bg_idroid_root">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_idroid_card"
+        android:padding="18dp">
+
+        <View
+            android:layout_width="36dp"
+            android:layout_height="2dp"
+            android:background="@color/idroid_cyan"
+            android:layout_marginBottom="10dp" />
+
+        <TextView
+            android:id="@+id/tvActionTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Grilled Chicken"
+            android:textSize="18sp"
+            android:letterSpacing="0.04"
+            android:textColor="@color/idroid_cyan_bright"
+            android:fontFamily="@font/rajdhani_bold" />
+
+        <TextView
+            android:id="@+id/tvActionMeta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="LUNCH // TODAY // 12:30"
+            android:textSize="12sp"
+            android:textColor="@color/idroid_text_sub"
+            android:fontFamily="@font/share_tech_mono"
+            android:layout_marginBottom="10dp" />
+
+        <TextView
+            android:id="@+id/tvActionMacros"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="550 KCAL // P 35g // C 50g // F 15g"
+            android:textSize="14sp"
+            android:textColor="@color/idroid_text_main"
+            android:fontFamily="@font/share_tech_mono"
+            android:layout_marginBottom="10dp" />
+
+        <TextView
+            android:id="@+id/tvActionNotes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@color/idroid_text_sub"
+            android:fontFamily="@font/share_tech_mono"
+            android:layout_marginBottom="10dp" />
+
+        <TextView
+            android:id="@+id/tvActionSync"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="◆ SYNCED TO HEALTH CONNECT"
+            android:textSize="11sp"
+            android:textColor="@color/idroid_cyan"
+            android:fontFamily="@font/share_tech_mono"
+            android:layout_marginBottom="16dp" />
+
+        <Button
+            android:id="@+id/btnActionRelog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="LOG AGAIN"
+            android:textSize="13sp"
+            android:fontFamily="@font/rajdhani_bold"
+            android:letterSpacing="0.08"
+            android:textColor="@color/idroid_btn_primary_text"
+            app:backgroundTint="@color/idroid_btn_primary_bg"
+            app:strokeColor="@color/idroid_cyan"
+            app:strokeWidth="1dp"
+            app:cornerRadius="3dp"
+            android:paddingVertical="11dp" />
+
+        <Button
+            android:id="@+id/btnActionRetrySync"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="RETRY HEALTH CONNECT SYNC"
+            android:textSize="13sp"
+            android:fontFamily="@font/rajdhani_bold"
+            android:letterSpacing="0.08"
+            android:textColor="@color/idroid_warn"
+            app:backgroundTint="@android:color/transparent"
+            app:strokeColor="@color/idroid_warn"
+            app:strokeWidth="1.2dp"
+            app:cornerRadius="3dp"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnActionEdit"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="EDIT"
+                android:textSize="13sp"
+                android:fontFamily="@font/rajdhani_bold"
+                android:letterSpacing="0.08"
+                android:textColor="@color/idroid_cyan"
+                app:backgroundTint="@android:color/transparent"
+                app:strokeColor="@color/idroid_cyan"
+                app:strokeWidth="1.2dp"
+                app:cornerRadius="3dp"
+                android:layout_marginEnd="8dp" />
+
+            <Button
+                android:id="@+id/btnActionDelete"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="DELETE"
+                android:textSize="13sp"
+                android:fontFamily="@font/rajdhani_bold"
+                android:letterSpacing="0.08"
+                android:textColor="@color/idroid_red"
+                app:backgroundTint="@android:color/transparent"
+                app:strokeColor="@color/idroid_red"
+                app:strokeWidth="1.2dp"
+                app:cornerRadius="3dp" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

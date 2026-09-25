@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Day separator in the ration log -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingTop="4dp">
+
+    <TextView
+        android:id="@+id/tvDayLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TODAY"
+        android:textSize="12sp"
+        android:fontFamily="@font/rajdhani_bold"
+        android:letterSpacing="0.12"
+        android:textColor="@color/idroid_cyan_glow" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_weight="1"
+        android:background="@color/idroid_border_dim"
+        android:layout_marginHorizontal="8dp" />
+
+    <TextView
+        android:id="@+id/tvDayTotal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1840 KCAL"
+        android:textSize="11sp"
+        android:fontFamily="@font/share_tech_mono"
+        android:textColor="@color/idroid_text_sub" />
+</LinearLayout>

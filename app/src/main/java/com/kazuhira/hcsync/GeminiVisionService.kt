@@ -23,7 +23,8 @@ data class MealEstimation(
     val proteinG: Double,
     val carbG: Double,
     val fatG: Double,
-    val notes: String
+    val notes: String,
+    val confidence: String = ""
 )
 
 /**
@@ -42,15 +43,23 @@ class GeminiVisionService(
         .writeTimeout(60, TimeUnit.SECONDS)
         .build()
 
-    suspend fun analyzeFoodImage(imageUri: Uri): Result<MealEstimation> = withContext(Dispatchers.IO) {
+    /**
+     * @param hint optional operator briefing (e.g. "2 portions, fried in butter") that the model
+     * should trust over what it can infer from the image alone.
+     */
+    suspend fun analyzeFoodImage(imageUri: Uri, hint: String? = null): Result<MealEstimation> = withContext(Dispatchers.IO) {
         try {
             val base64Image = readAndCompressImage(imageUri)
                 ?: return@withContext Result.failure(Exception("Failed to load and compress target image."))
 
+            val briefing = hint?.trim()?.takeIf { it.isNotEmpty() }?.let {
+                "\nOPERATOR BRIEFING (facts from the person who ate the meal; trust it over visual guesses): ${it.replace("&", "and")}\n"
+            } ?: ""
+
             val prompt = """
                 You are Kazuhira Miller — logistics and supply officer for personal health operations.
                 Analyze this food image in detail. Identify the dish/food items, portion sizes, and calculate precise nutritional information (calories, protein, carbs, fat).
-                
+
                 CRITICAL RULES:
                 1. Calculate calories (kcal), protein (g), carbs (g), and fat (g) based on standard visible portions.
                 2. NEVER use the symbol '&' anywhere in meal names or notes; always write out the word 'and'.
@@ -63,9 +72,10 @@ class GeminiVisionService(
                   "protein_g": 30.0,
                   "carbohydrate_g": 50.0,
                   "fat_g": 15.0,
+                  "confidence": "low, medium or high: how sure you are of the portion size and ingredients",
                   "notes": "Brief Kazuhira-style analysis of portion sizes and ingredients estimated"
                 }
-            """.trimIndent()
+            """.trimIndent() + briefing
 
             if (provider.equals("openrouter", ignoreCase = true)) {
                 analyzeWithOpenRouter(prompt, base64Image)
@@ -165,6 +175,7 @@ class GeminiVisionService(
             val generationConfig = JSONObject().apply {
                 put("temperature", 0.2)
                 put("response_mime_type", "application/json")
+                put("response_schema", estimationSchema())
             }
             put("generationConfig", generationConfig)
         }
@@ -221,6 +232,25 @@ class GeminiVisionService(
         return Result.failure(lastException ?: Exception("Failed to analyze image with Gemini API"))
     }
 
+    // Gemini structured output: guarantees well-formed JSON with every field present
+    private fun estimationSchema(): JSONObject {
+        fun field(type: String) = JSONObject().put("type", type)
+        val properties = JSONObject()
+            .put("meal_name", field("STRING"))
+            .put("calories", field("NUMBER"))
+            .put("protein_g", field("NUMBER"))
+            .put("carbohydrate_g", field("NUMBER"))
+            .put("fat_g", field("NUMBER"))
+            .put("confidence", field("STRING"))
+            .put("notes", field("STRING"))
+        val required = JSONArray()
+        properties.keys().forEach { required.put(it) }
+        return JSONObject()
+            .put("type", "OBJECT")
+            .put("properties", properties)
+            .put("required", required)
+    }
+
     private fun parseEstimationJson(rawText: String): Result<MealEstimation> {
         try {
             var text = rawText.trim()
@@ -237,7 +267,8 @@ class GeminiVisionService(
                 proteinG = parsedJson.optDouble("protein_g", 0.0),
                 carbG = parsedJson.optDouble("carbohydrate_g", 0.0),
                 fatG = parsedJson.optDouble("fat_g", 0.0),
-                notes = parsedJson.optString("notes", "")
+                notes = parsedJson.optString("notes", ""),
+                confidence = parsedJson.optString("confidence", "").lowercase().trim()
             )
             return Result.success(estimation)
         } catch (e: Exception) {

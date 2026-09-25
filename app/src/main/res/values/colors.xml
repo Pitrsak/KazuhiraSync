@@ -21,10 +21,10 @@
     <color name="idroid_btn_primary_bg">#1A6588</color>
     <color name="idroid_btn_primary_text">#DCF7FF</color>
 
-    <!-- Tactical Shades of Blue for Macros & Key Metrics -->
-    <color name="idroid_macro_protein">#7FE8FF</color> <!-- Ice cyan -->
-    <color name="idroid_macro_carbs">#52B4FF</color>   <!-- Tactical sky blue -->
-    <color name="idroid_macro_fat">#4DD0E1</color>     <!-- Cool teal cyan -->
+    <!-- Tactical Shades of Blue for Macros & Key Metrics (spread in lightness so they stay distinguishable) -->
+    <color name="idroid_macro_protein">#C4F6FF</color> <!-- Pale ice -->
+    <color name="idroid_macro_carbs">#38D3FF</color>   <!-- Signature cyan -->
+    <color name="idroid_macro_fat">#4A9BF0</color>     <!-- Deep tactical blue -->
 
     <!-- Remapped Legacy Colors to Blue/Cyan (so existing layouts and badges render in authentic shades of blue) -->
     <color name="idroid_amber">#7CE7FF</color>        <!-- Shifted from yellow to holographic cyan/blue -->
@@ -33,6 +33,8 @@
     <color name="idroid_green">#7FE8FF</color>        <!-- Shifted from neon green to ice cyan -->
     <color name="idroid_blue">#52B4FF</color>
     <color name="idroid_red">#FF5252</color>
+    <color name="idroid_warn">#FF7A59</color>         <!-- MGSV alert orange, used only for sync warnings -->
+    <color name="idroid_warn_bg">#26FF7A59</color>
 
     <!-- Borders & Dividers -->
     <color name="idroid_border">#2C5D7F</color>
@@ -42,8 +44,8 @@
     <!-- Typography (Tactical Shades of Blue and Cyan) -->
     <color name="idroid_text_main">#D6F4FD</color>
     <color name="idroid_text_sub">#72BEDA</color>
-    <color name="idroid_text_dim">#4E879F</color>
-    <color name="idroid_text_faint">#2C5569</color>
+    <color name="idroid_text_dim">#6CA7C0</color>
+    <color name="idroid_text_faint">#40718A</color>
 
     <!-- Gradients & Overlay effects -->
     <color name="idroid_grad_top">#0A1524</color>
