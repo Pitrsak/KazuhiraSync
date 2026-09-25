@@ -22,7 +22,6 @@ There is no intermediate backend, proxy server, or account registration required
   - Procedural scanlines and CRT grain
   - Ambient dot matrix grid
   - Cyan-blue holographic tint and vignette calibrated for legibility over food plates
-  - Tactical HUD corner brackets
 - **Gyroscope Parallax Reactivity:** UI cards and the ration log react smoothly to device orientation via rotation vector / accelerometer sensors, creating depth perspective.
 - **MGSV Typography and Palette:** Monochromatic cyan and ice-blue color scheme using the Rajdhani geometric typeface and Share Tech Mono tabular numerals.
 
@@ -34,8 +33,16 @@ There is no intermediate backend, proxy server, or account registration required
 ### Nutrition Tracking Workflow
 1. **Target Acquisition:** Point the camera at a meal and tap **CAPTURE TARGET SCAN** to take an image from the live feed, or tap **LOAD INTEL FILE** to select an image from the gallery.
 2. **AI Estimation:** The vision model analyzes portion sizes, identifies ingredients, and estimates total calories (kcal), protein (g), carbohydrates (g), and fat (g).
-3. **Intel Verification:** An inspection dialog allows manual review and adjustments of meal designations, calories, and macros before saving.
-4. **Health Connect Sync:** Saves the entry to local history (sorted newest first) and commits a `NutritionRecord` to **Android Health Connect**, automatically syncing with connected services like Samsung Health.
+3. **Intel Verification:** An inspection dialog allows manual review and adjustments before saving:
+   - Meal name, calories, and macros, plus a **portion multiplier** (×0.25–×3) that scales everything at once.
+   - **Mission time** and **meal type** (breakfast / lunch / dinner / snack), inferred from the time and editable, for logging meals after the fact.
+   - **Brief Kaz:** add context the camera can't see (e.g. "2 portions, fried in butter") and re-scan for a better estimate. The model also reports its confidence.
+4. **Health Connect Sync:** Saves the entry to local history and commits a `NutritionRecord` to **Android Health Connect**, where Samsung Health and other apps pick it up.
+
+### Ration Log
+- Grouped by day with daily calorie totals.
+- Tap a ration to **log it again** (no AI call), **edit** it, or **delete** it. Edits and deletions are mirrored to Health Connect.
+- Rations that could not reach Health Connect (offline, no permission) are marked **PENDING SYNC** and retried automatically, or on tap.
 
 ---
 
@@ -48,6 +55,18 @@ There is no intermediate backend, proxy server, or account registration required
    - **OpenRouter:** Generate an API key at [OpenRouter](https://openrouter.ai/keys).
 4. Paste your key and select a model preset or enter a custom model name.
 5. Tap **SAVE CONFIG**.
+
+---
+
+## Samsung Health
+
+Kazuhira Sync reaches Samsung Health through **Health Connect**: it writes rations there, and Samsung Health reads them.
+
+1. Log a ration in Kazuhira Sync and grant **Health Connect** write access for Nutrition when prompted (or via **Settings › Health Connect Link**).
+2. In **Samsung Health**, open **Settings › Health Connect** and allow Samsung Health to **read Nutrition**.
+3. Rations appear in the Samsung Health food diary under the matching meal (breakfast, lunch, dinner, snacks) after its next sync, which is usually when Samsung Health is opened.
+
+Rations logged before v2.2.0 were written without a stable record ID, so editing or deleting them in Kazuhira Sync only changes the local log.
 
 ---
 
@@ -85,7 +104,7 @@ To build the APK locally:
 
 Kazuhira Sync requests the following permissions:
 - `android.permission.CAMERA`: Renders the live optical background feed and captures photos for analysis.
-- `android.permission.health.READ_NUTRITION` & `WRITE_NUTRITION`: Reads and writes meal records to Android Health Connect.
+- `android.permission.health.WRITE_NUTRITION`: Writes, updates, and deletes the meal records this app created in Android Health Connect.
 - `android.permission.INTERNET`: Sends meal images directly to your chosen AI provider (Google Gemini or OpenRouter).
 
 No analytics, ads, tracking libraries, or intermediary servers are included. Communications happen exclusively between your device and the AI endpoints you explicitly configure.

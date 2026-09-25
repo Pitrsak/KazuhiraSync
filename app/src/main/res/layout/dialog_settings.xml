@@ -43,6 +43,8 @@
             android:id="@+id/spinnerProvider"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            android:backgroundTint="@color/idroid_cyan"
+            android:popupBackground="@color/idroid_bg"
             android:layout_marginBottom="12dp" />
 
         <!-- API Key -->
@@ -83,13 +85,15 @@
             android:id="@+id/spinnerModelPreset"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            android:backgroundTint="@color/idroid_cyan"
+            android:popupBackground="@color/idroid_bg"
             android:layout_marginBottom="8dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="CUSTOM MODEL IDENTIFIER"
-            android:textSize="10sp"
+            android:textSize="11sp"
             android:textColor="@color/idroid_text_dim"
             android:fontFamily="@font/share_tech_mono" />
 
@@ -103,7 +107,59 @@
             android:backgroundTint="@color/idroid_cyan"
             android:hint="e.g. gemini-3.8-flash or gemini-3.5-flash-lite"
             android:fontFamily="@font/share_tech_mono"
-            android:layout_marginBottom="20dp" />
+            android:layout_marginBottom="16dp" />
+
+        <!-- Health Connect link (Samsung Health reads rations from here) -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/idroid_border"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="HEALTH CONNECT LINK"
+            android:textSize="11sp"
+            android:letterSpacing="0.1"
+            android:textColor="@color/idroid_cyan"
+            android:fontFamily="@font/rajdhani_bold" />
+
+        <TextView
+            android:id="@+id/tvHcStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CHECKING LINK..."
+            android:textSize="12sp"
+            android:textColor="@color/idroid_text_main"
+            android:fontFamily="@font/share_tech_mono"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="6dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Samsung Health: open Samsung Health › Settings › Health Connect and allow it to read Nutrition. Entries appear in its food diary after the next sync."
+            android:textSize="12sp"
+            android:textColor="@color/idroid_text_sub"
+            android:fontFamily="@font/rajdhani_semibold"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/btnHealthConnect"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="MANAGE HEALTH CONNECT"
+            android:textSize="13sp"
+            android:fontFamily="@font/rajdhani_bold"
+            android:letterSpacing="0.08"
+            android:textColor="@color/idroid_cyan"
+            app:backgroundTint="@android:color/transparent"
+            app:strokeColor="@color/idroid_cyan"
+            app:strokeWidth="1.2dp"
+            app:cornerRadius="3dp"
+            android:layout_marginBottom="16dp" />
 
         <!-- Actions -->
         <LinearLayout
