@@ -50,7 +50,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvModelSubtitle: TextView
     private lateinit var progressBar: ProgressBar
     private lateinit var btnTakePhoto: Button
-    private lateinit var btnPickGallery: Button
     private lateinit var tabBar: IdroidTabBar
     private lateinit var listViewHistory: ListView
     private lateinit var tvTodayCalories: TextView
@@ -95,7 +94,6 @@ class MainActivity : AppCompatActivity() {
         tvModelSubtitle = findViewById(R.id.tvModelSubtitle)
         progressBar = findViewById(R.id.progressBar)
         btnTakePhoto = findViewById(R.id.btnTakePhoto)
-        btnPickGallery = findViewById(R.id.btnPickGallery)
         tabBar = findViewById(R.id.tabBar)
         listViewHistory = findViewById(R.id.listViewHistory)
         tvTodayCalories = findViewById(R.id.tvTodayCalories)
@@ -110,15 +108,8 @@ class MainActivity : AppCompatActivity() {
         tvHudAvg = findViewById(R.id.tvHudAvg)
 
         parallaxManager = IdroidParallaxManager(this)
-        findViewById<View>(R.id.cardTodaySummary)?.let {
-            parallaxManager.registerView(it, translationDp = 6f, rotationDeg = 2.5f)
-        }
-        findViewById<View>(R.id.cardAcquireTarget)?.let {
-            parallaxManager.registerView(it, translationDp = 8f, rotationDeg = 3.0f)
-        }
-        findViewById<View>(R.id.layoutRationSection)?.let {
-            parallaxManager.registerView(it, translationDp = 4f, rotationDeg = 2.0f)
-        }
+        // The whole HUD tilts together over the fixed camera feed and hologram overlay
+        parallaxManager.registerView(findViewById(R.id.layoutIdroidUi), translationDp = 8f, rotationDeg = 2.5f)
 
         updateModelSubtitle()
 
@@ -172,14 +163,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        btnPickGallery.setOnClickListener {
-            galleryLauncher.launch("image/*")
-        }
-
         // Tab strip: INTEL FILE | RATIONS (this screen) | CONFIG
         tabBar.onTabClick = { index ->
             when (index) {
-                0 -> galleryLauncher.launch("image/*")
+                // Disabled with the capture row while a scan is being captured or analysed
+                0 -> if (btnTakePhoto.isEnabled) galleryLauncher.launch("image/*")
                 2 -> showSettingsDialog()
             }
         }
@@ -370,7 +358,6 @@ class MainActivity : AppCompatActivity() {
         statusText.text = "Kazuhira is analyzing target intel ($modelName)..."
         progressBar.visibility = View.VISIBLE
         btnTakePhoto.isEnabled = false
-        btnPickGallery.isEnabled = false
 
         val visionService = GeminiVisionService(this, apiKey, modelName, provider)
         lifecycleScope.launch {
@@ -378,7 +365,6 @@ class MainActivity : AppCompatActivity() {
 
             progressBar.visibility = View.GONE
             btnTakePhoto.isEnabled = true
-            btnPickGallery.isEnabled = true
 
             result.onSuccess { estimation ->
                 statusText.text = "Target analysis complete. Confirm data below."

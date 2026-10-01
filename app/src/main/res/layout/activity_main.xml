@@ -20,8 +20,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!-- Layer 3: Main iDroid User Interface -->
+    <!-- Layer 3: Main iDroid User Interface (tilts as one piece with the gyroscope) -->
     <LinearLayout
+        android:id="@+id/layoutIdroidUi"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -49,7 +50,7 @@
                     android:id="@+id/tvAppTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="KAZUHIRA SYNC VER 2.3.0"
+                    android:text="KAZUHIRA SYNC VER 2.3.1"
                     android:textSize="11sp"
                     android:fontFamily="@font/share_tech_mono"
                     android:letterSpacing="0.04"
@@ -295,29 +296,6 @@
                     android:textColor="@color/idroid_btn_primary_text"
                     app:backgroundTint="@color/idroid_btn_primary_bg"
                     app:rippleColor="@color/idroid_cyan"
-                    app:cornerRadius="0dp" />
-
-                <!-- Regular row -->
-                <Button
-                    android:id="@+id/btnPickGallery"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:text="Load Intel File"
-                    android:textAllCaps="false"
-                    android:textSize="15sp"
-                    android:fontFamily="@font/rajdhani_semibold"
-                    android:gravity="center_vertical|start"
-                    android:paddingStart="12dp"
-                    android:paddingEnd="12dp"
-                    android:insetTop="0dp"
-                    android:insetBottom="0dp"
-                    android:layout_marginTop="2dp"
-                    android:textColor="@color/idroid_text_main"
-                    app:backgroundTint="@color/idroid_cyan_faint"
-                    app:strokeColor="@color/idroid_border_dim"
-                    app:strokeWidth="1dp"
-                    app:rippleColor="@color/idroid_cyan_dim"
                     app:cornerRadius="0dp" />
 
                 <ProgressBar

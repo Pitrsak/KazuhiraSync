@@ -32,7 +32,7 @@ There is no intermediate backend, proxy server, or account registration required
 - **Bring Your Own Key:** API keys are stored solely in Android private app preferences (`SharedPreferences`), encrypted by OS-level sandbox boundaries.
 
 ### Nutrition Tracking Workflow
-1. **Target Acquisition:** Point the camera at a meal and tap **CAPTURE TARGET SCAN** to take an image from the live feed, or tap **LOAD INTEL FILE** to select an image from the gallery.
+1. **Target Acquisition:** Point the camera at a meal and tap **CAPTURE TARGET SCAN** to take an image from the live feed, or tap the **INTEL FILE** tab to select an image from the gallery.
 2. **AI Estimation:** The vision model analyzes portion sizes, identifies ingredients, and estimates total calories (kcal), protein (g), carbohydrates (g), and fat (g).
 3. **Intel Verification:** An inspection dialog allows manual review and adjustments before saving:
    - Meal name, calories, and macros, plus a **portion multiplier** (×0.25–×3) that scales everything at once.
