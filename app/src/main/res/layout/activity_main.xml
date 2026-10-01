@@ -8,13 +8,13 @@
     android:clipToPadding="false"
     android:background="@drawable/bg_idroid_root">
 
-    <!-- Layer 1: Always-on Camera Feed -->
+    <!-- Layer 1: Always-on Camera Feed (TextureView-backed so it can be colour graded) -->
     <androidx.camera.view.PreviewView
         android:id="@+id/cameraPreviewView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!-- Layer 2: iDroid Holographic Overlay (Noise, Dot Matrix, Scanlines, Vignette) -->
+    <!-- Layer 2: iDroid Holographic Overlay (teal wash, light band, grain, scanlines) -->
     <com.kazuhira.hcsync.IdroidOverlayView
         android:id="@+id/idroidOverlayView"
         android:layout_width="match_parent"
@@ -27,18 +27,17 @@
         android:orientation="vertical"
         android:clipChildren="false"
         android:clipToPadding="false"
-        android:paddingStart="14dp"
-        android:paddingEnd="14dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="8dp">
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
 
         <!-- ===================== iDroid System Header ===================== -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="8dp">
+            android:gravity="bottom">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -50,68 +49,41 @@
                     android:id="@+id/tvAppTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="KAZUHIRA SYNC // VER 2.2.0"
-                    android:textSize="14sp"
-                    android:fontFamily="@font/rajdhani_bold"
-                    android:letterSpacing="0.08"
-                    android:textColor="@color/idroid_text_main" />
+                    android:text="KAZUHIRA SYNC VER 2.3.0"
+                    android:textSize="11sp"
+                    android:fontFamily="@font/share_tech_mono"
+                    android:letterSpacing="0.04"
+                    android:textColor="@color/idroid_text_sub" />
 
                 <TextView
                     android:id="@+id/tvModelSubtitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="GEMINI // GEMINI-3.8-FLASH"
-                    android:textSize="11sp"
-                    android:fontFamily="@font/share_tech_mono"
+                    android:textSize="12sp"
+                    android:fontFamily="@font/rajdhani_bold"
                     android:letterSpacing="0.06"
-                    android:textColor="@color/idroid_cyan" />
+                    android:textColor="@color/idroid_amber" />
             </LinearLayout>
-
-            <!-- Quick Settings Button -->
-            <ImageButton
-                android:id="@+id/btnSettings"
-                android:layout_width="38dp"
-                android:layout_height="38dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Settings"
-                android:src="@drawable/ic_idroid_settings" />
-        </LinearLayout>
-
-        <!-- ===================== Tactical Status Subheader ===================== -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="8dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="OPERATIONAL INTEL"
-                android:textSize="11sp"
-                android:fontFamily="@font/rajdhani_bold"
-                android:letterSpacing="0.14"
-                android:textColor="@color/idroid_cyan_glow" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1"
-                android:background="@color/idroid_border"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="8dp" />
 
             <TextView
                 android:id="@+id/tvOpticalStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="OPTICAL HUD // STANDBY"
-                android:textSize="11sp"
+                android:textSize="10sp"
                 android:fontFamily="@font/share_tech_mono"
-                android:letterSpacing="0.08"
+                android:letterSpacing="0.06"
                 android:textColor="@color/idroid_text_dim" />
         </LinearLayout>
+
+        <!-- ===================== iDroid Tab Strip (INTEL FILE | RATIONS | CONFIG) ===================== -->
+        <com.kazuhira.hcsync.IdroidTabBar
+            android:id="@+id/tabBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="10dp" />
 
         <!-- Cards Container (allows parallax tilt without clipping card borders) -->
         <LinearLayout
@@ -119,257 +91,248 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:clipChildren="false"
-            android:clipToPadding="false"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp">
+            android:clipToPadding="false">
 
-            <!-- ===================== Today Summary Card ===================== -->
+            <!-- ===================== Today Summary: solid cyan iDroid data tile ===================== -->
             <LinearLayout
                 android:id="@+id/cardTodaySummary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="@drawable/bg_idroid_card"
-                android:padding="14dp"
-                android:layout_marginStart="2dp"
-                android:layout_marginEnd="2dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginBottom="8dp">
+                android:layout_marginBottom="12dp">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="4dp">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="TODAY'S RATION STATUS"
-                        android:textSize="12sp"
-                        android:fontFamily="@font/rajdhani_bold"
-                        android:letterSpacing="0.12"
-                        android:textColor="@color/idroid_cyan" />
-
-                    <!-- Tactical Badge -->
-                    <TextView
-                        android:id="@+id/tvTodayCount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0 RATIONS"
-                        android:textSize="11sp"
-                        android:fontFamily="@font/share_tech_mono"
-                        android:textColor="@color/idroid_cyan_bright"
-                        android:background="@drawable/bg_idroid_badge_yellow"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="8dp"
-                        android:paddingTop="2dp"
-                        android:paddingBottom="2dp" />
-                </LinearLayout>
-
-                <LinearLayout
+                <!-- Tile caption sits above the tile, like the player name on FOB cards -->
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="bottom"
-                    android:layout_marginBottom="10dp">
-
-                    <TextView
-                        android:id="@+id/tvTodayCalories"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textSize="36sp"
-                        android:fontFamily="@font/share_tech_mono"
-                        android:textColor="@color/idroid_cyan_bright"
-                        android:shadowColor="@color/idroid_cyan"
-                        android:shadowRadius="6" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="KCAL"
-                        android:textSize="13sp"
-                        android:fontFamily="@font/share_tech_mono"
-                        android:textColor="@color/idroid_text_dim"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginBottom="7dp" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/idroid_border"
-                    android:layout_marginBottom="10dp" />
+                    android:text="Daily Ration Status"
+                    android:textSize="13sp"
+                    android:fontFamily="@font/rajdhani_semibold"
+                    android:textColor="@color/idroid_text_main"
+                    android:layout_marginBottom="2dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="3">
+                    android:orientation="vertical"
+                    android:background="@drawable/bg_idroid_data_card">
 
-                    <!-- Protein -->
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
+                        android:paddingTop="6dp">
+
                         <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Caloric Intake"
+                            android:textSize="13sp"
+                            android:fontFamily="@font/rajdhani_semibold"
+                            android:textColor="@color/idroid_data_card_text" />
+
+                        <TextView
+                            android:id="@+id/tvTodayCount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="PROTEIN"
+                            android:text="0 RATIONS"
                             android:textSize="11sp"
-                            android:fontFamily="@font/rajdhani_bold"
-                            android:letterSpacing="0.08"
-                            android:textColor="@color/idroid_macro_protein" />
-                        <TextView
-                            android:id="@+id/tvTodayProtein"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="0g"
-                            android:textSize="16sp"
                             android:fontFamily="@font/share_tech_mono"
-                            android:textColor="@color/idroid_text_main" />
+                            android:textColor="@color/idroid_data_card_text" />
                     </LinearLayout>
 
-                    <!-- Carbs -->
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:orientation="horizontal"
+                        android:gravity="bottom"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp">
+
                         <TextView
+                            android:id="@+id/tvTodayCalories"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="CARBS"
-                            android:textSize="11sp"
-                            android:fontFamily="@font/rajdhani_bold"
-                            android:letterSpacing="0.08"
-                            android:textColor="@color/idroid_macro_carbs" />
-                        <TextView
-                            android:id="@+id/tvTodayCarbs"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="0g"
-                            android:textSize="16sp"
+                            android:text="0"
+                            android:textSize="34sp"
+                            android:includeFontPadding="false"
                             android:fontFamily="@font/share_tech_mono"
-                            android:textColor="@color/idroid_text_main" />
+                            android:textColor="@color/idroid_data_card_text" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="kcal"
+                            android:textSize="13sp"
+                            android:fontFamily="@font/share_tech_mono"
+                            android:textColor="@color/idroid_data_card_text_dim"
+                            android:layout_marginStart="6dp"
+                            android:layout_marginBottom="4dp" />
                     </LinearLayout>
 
-                    <!-- Fat -->
+                    <!-- Footer band: macro totals -->
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-                        <TextView
-                            android:layout_width="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="@drawable/bg_idroid_data_band"
+                        android:layout_marginTop="6dp"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+                        android:weightSum="3">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="FAT"
-                            android:textSize="11sp"
-                            android:fontFamily="@font/rajdhani_bold"
-                            android:letterSpacing="0.08"
-                            android:textColor="@color/idroid_macro_fat" />
-                        <TextView
-                            android:id="@+id/tvTodayFat"
-                            android:layout_width="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Protein"
+                                android:textSize="12sp"
+                                android:fontFamily="@font/rajdhani_medium"
+                                android:textColor="@color/idroid_data_card_text_dim" />
+                            <TextView
+                                android:id="@+id/tvTodayProtein"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="0g"
+                                android:textSize="14sp"
+                                android:fontFamily="@font/share_tech_mono"
+                                android:textColor="@color/idroid_data_card_text"
+                                android:layout_marginStart="5dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="0g"
-                            android:textSize="16sp"
-                            android:fontFamily="@font/share_tech_mono"
-                            android:textColor="@color/idroid_text_main" />
+                            android:layout_weight="1"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Carbs"
+                                android:textSize="12sp"
+                                android:fontFamily="@font/rajdhani_medium"
+                                android:textColor="@color/idroid_data_card_text_dim" />
+                            <TextView
+                                android:id="@+id/tvTodayCarbs"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="0g"
+                                android:textSize="14sp"
+                                android:fontFamily="@font/share_tech_mono"
+                                android:textColor="@color/idroid_data_card_text"
+                                android:layout_marginStart="5dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Fat"
+                                android:textSize="12sp"
+                                android:fontFamily="@font/rajdhani_medium"
+                                android:textColor="@color/idroid_data_card_text_dim" />
+                            <TextView
+                                android:id="@+id/tvTodayFat"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="0g"
+                                android:textSize="14sp"
+                                android:fontFamily="@font/share_tech_mono"
+                                android:textColor="@color/idroid_data_card_text"
+                                android:layout_marginStart="5dp" />
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- ===================== Target Acquisition / Scan Card ===================== -->
+            <!-- ===================== Target Acquisition: iDroid menu rows ===================== -->
             <LinearLayout
                 android:id="@+id/cardAcquireTarget"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@drawable/bg_idroid_card"
-                android:padding="14dp"
-                android:layout_marginStart="2dp"
-                android:layout_marginEnd="2dp"
-                android:layout_marginBottom="0dp">
+                android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="10dp">
+                    android:text="Target Acquisition"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/rajdhani_semibold"
+                    android:textColor="@color/idroid_text_main"
+                    android:layout_marginBottom="4dp" />
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="ACQUIRE TARGET"
-                        android:textSize="12sp"
-                        android:fontFamily="@font/rajdhani_bold"
-                        android:letterSpacing="0.12"
-                        android:textColor="@color/idroid_cyan" />
-
-                </LinearLayout>
-
+                <!-- Highlighted (selected) row -->
                 <Button
                     android:id="@+id/btnTakePhoto"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="CAPTURE TARGET SCAN"
-                    android:textSize="14sp"
-                    android:fontFamily="@font/rajdhani_bold"
-                    android:letterSpacing="0.08"
+                    android:layout_height="40dp"
+                    android:text="Capture Target Scan"
+                    android:textAllCaps="false"
+                    android:textSize="15sp"
+                    android:fontFamily="@font/rajdhani_semibold"
+                    android:gravity="center_vertical|start"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
                     android:textColor="@color/idroid_btn_primary_text"
                     app:backgroundTint="@color/idroid_btn_primary_bg"
-                    app:cornerRadius="3dp"
-                    app:strokeColor="@color/idroid_cyan"
-                    app:strokeWidth="1dp"
-                    android:paddingVertical="11dp"
-                    android:layout_marginBottom="6dp" />
+                    app:rippleColor="@color/idroid_cyan"
+                    app:cornerRadius="0dp" />
 
+                <!-- Regular row -->
                 <Button
                     android:id="@+id/btnPickGallery"
                     style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="LOAD INTEL FILE"
-                    android:textSize="13sp"
-                    android:fontFamily="@font/rajdhani_bold"
-                    android:letterSpacing="0.08"
-                    android:textColor="@color/idroid_cyan_bright"
-                    app:backgroundTint="#26102E42"
-                    app:strokeColor="@color/idroid_cyan"
-                    app:strokeWidth="1.2dp"
-                    app:cornerRadius="3dp"
-                    android:paddingVertical="9dp" />
+                    android:layout_height="40dp"
+                    android:text="Load Intel File"
+                    android:textAllCaps="false"
+                    android:textSize="15sp"
+                    android:fontFamily="@font/rajdhani_semibold"
+                    android:gravity="center_vertical|start"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/idroid_text_main"
+                    app:backgroundTint="@color/idroid_cyan_faint"
+                    app:strokeColor="@color/idroid_border_dim"
+                    app:strokeWidth="1dp"
+                    app:rippleColor="@color/idroid_cyan_dim"
+                    app:cornerRadius="0dp" />
 
                 <ProgressBar
                     android:id="@+id/progressBar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:visibility="gone"
-                    android:indeterminateTint="@color/idroid_cyan"
-                    android:layout_marginVertical="8dp" />
-
-                <TextView
-                    android:id="@+id/statusText"
+                    style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Awaiting target acquisition. Point optical sensor at meal."
-                    android:textSize="12sp"
-                    android:textColor="@color/idroid_text_sub"
-                    android:textAlignment="center"
-                    android:layout_marginTop="5dp"
-                    android:fontFamily="@font/share_tech_mono" />
+                    android:layout_height="3dp"
+                    android:layout_marginTop="4dp"
+                    android:indeterminate="true"
+                    android:indeterminateTint="@color/idroid_cyan_glow"
+                    android:visibility="gone" />
             </LinearLayout>
         </LinearLayout>
 
-        <!-- ===================== History / Ration Log Section ===================== -->
+        <!-- ===================== Ration Log ("Results Log" list) ===================== -->
         <!-- Strictly clipped so list items never overlap upper cards when scrolling -->
         <LinearLayout
             android:id="@+id/layoutRationSection"
@@ -377,66 +340,223 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="12dp"
             android:clipChildren="true"
             android:clipToPadding="true">
 
-            <!-- Ration Log Header -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ration Log"
+                android:textSize="16sp"
+                android:fontFamily="@font/rajdhani_semibold"
+                android:textColor="@color/idroid_text_main"
+                android:layout_marginBottom="4dp" />
+
+            <!-- Column header band -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:layout_marginBottom="10dp">
+                android:background="@drawable/bg_idroid_column_header"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="64dp"
                     android:layout_height="wrap_content"
-                    android:text="RATION LOG"
+                    android:text="Time"
                     android:textSize="12sp"
-                    android:fontFamily="@font/rajdhani_bold"
-                    android:letterSpacing="0.12"
-                    android:textColor="@color/idroid_cyan"
-                    android:layout_marginEnd="10dp" />
+                    android:fontFamily="@font/rajdhani_medium"
+                    android:textColor="@color/idroid_text_sub" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1"
-                    android:background="@color/idroid_border" />
-
-                <!-- Tap to push rations that have not reached Health Connect yet -->
                 <TextView
-                    android:id="@+id/tvPendingSync"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Ration"
+                    android:textSize="12sp"
+                    android:fontFamily="@font/rajdhani_medium"
+                    android:textColor="@color/idroid_text_sub" />
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="2 PENDING // SYNC"
-                    android:textSize="11sp"
-                    android:fontFamily="@font/share_tech_mono"
-                    android:textColor="@color/idroid_warn"
-                    android:background="@drawable/bg_idroid_warn_badge"
-                    android:paddingHorizontal="8dp"
-                    android:paddingVertical="3dp"
-                    android:layout_marginStart="8dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:visibility="gone" />
+                    android:text="kcal"
+                    android:textSize="12sp"
+                    android:fontFamily="@font/rajdhani_medium"
+                    android:textColor="@color/idroid_text_sub"
+                    android:layout_marginEnd="26dp" />
             </LinearLayout>
 
             <ListView
                 android:id="@+id/listViewHistory"
+                android:background="@color/idroid_hud_box"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:clipChildren="true"
                 android:clipToPadding="true"
-                android:divider="@android:color/transparent"
-                android:dividerHeight="8dp"
+                android:divider="@null"
+                android:dividerHeight="0dp"
                 android:scrollbars="vertical"
-                android:scrollbarThumbVertical="@color/idroid_border_glow"
-                android:listSelector="@color/idroid_cyan_faint"
+                android:scrollbarSize="2dp"
+                android:scrollbarThumbVertical="@color/idroid_text_main"
+                android:scrollbarTrackVertical="@color/idroid_border_dim"
+                android:scrollbarStyle="outsideOverlay"
+                android:fadeScrollbars="false"
+                android:listSelector="@android:color/transparent"
                 android:overScrollMode="never" />
+        </LinearLayout>
 
+        <!-- ===================== Footer: description line, button prompts, HUD stats ===================== -->
+        <TextView
+            android:id="@+id/statusText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Awaiting target acquisition. Point optical sensor at meal."
+            android:textSize="13sp"
+            android:fontFamily="@font/rajdhani_medium"
+            android:textColor="@color/idroid_text_main"
+            android:layout_marginTop="8dp"
+            android:maxLines="3"
+            android:ellipsize="end" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="bottom"
+            android:layout_marginTop="6dp">
+
+            <!-- Button prompts -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TAP"
+                        android:textSize="9sp"
+                        android:fontFamily="@font/share_tech_mono"
+                        android:textColor="@color/idroid_text_main"
+                        android:background="@drawable/bg_idroid_prompt_glyph"
+                        android:paddingHorizontal="4dp"
+                        android:paddingVertical="1dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ration Details"
+                        android:textSize="13sp"
+                        android:fontFamily="@font/rajdhani_medium"
+                        android:textColor="@color/idroid_text_main"
+                        android:layout_marginStart="6dp" />
+                </LinearLayout>
+
+                <!-- Tap to push rations that have not reached Health Connect yet -->
+                <LinearLayout
+                    android:id="@+id/layoutPendingSync"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="4dp"
+                    android:paddingVertical="2dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tvPendingSync"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="⟳ Sync 2 Pending"
+                        android:textSize="13sp"
+                        android:fontFamily="@font/rajdhani_medium"
+                        android:textColor="@color/idroid_warn"
+                        android:background="@drawable/bg_idroid_warn_badge"
+                        android:paddingHorizontal="8dp"
+                        android:paddingVertical="2dp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- HUD stats block (TIME / GMP / HEROISM) -->
+            <GridLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:columnCount="2">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TIME"
+                    android:textSize="10sp"
+                    android:fontFamily="@font/share_tech_mono"
+                    android:textColor="@color/idroid_text_sub"
+                    android:layout_marginEnd="14dp" />
+
+                <TextClock
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:format12Hour="hh:mm"
+                    android:format24Hour="HH:mm"
+                    android:textSize="10sp"
+                    android:fontFamily="@font/share_tech_mono"
+                    android:textColor="@color/idroid_text_main" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="RATIONS"
+                    android:textSize="10sp"
+                    android:fontFamily="@font/share_tech_mono"
+                    android:textColor="@color/idroid_text_sub"
+                    android:layout_marginEnd="14dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvHudRations"
+                    android:layout_gravity="end"
+                    android:text="0"
+                    android:textSize="10sp"
+                    android:fontFamily="@font/share_tech_mono"
+                    android:textColor="@color/idroid_text_main" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="AVG/7D"
+                    android:textSize="10sp"
+                    android:fontFamily="@font/share_tech_mono"
+                    android:textColor="@color/idroid_text_sub"
+                    android:layout_marginEnd="14dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvHudAvg"
+                    android:layout_gravity="end"
+                    android:text="0"
+                    android:textSize="10sp"
+                    android:fontFamily="@font/share_tech_mono"
+                    android:textColor="@color/idroid_text_main" />
+            </GridLayout>
         </LinearLayout>
 
     </LinearLayout>

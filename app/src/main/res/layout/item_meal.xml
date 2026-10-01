@@ -1,145 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- iDroid results-log row: time | ration + macros | kcal | status glyph -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="@drawable/bg_idroid_card"
-    android:padding="13dp">
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:background="@drawable/bg_idroid_row"
+    android:paddingStart="8dp"
+    android:paddingEnd="8dp"
+    android:paddingTop="6dp"
+    android:paddingBottom="6dp">
 
-    <!-- Header line with tactical diamond icon & title & calories -->
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/tvMealTime"
+        android:layout_width="64dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="6dp">
+        android:text="12:30"
+        android:textSize="12sp"
+        android:fontFamily="@font/share_tech_mono"
+        android:textColor="@color/idroid_row_text"
+        android:duplicateParentState="true"
+        android:maxLines="1" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:duplicateParentState="true">
+
+        <TextView
+            android:id="@+id/tvMealTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Grilled Chicken"
+            android:textSize="15sp"
+            android:fontFamily="@font/rajdhani_semibold"
+            android:textColor="@color/idroid_row_text"
+            android:duplicateParentState="true"
+            android:maxLines="1"
+            android:ellipsize="end" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_alignParentStart="true"
-            android:layout_toStartOf="@id/tvMealCalories"
-            android:layout_centerVertical="true">
+            android:duplicateParentState="true">
 
-            <!-- Sync indicator diamond: filled = in Health Connect, hollow = pending -->
             <TextView
-                android:id="@+id/tvSyncDiamond"
+                android:id="@+id/tvMealType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="◆"
-                android:textSize="10sp"
-                android:textColor="@color/idroid_cyan"
+                android:text="Lunch"
+                android:textSize="12sp"
+                android:fontFamily="@font/rajdhani_medium"
+                android:textColor="@color/idroid_row_text_dim"
+                android:duplicateParentState="true"
+                android:layout_marginEnd="8dp" />
+
+            <TextView
+                android:id="@+id/tvProteinBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="P 35g"
+                android:textSize="11sp"
+                android:fontFamily="@font/share_tech_mono"
+                android:textColor="@color/idroid_row_text_dim"
+                android:duplicateParentState="true"
                 android:layout_marginEnd="6dp" />
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/tvCarbBadge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:text="C 50g"
+                android:textSize="11sp"
+                android:fontFamily="@font/share_tech_mono"
+                android:textColor="@color/idroid_row_text_dim"
+                android:duplicateParentState="true"
+                android:layout_marginEnd="6dp" />
 
-                <TextView
-                    android:id="@+id/tvMealTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Grilled Chicken"
-                    android:textSize="15sp"
-                    android:fontFamily="@font/rajdhani_bold"
-                    android:letterSpacing="0.06"
-                    android:textColor="@color/idroid_text_main"
-                    android:maxLines="1"
-                    android:ellipsize="end" />
+            <TextView
+                android:id="@+id/tvFatBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="F 15g"
+                android:textSize="11sp"
+                android:fontFamily="@font/share_tech_mono"
+                android:textColor="@color/idroid_row_text_dim"
+                android:duplicateParentState="true" />
 
-                <TextView
-                    android:id="@+id/tvMealTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="LUNCH // 12:30"
-                    android:textSize="11sp"
-                    android:textColor="@color/idroid_text_dim"
-                    android:fontFamily="@font/share_tech_mono" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/tvSyncState"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PENDING"
+                android:textSize="10sp"
+                android:fontFamily="@font/share_tech_mono"
+                android:textColor="@color/idroid_warn"
+                android:layout_marginStart="8dp"
+                android:visibility="gone" />
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/tvMealCalories"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:text="550"
-            android:textSize="20sp"
-            android:fontFamily="@font/share_tech_mono"
-            android:textColor="@color/idroid_cyan_bright" />
-    </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/idroid_border"
-        android:layout_marginBottom="8dp" />
-
-    <!-- Macro Badges Row (MGSV shades of blue/cyan) -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
-
-        <TextView
-            android:id="@+id/tvProteinBadge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="P 35g"
-            android:textSize="11sp"
-            android:textColor="@color/idroid_macro_protein"
-            android:background="@color/idroid_cyan_badge_bg"
-            android:paddingHorizontal="7dp"
-            android:paddingVertical="3dp"
-            android:layout_marginEnd="6dp"
-            android:fontFamily="@font/share_tech_mono" />
-
-        <TextView
-            android:id="@+id/tvCarbBadge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="C 50g"
-            android:textSize="11sp"
-            android:textColor="@color/idroid_macro_carbs"
-            android:background="@color/idroid_cyan_badge_bg"
-            android:paddingHorizontal="7dp"
-            android:paddingVertical="3dp"
-            android:layout_marginEnd="6dp"
-            android:fontFamily="@font/share_tech_mono" />
-
-        <TextView
-            android:id="@+id/tvFatBadge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="F 15g"
-            android:textSize="11sp"
-            android:textColor="@color/idroid_macro_fat"
-            android:background="@color/idroid_cyan_badge_bg"
-            android:paddingHorizontal="7dp"
-            android:paddingVertical="3dp"
-            android:fontFamily="@font/share_tech_mono" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1" />
-
-        <TextView
-            android:id="@+id/tvSyncState"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="PENDING SYNC"
-            android:textSize="10sp"
-            android:textColor="@color/idroid_warn"
-            android:background="@drawable/bg_idroid_warn_badge"
-            android:paddingHorizontal="6dp"
-            android:paddingVertical="2dp"
-            android:fontFamily="@font/share_tech_mono"
-            android:visibility="gone" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvMealCalories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="550"
+        android:textSize="15sp"
+        android:fontFamily="@font/share_tech_mono"
+        android:textColor="@color/idroid_row_text"
+        android:duplicateParentState="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
+
+    <!-- Status glyph: green check = in Health Connect, orange ! = pending -->
+    <TextView
+        android:id="@+id/tvSyncDiamond"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:gravity="center"
+        android:text="✓"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        android:includeFontPadding="false"
+        android:textColor="@color/idroid_data_card_text"
+        android:background="@drawable/bg_idroid_check" />
 
 </LinearLayout>

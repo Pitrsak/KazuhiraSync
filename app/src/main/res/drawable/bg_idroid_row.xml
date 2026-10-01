@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- iDroid list row: hairline separator; pressed = white highlight bar -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:exitFadeDuration="@android:integer/config_shortAnimTime">
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/idroid_btn_primary_bg" />
+        </shape>
+    </item>
+    <item>
+        <layer-list>
+            <item android:gravity="bottom" android:height="1dp">
+                <shape android:shape="rectangle">
+                    <solid android:color="@color/idroid_border_dim" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+</selector>
