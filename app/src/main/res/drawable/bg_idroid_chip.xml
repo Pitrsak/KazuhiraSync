@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Selectable tactical chip (meal type selector) -->
+<!-- Selectable tactical chip (meal type selector): selected = iDroid white highlight bar -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_selected="true">
         <shape android:shape="rectangle">
-            <corners android:radius="3dp" />
             <solid android:color="@color/idroid_btn_primary_bg" />
-            <stroke android:width="1dp" android:color="@color/idroid_cyan" />
         </shape>
     </item>
     <item>
         <shape android:shape="rectangle">
-            <corners android:radius="3dp" />
             <solid android:color="@color/idroid_cyan_badge_bg" />
-            <stroke android:width="1dp" android:color="@color/idroid_border" />
+            <stroke android:width="1dp" android:color="@color/idroid_border_dim" />
         </shape>
     </item>
 </selector>

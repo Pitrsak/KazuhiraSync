@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var progressBar: ProgressBar
     private lateinit var btnTakePhoto: Button
     private lateinit var btnPickGallery: Button
-    private lateinit var btnSettings: ImageButton
+    private lateinit var tabBar: IdroidTabBar
     private lateinit var listViewHistory: ListView
     private lateinit var tvTodayCalories: TextView
     private lateinit var tvTodayCount: TextView
@@ -60,6 +60,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvTodayFat: TextView
     private lateinit var tvOpticalStatus: TextView
     private lateinit var tvPendingSync: TextView
+    private lateinit var layoutPendingSync: View
+    private lateinit var tvHudRations: TextView
+    private lateinit var tvHudAvg: TextView
     private lateinit var parallaxManager: IdroidParallaxManager
 
     private lateinit var localRepo: LocalMealRepository
@@ -85,12 +88,15 @@ class MainActivity : AppCompatActivity() {
         initDefaultPrefs()
 
         cameraPreviewView = findViewById(R.id.cameraPreviewView)
+        // TextureView-backed preview so the feed can be colour graded like the iDroid projection
+        cameraPreviewView.implementationMode = PreviewView.ImplementationMode.COMPATIBLE
+        IdroidOverlayView.applyHoloColorGrade(cameraPreviewView)
         statusText = findViewById(R.id.statusText)
         tvModelSubtitle = findViewById(R.id.tvModelSubtitle)
         progressBar = findViewById(R.id.progressBar)
         btnTakePhoto = findViewById(R.id.btnTakePhoto)
         btnPickGallery = findViewById(R.id.btnPickGallery)
-        btnSettings = findViewById(R.id.btnSettings)
+        tabBar = findViewById(R.id.tabBar)
         listViewHistory = findViewById(R.id.listViewHistory)
         tvTodayCalories = findViewById(R.id.tvTodayCalories)
         tvTodayCount = findViewById(R.id.tvTodayCount)
@@ -99,6 +105,9 @@ class MainActivity : AppCompatActivity() {
         tvTodayFat = findViewById(R.id.tvTodayFat)
         tvOpticalStatus = findViewById(R.id.tvOpticalStatus)
         tvPendingSync = findViewById(R.id.tvPendingSync)
+        layoutPendingSync = findViewById(R.id.layoutPendingSync)
+        tvHudRations = findViewById(R.id.tvHudRations)
+        tvHudAvg = findViewById(R.id.tvHudAvg)
 
         parallaxManager = IdroidParallaxManager(this)
         findViewById<View>(R.id.cardTodaySummary)?.let {
@@ -167,8 +176,12 @@ class MainActivity : AppCompatActivity() {
             galleryLauncher.launch("image/*")
         }
 
-        btnSettings.setOnClickListener {
-            showSettingsDialog()
+        // Tab strip: INTEL FILE | RATIONS (this screen) | CONFIG
+        tabBar.onTabClick = { index ->
+            when (index) {
+                0 -> galleryLauncher.launch("image/*")
+                2 -> showSettingsDialog()
+            }
         }
 
         logAdapter = RationLogAdapter(this)
@@ -176,7 +189,7 @@ class MainActivity : AppCompatActivity() {
         listViewHistory.setOnItemClickListener { _, _, position, _ ->
             (logAdapter.getItem(position) as? LogRow.Meal)?.let { showMealActions(it.record) }
         }
-        tvPendingSync.setOnClickListener { syncPending(interactive = true) }
+        layoutPendingSync.setOnClickListener { syncPending(interactive = true) }
 
         refreshHistoryList()
 
@@ -298,7 +311,7 @@ class MainActivity : AppCompatActivity() {
         val provider = prefs.getString("AI_PROVIDER", "gemini") ?: "gemini"
         val currentModel = prefs.getString("MODEL_NAME", prefs.getString("GEMINI_MODEL", "gemini-3.8-flash")) ?: "gemini-3.8-flash"
         val provTag = if (provider.equals("openrouter", ignoreCase = true)) "OPENROUTER" else "GEMINI"
-        findViewById<TextView>(R.id.tvAppTitle)?.text = "KAZUHIRA SYNC // VER ${BuildConfig.VERSION_NAME}"
+        findViewById<TextView>(R.id.tvAppTitle)?.text = "KAZUHIRA SYNC VER ${BuildConfig.VERSION_NAME}"
         tvModelSubtitle.text = "$provTag // ${currentModel.uppercase()}"
     }
 
@@ -631,8 +644,9 @@ class MainActivity : AppCompatActivity() {
         logAdapter.submit(meals)
 
         val pending = meals.count { !it.syncedToHealthConnect && it.hcLinked } + localRepo.getPendingDeletes().size
-        tvPendingSync.visibility = if (pending > 0) View.VISIBLE else View.GONE
-        tvPendingSync.text = "$pending PENDING // SYNC"
+        layoutPendingSync.visibility = if (pending > 0) View.VISIBLE else View.GONE
+        tvPendingSync.text = "⟳ Sync $pending Pending"
+        updateHudStats(meals)
     }
 
     private fun updateTodaySummary(meals: List<LocalMealRecord>) {
@@ -644,6 +658,18 @@ class MainActivity : AppCompatActivity() {
         tvTodayProtein.text = RationFormat.grams(todayMeals.sumOf { it.proteinG })
         tvTodayCarbs.text = RationFormat.grams(todayMeals.sumOf { it.carbG })
         tvTodayFat.text = RationFormat.grams(todayMeals.sumOf { it.fatG })
+    }
+
+    /** Bottom-right HUD block: total rations logged and the average daily intake over the last 7 days. */
+    private fun updateHudStats(meals: List<LocalMealRecord>) {
+        val zone = ZoneId.systemDefault()
+        val weekStart = LocalDate.now().minusDays(6)
+        val recentDays = meals
+            .filter { !it.instant.atZone(zone).toLocalDate().isBefore(weekStart) }
+            .groupBy { it.instant.atZone(zone).toLocalDate() }
+        tvHudRations.text = meals.size.toString()
+        tvHudAvg.text = if (recentDays.isEmpty()) "0"
+            else RationFormat.kcal(recentDays.values.sumOf { day -> day.sumOf { it.calories } } / recentDays.size)
     }
 
     private fun themedSpinnerAdapter(items: List<String>) =

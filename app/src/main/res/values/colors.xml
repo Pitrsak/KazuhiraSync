@@ -1,55 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Backgrounds & Translucent Hologram Layers -->
-    <color name="idroid_bg">#070B12</color>
-    <!-- Darker holographic tint and card opacity so food is subtly visible underneath while text remains crisp & readable -->
-    <color name="idroid_holo_tint">#8003101E</color>
-    <color name="idroid_holo_vignette">#9901050A</color>
-    <color name="idroid_card">#D0081C2E</color> <!-- ~82% dark translucent holographic cyan-navy glass -->
-    <color name="idroid_card_selected">#EB0F2F4A</color>
-    <color name="idroid_hud_box">#D8092238</color>
+    <!-- Backgrounds & Translucent Hologram Layers (MGSV iDroid teal projection) -->
+    <color name="idroid_bg">#0C2F3B</color>
+    <color name="idroid_holo_tint">#5C104656</color>
+    <color name="idroid_holo_vignette">#8C04161D</color>
+    <color name="idroid_card">#EB123D4B</color> <!-- iDroid panel: dense teal glass behind dialogs -->
+    <color name="idroid_card_selected">#F2E8F5F7</color>
+    <color name="idroid_hud_box">#4D0A2A35</color>
 
-    <!-- iDroid Signature Blue / Cyan Accents (Authentic MGSV Monochrome Palette) -->
-    <color name="idroid_cyan">#38D3FF</color>
-    <color name="idroid_cyan_bright">#A8F0FF</color>
-    <color name="idroid_cyan_glow">#DCF7FF</color>
-    <color name="idroid_cyan_dim">#2600E5FF</color>
-    <color name="idroid_cyan_faint">#1A00E5FF</color>
-    <color name="idroid_cyan_badge_bg">#26153B52</color>
+    <!-- iDroid accents: the game renders almost everything in white / pale aqua over the teal wash -->
+    <color name="idroid_cyan">#A6E6F1</color>
+    <color name="idroid_cyan_bright">#E6F7FA</color>
+    <color name="idroid_cyan_glow">#FFFFFF</color>
+    <color name="idroid_cyan_dim">#26FFFFFF</color>
+    <color name="idroid_cyan_faint">#1AFFFFFF</color>
+    <color name="idroid_cyan_badge_bg">#1FFFFFFF</color>
 
-    <!-- Primary Action Buttons -->
-    <color name="idroid_btn_primary_bg">#1A6588</color>
-    <color name="idroid_btn_primary_text">#DCF7FF</color>
+    <!-- Primary actions use the iDroid "selected row" look: near-white bar, dark teal text -->
+    <color name="idroid_btn_primary_bg">#E8F5F7</color>
+    <color name="idroid_btn_primary_text">#0D2C38</color>
 
-    <!-- Tactical Shades of Blue for Macros & Key Metrics (spread in lightness so they stay distinguishable) -->
-    <color name="idroid_macro_protein">#C4F6FF</color> <!-- Pale ice -->
-    <color name="idroid_macro_carbs">#38D3FF</color>   <!-- Signature cyan -->
-    <color name="idroid_macro_fat">#4A9BF0</color>     <!-- Deep tactical blue -->
+    <!-- Macros: white / aqua / MGSV amber so the three stay distinguishable -->
+    <color name="idroid_macro_protein">#F2FAFC</color>
+    <color name="idroid_macro_carbs">#8FE0EE</color>
+    <color name="idroid_macro_fat">#E8B33A</color>
 
-    <!-- Remapped Legacy Colors to Blue/Cyan (so existing layouts and badges render in authentic shades of blue) -->
-    <color name="idroid_amber">#7CE7FF</color>        <!-- Shifted from yellow to holographic cyan/blue -->
-    <color name="idroid_amber_glow">#DCF7FF</color>
-    <color name="idroid_amber_dim">#26153B52</color>
-    <color name="idroid_green">#7FE8FF</color>        <!-- Shifted from neon green to ice cyan -->
-    <color name="idroid_blue">#52B4FF</color>
-    <color name="idroid_red">#FF5252</color>
-    <color name="idroid_warn">#FF7A59</color>         <!-- MGSV alert orange, used only for sync warnings -->
-    <color name="idroid_warn_bg">#26FF7A59</color>
+    <!-- Data card (solid cyan tiles from the FOB / PF screens) -->
+    <color name="idroid_data_card">#E88CD8E6</color>
+    <color name="idroid_data_card_band">#33062430</color>
+    <color name="idroid_data_card_text">#0A2733</color>
+    <color name="idroid_data_card_text_dim">#B30A2733</color>
 
-    <!-- Borders & Dividers -->
-    <color name="idroid_border">#2C5D7F</color>
-    <color name="idroid_border_glow">#5CBCE6</color>
-    <color name="idroid_border_dim">#1A3E5C</color>
+    <!-- MGSV category amber (e.g. "PF GRADE"), status check / cross -->
+    <color name="idroid_amber">#E8B33A</color>
+    <color name="idroid_amber_glow">#FFD772</color>
+    <color name="idroid_amber_dim">#33E8B33A</color>
+    <color name="idroid_green">#8EE06A</color>
+    <color name="idroid_blue">#8FE0EE</color>
+    <color name="idroid_red">#E2574C</color>
+    <color name="idroid_warn">#FF8A5B</color>         <!-- MGSV alert orange, used only for sync warnings -->
+    <color name="idroid_warn_bg">#33FF8A5B</color>
 
-    <!-- Typography (Tactical Shades of Blue and Cyan) -->
-    <color name="idroid_text_main">#D6F4FD</color>
-    <color name="idroid_text_sub">#72BEDA</color>
-    <color name="idroid_text_dim">#6CA7C0</color>
-    <color name="idroid_text_faint">#40718A</color>
+    <!-- Borders & Dividers: thin translucent white rules -->
+    <color name="idroid_border">#59FFFFFF</color>
+    <color name="idroid_border_glow">#B3FFFFFF</color>
+    <color name="idroid_border_dim">#2EFFFFFF</color>
+
+    <!-- Typography -->
+    <color name="idroid_text_main">#F2FAFC</color>
+    <color name="idroid_text_sub">#C2DEE5</color>
+    <color name="idroid_text_dim">#9CC0CA</color>
+    <color name="idroid_text_faint">#6E97A3</color>
 
     <!-- Gradients & Overlay effects -->
-    <color name="idroid_grad_top">#0A1524</color>
-    <color name="idroid_grad_bottom">#03070D</color>
-    <color name="idroid_grid_dot">#3059A5D6</color>
-    <color name="idroid_scanline">#1200E5FF</color>
+    <color name="idroid_grad_top">#0C2F3B</color>
+    <color name="idroid_grad_bottom">#08222B</color>
+    <color name="idroid_scanline">#0FFFFFFF</color>
+    <color name="idroid_grid_dot">#24CFF3FA</color>
+    <color name="idroid_glow_band">#3D9CEBF7</color>
 </resources>
