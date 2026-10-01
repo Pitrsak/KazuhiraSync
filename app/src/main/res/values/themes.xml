@@ -13,11 +13,19 @@
         <item name="android:windowBackground">@drawable/bg_idroid_root</item>
 
         <!-- Primary branding colors -->
-        <item name="colorPrimary">@color/idroid_amber</item>
+        <item name="colorPrimary">@color/idroid_cyan</item>
         <item name="colorOnPrimary">#070B12</item>
         <item name="colorSecondary">@color/idroid_cyan</item>
         <item name="colorOnSecondary">#070B12</item>
         <item name="android:colorBackground">@color/idroid_bg</item>
+
+        <!-- Dialog layouts draw their own iDroid panel; drop the default Material surface behind them -->
+        <item name="alertDialogTheme">@style/IdroidAlertDialog</item>
+    </style>
+
+    <style name="IdroidAlertDialog" parent="ThemeOverlay.Material3.Dialog.Alert">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimAmount">0.55</item>
     </style>
 
     <!-- Date / time pickers for the ration mission time -->

@@ -19,11 +19,12 @@ There is no intermediate backend, proxy server, or account registration required
 ### Authentic MGSV iDroid Holographic Interface
 - **Optical Background Feed:** Runs CameraX continuously behind the holographic UI, providing the appearance of an augmented-reality projection over your surroundings.
 - **Hardware-Accelerated HUD Shader:**
-  - Procedural scanlines and CRT grain
-  - Ambient dot matrix grid
-  - Cyan-blue holographic tint and vignette calibrated for legibility over food plates
+  - Camera feed colour-graded into the iDroid teal projection (Android 12+), with a lighter wash fallback on older devices
+  - Projector light band, procedural scanlines and CRT grain
+  - Darkened header / footer zones and vignette calibrated for legibility over food plates
+- **1:1 iDroid Layout:** `KAZUHIRA SYNC VER` header with amber model line, tab strip with the raised active tab (INTEL FILE opens the gallery, CONFIG opens settings), solid cyan data tile for daily totals, white highlight-bar menu rows, a "Results Log" style ration list with status checks, and a footer with a tap-to-sync badge and TIME / RATIONS / AVG stats.
 - **Gyroscope Parallax Reactivity:** UI cards and the ration log react smoothly to device orientation via rotation vector / accelerometer sensors, creating depth perspective.
-- **MGSV Typography and Palette:** Monochromatic cyan and ice-blue color scheme using the Rajdhani geometric typeface and Share Tech Mono tabular numerals.
+- **MGSV Typography and Palette:** White and pale-aqua type over teal with MGSV amber accents, mixed-case Rajdhani labels and Share Tech Mono numerals, as in the in-game iDroid.
 
 ### Multimodal Vision AI Providers
 - **Google Gemini (Direct):** Direct integration with Google AI Studio supporting models such as `gemini-3.8-flash`, `gemini-3.5-flash-lite`, `gemini-3.5-flash`, `gemini-2.5-flash`, or custom identifiers.

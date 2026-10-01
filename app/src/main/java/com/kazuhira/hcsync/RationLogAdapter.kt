@@ -6,9 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import java.time.LocalDate
 import java.time.ZoneId
+import java.util.Locale
 
 sealed class LogRow {
     data class Header(val date: LocalDate, val totalKcal: Double) : LogRow()
@@ -55,20 +55,22 @@ class RationLogAdapter(private val context: Context) : BaseAdapter() {
 
     private fun bindMeal(item: LocalMealRecord, view: View): View {
         view.findViewById<TextView>(R.id.tvMealTitle).text = item.mealName
-        view.findViewById<TextView>(R.id.tvMealCalories).text = "${RationFormat.kcal(item.calories)} kcal"
+        view.findViewById<TextView>(R.id.tvMealCalories).text = RationFormat.kcal(item.calories)
         view.findViewById<TextView>(R.id.tvProteinBadge).text = "P ${RationFormat.grams(item.proteinG)}"
         view.findViewById<TextView>(R.id.tvCarbBadge).text = "C ${RationFormat.grams(item.carbG)}"
         view.findViewById<TextView>(R.id.tvFatBadge).text = "F ${RationFormat.grams(item.fatG)}"
 
         val time = item.instant.atZone(ZoneId.systemDefault())
         val mealType = HealthConnectSync.mealTypeLabel(HealthConnectSync.resolveMealType(item))
-        view.findViewById<TextView>(R.id.tvMealTime).text = "$mealType // ${RationFormat.clock(context, time)}"
+        view.findViewById<TextView>(R.id.tvMealTime).text = RationFormat.clock(context, time)
+        view.findViewById<TextView>(R.id.tvMealType).text =
+            mealType.lowercase(Locale.ENGLISH).replaceFirstChar { it.titlecase(Locale.ENGLISH) }
 
         val pending = !item.syncedToHealthConnect
         view.findViewById<TextView>(R.id.tvSyncState).visibility = if (pending) View.VISIBLE else View.GONE
         view.findViewById<TextView>(R.id.tvSyncDiamond).apply {
-            text = if (pending) "◇" else "◆"
-            setTextColor(ContextCompat.getColor(context, if (pending) R.color.idroid_warn else R.color.idroid_cyan))
+            text = if (pending) "!" else "✓"
+            setBackgroundResource(if (pending) R.drawable.bg_idroid_pending else R.drawable.bg_idroid_check)
         }
         return view
     }
