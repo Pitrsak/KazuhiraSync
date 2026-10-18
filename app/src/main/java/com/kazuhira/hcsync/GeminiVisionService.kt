@@ -37,11 +37,17 @@ class GeminiVisionService(
     private val provider: String = "gemini" // "gemini" or "openrouter"
 ) {
 
-    private val client = OkHttpClient.Builder()
-        .connectTimeout(30, TimeUnit.SECONDS)
-        .readTimeout(60, TimeUnit.SECONDS)
-        .writeTimeout(60, TimeUnit.SECONDS)
-        .build()
+    companion object {
+        // Shared so a re-scan or a follow-up scan reuses the open TLS connection
+        private val client = OkHttpClient.Builder()
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(60, TimeUnit.SECONDS)
+            .writeTimeout(60, TimeUnit.SECONDS)
+            .build()
+
+        // Calorie estimation does not need deep reasoning; long thinking is most of the wait
+        private const val REASONING_EFFORT = "low"
+    }
 
     /**
      * @param hint optional operator briefing (e.g. "2 portions, fried in butter") that the model
@@ -88,6 +94,13 @@ class GeminiVisionService(
     }
 
     private fun analyzeWithOpenRouter(prompt: String, base64Image: String): Result<MealEstimation> {
+        val first = analyzeWithOpenRouter(prompt, base64Image, limitReasoning = true)
+        // Some routed models reject the reasoning parameter; ask again without it
+        val rejected = first.exceptionOrNull()?.message?.startsWith("OpenRouter Error (400)") == true
+        return if (rejected) analyzeWithOpenRouter(prompt, base64Image, limitReasoning = false) else first
+    }
+
+    private fun analyzeWithOpenRouter(prompt: String, base64Image: String, limitReasoning: Boolean): Result<MealEstimation> {
         val targetModel = modelName.ifBlank { "google/gemini-3.8-flash" }
 
         val jsonBody = JSONObject().apply {
@@ -112,6 +125,7 @@ class GeminiVisionService(
                 put(userMsg)
             }
             put("messages", messages)
+            if (limitReasoning) put("reasoning", JSONObject().put("effort", REASONING_EFFORT))
         }
 
         val request = Request.Builder()
@@ -179,6 +193,7 @@ class GeminiVisionService(
             }
             put("generationConfig", generationConfig)
         }
+        val baseBody = jsonBody.toString()
 
         val modelsToTry = listOf(
             modelName.ifBlank { "gemini-3.8-flash" },
@@ -190,16 +205,27 @@ class GeminiVisionService(
 
         var lastException: Exception? = null
 
-        for (model in modelsToTry) {
+        for (model in modelsToTry) for (limitThinking in listOf(true, false)) {
             try {
+                val body = JSONObject(baseBody)
+                if (limitThinking) {
+                    body.getJSONObject("generationConfig").put("thinkingConfig", thinkingConfig(model))
+                }
                 val url = "https://generativelanguage.googleapis.com/v1beta/models/$model:generateContent?key=$apiKey"
                 val request = Request.Builder()
                     .url(url)
-                    .post(jsonBody.toString().toRequestBody("application/json".toMediaType()))
+                    .post(body.toString().toRequestBody("application/json".toMediaType()))
                     .build()
 
+                var retryWithoutThinking = false
                 client.newCall(request).execute().use { response ->
                     val responseStr = response.body?.string() ?: ""
+                    // A model that rejects the thinking setting gets one more try without it
+                    if (limitThinking && response.code == 400) {
+                        retryWithoutThinking = true
+                        lastException = Exception("Gemini API Error ($model - ${response.code}): $responseStr")
+                        return@use
+                    }
                     if (!response.isSuccessful) {
                         lastException = Exception("Gemini API Error ($model - ${response.code}): $responseStr")
                         return@use
@@ -215,22 +241,35 @@ class GeminiVisionService(
                     val firstCandidate = candidates.getJSONObject(0)
                     val content = firstCandidate.getJSONObject("content")
                     val parts = content.getJSONArray("parts")
-                    val rawText = parts.getJSONObject(0).getString("text")
+                    // Thinking models may put a thought-summary part first; take the answer part
+                    val rawText = (0 until parts.length())
+                        .map { parts.getJSONObject(it) }
+                        .lastOrNull { it.has("text") && !it.optBoolean("thought", false) }
+                        ?.getString("text")
+                        ?: parts.getJSONObject(0).getString("text")
                     return parseEstimationJson(rawText)
                 }
+                if (!retryWithoutThinking) break
             } catch (e: java.net.UnknownHostException) {
                 return Result.failure(Exception("Comms offline: Unable to resolve Google AI servers. Check device Wi-Fi or mobile data."))
             } catch (e: java.net.ConnectException) {
                 return Result.failure(Exception("Comms offline: Connection refused. Check device network connection."))
             } catch (e: java.net.SocketTimeoutException) {
                 lastException = Exception("Comms timeout: Server took too long to respond on $model.")
+                break
             } catch (e: Exception) {
                 lastException = e
+                break
             }
         }
 
         return Result.failure(lastException ?: Exception("Failed to analyze image with Gemini API"))
     }
+
+    // Gemini 2.x takes a token budget (0 = off); Gemini 3+ takes a thinking level
+    private fun thinkingConfig(model: String): JSONObject =
+        if (model.startsWith("gemini-2")) JSONObject().put("thinkingBudget", 0)
+        else JSONObject().put("thinkingLevel", REASONING_EFFORT)
 
     // Gemini structured output: guarantees well-formed JSON with every field present
     private fun estimationSchema(): JSONObject {
@@ -278,14 +317,23 @@ class GeminiVisionService(
 
     private fun readAndCompressImage(uri: Uri): String? {
         return try {
+            // Scale down to max 1024x1024 to save bandwidth and speed up processing
+            val maxDimension = 1024
+
+            // Read the size first and decode at a power-of-two reduction, so a 50 MP gallery
+            // photo is never fully decoded into memory just to be shrunk
+            val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+            context.contentResolver.openInputStream(uri)?.use { BitmapFactory.decodeStream(it, null, bounds) }
+            var sampleSize = 1
+            while (bounds.outWidth / (sampleSize * 2) >= maxDimension && bounds.outHeight / (sampleSize * 2) >= maxDimension) {
+                sampleSize *= 2
+            }
+            val decodeOptions = BitmapFactory.Options().apply { inSampleSize = sampleSize }
             val inputStream: InputStream? = context.contentResolver.openInputStream(uri)
-            val originalBitmap = BitmapFactory.decodeStream(inputStream)
-            inputStream?.close()
+            val originalBitmap = inputStream?.use { BitmapFactory.decodeStream(it, null, decodeOptions) }
 
             if (originalBitmap == null) return null
 
-            // Scale down to max 1024x1024 to save bandwidth and speed up processing
-            val maxDimension = 1024
             val width = originalBitmap.width
             val height = originalBitmap.height
             val scale = if (width > maxDimension || height > maxDimension) {

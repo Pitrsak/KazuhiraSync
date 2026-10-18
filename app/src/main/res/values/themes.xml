@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <style name="Theme.KazuhiraSync" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Status bar color -->
-        <item name="android:statusBarColor">@color/idroid_grad_top</item>
+        <!-- Full screen: the HUD draws under the (hidden) system bars and around the camera cutout -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">false</item>
-
-        <!-- Navigation bar color -->
-        <item name="android:navigationBarColor">@color/idroid_grad_bottom</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:enforceNavigationBarContrast" tools:targetApi="q">false</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
 
         <!-- Window background -->
         <item name="android:windowBackground">@drawable/bg_idroid_root</item>

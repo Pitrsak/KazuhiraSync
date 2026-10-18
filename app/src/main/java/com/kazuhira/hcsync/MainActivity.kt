@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.util.Size
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,11 +18,17 @@ import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
+import androidx.camera.core.resolutionselector.ResolutionSelector
+import androidx.camera.core.resolutionselector.ResolutionStrategy
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.concurrent.futures.await
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.health.connect.client.HealthConnectClient
 import androidx.health.connect.client.PermissionController
 import androidx.health.connect.client.records.MealType
@@ -81,6 +88,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        enterFullScreen()
 
         localRepo = LocalMealRepository(this)
         hcSync = HealthConnectSync(this)
@@ -185,6 +193,36 @@ class MainActivity : AppCompatActivity() {
         handleIncomingIntent(intent)
     }
 
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        // Returning from the system camera, gallery or a permission screen can restore the bars
+        if (hasFocus) window.hideSystemBars()
+    }
+
+    /**
+     * Camera feed and hologram fill the whole display; only the HUD layer is inset, and only by
+     * the camera cutout, so the header never sits under the punch hole.
+     */
+    private fun enterFullScreen() {
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        window.hideSystemBars()
+        val hud = findViewById<View>(R.id.layoutIdroidUi)
+        val baseTop = hud.paddingTop
+        val baseBottom = hud.paddingBottom
+        val baseLeft = hud.paddingLeft
+        val baseRight = hud.paddingRight
+        ViewCompat.setOnApplyWindowInsetsListener(hud) { v, insets ->
+            val cutout = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
+            v.updatePadding(
+                left = baseLeft + cutout.left,
+                top = baseTop + cutout.top,
+                right = baseRight + cutout.right,
+                bottom = baseBottom + cutout.bottom
+            )
+            insets
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         parallaxManager.start()
@@ -212,8 +250,20 @@ class MainActivity : AppCompatActivity() {
                     it.setSurfaceProvider(cameraPreviewView.surfaceProvider)
                 }
 
+                // The scan is uploaded at 1024 px anyway; capturing at full sensor resolution
+                // (up to 50+ MP) only makes the shot, the file write and the decode slower
                 imageCapture = ImageCapture.Builder()
                     .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+                    .setResolutionSelector(
+                        ResolutionSelector.Builder()
+                            .setResolutionStrategy(
+                                ResolutionStrategy(
+                                    Size(1280, 960),
+                                    ResolutionStrategy.FALLBACK_RULE_CLOSEST_HIGHER_THEN_LOWER
+                                )
+                            )
+                            .build()
+                    )
                     .build()
 
                 val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
@@ -496,7 +546,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        dialog.show()
+        dialog.showImmersive()
     }
 
     private fun deleteMeal(meal: LocalMealRecord) {
@@ -814,6 +864,6 @@ class MainActivity : AppCompatActivity() {
             dialog.dismiss()
         }
 
-        dialog.show()
+        dialog.showImmersive()
     }
 }

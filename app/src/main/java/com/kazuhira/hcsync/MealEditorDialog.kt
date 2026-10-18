@@ -172,12 +172,12 @@ class MealEditorDialog(
                             renderMealType()
                         },
                         mealTime.hour, mealTime.minute, DateFormat.is24HourFormat(activity)
-                    ).show()
+                    ).showImmersive()
                 },
                 mealTime.year, mealTime.monthValue - 1, mealTime.dayOfMonth
             )
             datePicker.datePicker.maxDate = System.currentTimeMillis()
-            datePicker.show()
+            datePicker.showImmersive()
         }
 
         // ---- Portion multiplier: fields show base value × multiplier ----
@@ -272,6 +272,6 @@ class MealEditorDialog(
             )
         }
 
-        dialog.show()
+        dialog.showImmersive()
     }
 }
