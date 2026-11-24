@@ -37,7 +37,7 @@
     <color name="idroid_amber_dim">#33E8B33A</color>
     <color name="idroid_green">#8EE06A</color>
     <color name="idroid_blue">#8FE0EE</color>
-    <color name="idroid_red">#E2574C</color>
+    <color name="idroid_red">#FF7C73</color>           <!-- >= 4.5:1 on the dialog panel -->
     <color name="idroid_warn">#FF8A5B</color>         <!-- MGSV alert orange, used only for sync warnings -->
     <color name="idroid_warn_bg">#33FF8A5B</color>
 
@@ -50,7 +50,7 @@
     <color name="idroid_text_main">#F2FAFC</color>
     <color name="idroid_text_sub">#C2DEE5</color>
     <color name="idroid_text_dim">#9CC0CA</color>
-    <color name="idroid_text_faint">#6E97A3</color>
+    <color name="idroid_text_faint">#8AB0BA</color>   <!-- hints: >= 4.5:1 on the dialog panel -->
 
     <!-- Gradients & Overlay effects -->
     <color name="idroid_grad_top">#0C2F3B</color>

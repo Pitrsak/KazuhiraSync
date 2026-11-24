@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="AI PROVIDER"
-            android:textSize="11sp"
+            android:textSize="12sp"
             android:letterSpacing="0.1"
             android:textColor="@color/idroid_cyan"
             android:fontFamily="@font/rajdhani_bold" />
@@ -52,7 +52,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="API KEY"
-            android:textSize="11sp"
+            android:textSize="12sp"
             android:letterSpacing="0.1"
             android:textColor="@color/idroid_cyan"
             android:fontFamily="@font/rajdhani_bold" />
@@ -75,7 +75,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="VISION MODEL PRESET"
-            android:textSize="11sp"
+            android:textSize="12sp"
             android:letterSpacing="0.1"
             android:textColor="@color/idroid_cyan"
             android:fontFamily="@font/rajdhani_bold" />
@@ -92,7 +92,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="CUSTOM MODEL IDENTIFIER"
-            android:textSize="11sp"
+            android:textSize="12sp"
             android:textColor="@color/idroid_text_dim"
             android:fontFamily="@font/share_tech_mono" />
 
@@ -119,7 +119,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="HEALTH CONNECT LINK"
-            android:textSize="11sp"
+            android:textSize="12sp"
             android:letterSpacing="0.1"
             android:textColor="@color/idroid_cyan"
             android:fontFamily="@font/rajdhani_bold" />

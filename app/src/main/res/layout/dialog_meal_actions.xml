@@ -63,7 +63,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="◆ SYNCED TO HEALTH CONNECT"
-            android:textSize="11sp"
+            android:textSize="12sp"
             android:textColor="@color/idroid_cyan"
             android:fontFamily="@font/share_tech_mono"
             android:layout_marginBottom="16dp" />

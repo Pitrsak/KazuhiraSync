@@ -51,7 +51,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="KAZUHIRA SYNC VER 2.3.1"
-                    android:textSize="11sp"
+                    android:textSize="12sp"
                     android:fontFamily="@font/share_tech_mono"
                     android:letterSpacing="0.04"
                     android:textColor="@color/idroid_text_sub" />
@@ -72,7 +72,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="OPTICAL HUD // STANDBY"
-                android:textSize="10sp"
+                android:textSize="12sp"
+                android:maxLines="1"
                 android:fontFamily="@font/share_tech_mono"
                 android:letterSpacing="0.06"
                 android:textColor="@color/idroid_text_dim" />
@@ -141,7 +142,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0 RATIONS"
-                            android:textSize="11sp"
+                            android:textSize="12sp"
                             android:fontFamily="@font/share_tech_mono"
                             android:textColor="@color/idroid_data_card_text" />
                     </LinearLayout>
@@ -427,7 +428,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="TAP"
-                        android:textSize="9sp"
+                        android:textSize="11sp"
                         android:fontFamily="@font/share_tech_mono"
                         android:textColor="@color/idroid_text_main"
                         android:background="@drawable/bg_idroid_prompt_glyph"
@@ -482,7 +483,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="TIME"
-                    android:textSize="10sp"
+                    android:textSize="12sp"
                     android:fontFamily="@font/share_tech_mono"
                     android:textColor="@color/idroid_text_sub"
                     android:layout_marginEnd="14dp" />
@@ -493,7 +494,7 @@
                     android:layout_gravity="end"
                     android:format12Hour="hh:mm"
                     android:format24Hour="HH:mm"
-                    android:textSize="10sp"
+                    android:textSize="12sp"
                     android:fontFamily="@font/share_tech_mono"
                     android:textColor="@color/idroid_text_main" />
 
@@ -501,7 +502,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="RATIONS"
-                    android:textSize="10sp"
+                    android:textSize="12sp"
                     android:fontFamily="@font/share_tech_mono"
                     android:textColor="@color/idroid_text_sub"
                     android:layout_marginEnd="14dp" />
@@ -512,7 +513,7 @@
                     android:id="@+id/tvHudRations"
                     android:layout_gravity="end"
                     android:text="0"
-                    android:textSize="10sp"
+                    android:textSize="12sp"
                     android:fontFamily="@font/share_tech_mono"
                     android:textColor="@color/idroid_text_main" />
 
@@ -520,7 +521,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="AVG/7D"
-                    android:textSize="10sp"
+                    android:textSize="12sp"
                     android:fontFamily="@font/share_tech_mono"
                     android:textColor="@color/idroid_text_sub"
                     android:layout_marginEnd="14dp" />
@@ -531,7 +532,7 @@
                     android:id="@+id/tvHudAvg"
                     android:layout_gravity="end"
                     android:text="0"
-                    android:textSize="10sp"
+                    android:textSize="12sp"
                     android:fontFamily="@font/share_tech_mono"
                     android:textColor="@color/idroid_text_main" />
             </GridLayout>
