@@ -16,6 +16,12 @@ object RationFormat {
         return DateTimeFormatter.ofPattern(pattern, Locale.ENGLISH).format(time)
     }
 
+    /** Width of the ration log's time column: "19:32" in 24-hour mode, "12:13 PM" otherwise. */
+    fun timeColumnWidthPx(context: Context): Int {
+        val dp = if (DateFormat.is24HourFormat(context)) 46 else 64
+        return (dp * context.resources.displayMetrics.density).toInt()
+    }
+
     fun dayLabel(date: LocalDate): String {
         val today = LocalDate.now()
         return when (date) {

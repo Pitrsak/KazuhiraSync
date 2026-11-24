@@ -13,7 +13,7 @@
 
     <TextView
         android:id="@+id/tvMealTime"
-        android:layout_width="64dp"
+        android:layout_width="46dp"
         android:layout_height="wrap_content"
         android:text="12:30"
         android:textSize="12sp"
@@ -55,7 +55,7 @@
                 android:text="Lunch"
                 android:textSize="12sp"
                 android:fontFamily="@font/rajdhani_medium"
-                android:textColor="@color/idroid_row_text_dim"
+                android:textColor="@color/idroid_row_text_sub"
                 android:duplicateParentState="true"
                 android:layout_marginEnd="8dp" />
 
@@ -66,7 +66,7 @@
                 android:text="P 35g"
                 android:textSize="12sp"
                 android:fontFamily="@font/share_tech_mono"
-                android:textColor="@color/idroid_row_text_dim"
+                android:textColor="@color/idroid_row_text_sub"
                 android:duplicateParentState="true"
                 android:layout_marginEnd="6dp" />
 
@@ -77,7 +77,7 @@
                 android:text="C 50g"
                 android:textSize="12sp"
                 android:fontFamily="@font/share_tech_mono"
-                android:textColor="@color/idroid_row_text_dim"
+                android:textColor="@color/idroid_row_text_sub"
                 android:duplicateParentState="true"
                 android:layout_marginEnd="6dp" />
 
@@ -88,7 +88,7 @@
                 android:text="F 15g"
                 android:textSize="12sp"
                 android:fontFamily="@font/share_tech_mono"
-                android:textColor="@color/idroid_row_text_dim"
+                android:textColor="@color/idroid_row_text_sub"
                 android:duplicateParentState="true" />
 
             <TextView
@@ -116,7 +116,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp" />
 
-    <!-- Status glyph: green check = in Health Connect, orange ! = pending -->
+    <!-- Status glyph: quiet tick = in Health Connect, orange ! = pending (only exceptions get colour) -->
     <TextView
         android:id="@+id/tvSyncDiamond"
         android:layout_width="16dp"
@@ -126,7 +126,7 @@
         android:textSize="10sp"
         android:textStyle="bold"
         android:includeFontPadding="false"
-        android:textColor="@color/idroid_data_card_text"
-        android:background="@drawable/bg_idroid_check" />
+        android:duplicateParentState="true"
+        android:textColor="@color/idroid_row_text_dim" />
 
 </LinearLayout>

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.Locale
@@ -62,15 +63,28 @@ class RationLogAdapter(private val context: Context) : BaseAdapter() {
 
         val time = item.instant.atZone(ZoneId.systemDefault())
         val mealType = HealthConnectSync.mealTypeLabel(HealthConnectSync.resolveMealType(item))
-        view.findViewById<TextView>(R.id.tvMealTime).text = RationFormat.clock(context, time)
+        view.findViewById<TextView>(R.id.tvMealTime).apply {
+            text = RationFormat.clock(context, time)
+            layoutParams.width = RationFormat.timeColumnWidthPx(context)
+        }
         view.findViewById<TextView>(R.id.tvMealType).text =
             mealType.lowercase(Locale.ENGLISH).replaceFirstChar { it.titlecase(Locale.ENGLISH) }
 
         val pending = !item.syncedToHealthConnect
         view.findViewById<TextView>(R.id.tvSyncState).visibility = if (pending) View.VISIBLE else View.GONE
         view.findViewById<TextView>(R.id.tvSyncDiamond).apply {
-            text = if (pending) "!" else "✓"
-            setBackgroundResource(if (pending) R.drawable.bg_idroid_pending else R.drawable.bg_idroid_check)
+            // Synced is the normal state, so it stays quiet; only a pending ration gets a coloured badge
+            if (pending) {
+                text = "!"
+                textSize = 10f
+                setBackgroundResource(R.drawable.bg_idroid_pending)
+                setTextColor(ContextCompat.getColor(context, R.color.idroid_data_card_text))
+            } else {
+                text = "✓"
+                textSize = 13f
+                background = null
+                setTextColor(ContextCompat.getColorStateList(context, R.color.idroid_row_text_dim))
+            }
         }
         return view
     }

@@ -34,50 +34,50 @@
         android:paddingBottom="10dp">
 
         <!-- ===================== iDroid System Header ===================== -->
+        <!-- Row 1: version + optics status; row 2: the model line gets the full width so it never wraps -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="bottom">
+            android:gravity="center_vertical">
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/tvAppTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tvAppTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="KAZUHIRA SYNC VER 2.3.1"
-                    android:textSize="12sp"
-                    android:fontFamily="@font/share_tech_mono"
-                    android:letterSpacing="0.04"
-                    android:textColor="@color/idroid_text_sub" />
-
-                <TextView
-                    android:id="@+id/tvModelSubtitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="GEMINI // GEMINI-3.8-FLASH"
-                    android:textSize="12sp"
-                    android:fontFamily="@font/rajdhani_bold"
-                    android:letterSpacing="0.06"
-                    android:textColor="@color/idroid_amber" />
-            </LinearLayout>
+                android:text="KAZUHIRA SYNC VER 2.3.1"
+                android:textSize="12sp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:fontFamily="@font/share_tech_mono"
+                android:letterSpacing="0.04"
+                android:textColor="@color/idroid_text_sub" />
 
             <TextView
                 android:id="@+id/tvOpticalStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="OPTICAL HUD // STANDBY"
+                android:layout_marginStart="8dp"
+                android:text="OPTICS // STANDBY"
                 android:textSize="12sp"
                 android:maxLines="1"
                 android:fontFamily="@font/share_tech_mono"
                 android:letterSpacing="0.06"
                 android:textColor="@color/idroid_text_dim" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvModelSubtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="GEMINI // GEMINI-3.8-FLASH"
+            android:textSize="12sp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:fontFamily="@font/rajdhani_bold"
+            android:letterSpacing="0.06"
+            android:textColor="@color/idroid_amber" />
 
         <!-- ===================== iDroid Tab Strip (INTEL FILE | RATIONS | CONFIG) ===================== -->
         <com.kazuhira.hcsync.IdroidTabBar
@@ -108,7 +108,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Daily Ration Status"
-                    android:textSize="13sp"
+                    android:textSize="16sp"
                     android:fontFamily="@font/rajdhani_semibold"
                     android:textColor="@color/idroid_text_main"
                     android:layout_marginBottom="2dp" />
@@ -284,7 +284,7 @@
                 <Button
                     android:id="@+id/btnTakePhoto"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="48dp"
                     android:text="Capture Target Scan"
                     android:textAllCaps="false"
                     android:textSize="15sp"
@@ -345,7 +345,8 @@
                 android:paddingBottom="3dp">
 
                 <TextView
-                    android:layout_width="64dp"
+                    android:id="@+id/tvColTime"
+                    android:layout_width="46dp"
                     android:layout_height="wrap_content"
                     android:text="Time"
                     android:textSize="12sp"
@@ -368,7 +369,7 @@
                     android:textSize="12sp"
                     android:fontFamily="@font/rajdhani_medium"
                     android:textColor="@color/idroid_text_sub"
-                    android:layout_marginEnd="26dp" />
+                    android:layout_marginEnd="24dp" />
             </LinearLayout>
 
             <ListView
@@ -386,7 +387,9 @@
                 android:scrollbarThumbVertical="@color/idroid_text_main"
                 android:scrollbarTrackVertical="@color/idroid_border_dim"
                 android:scrollbarStyle="outsideOverlay"
-                android:fadeScrollbars="false"
+                android:fadeScrollbars="true"
+                android:requiresFadingEdge="vertical"
+                android:fadingEdgeLength="20dp"
                 android:listSelector="@android:color/transparent"
                 android:overScrollMode="never" />
         </LinearLayout>
@@ -501,7 +504,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="RATIONS"
+                    android:text="LOGGED"
                     android:textSize="12sp"
                     android:fontFamily="@font/share_tech_mono"
                     android:textColor="@color/idroid_text_sub"

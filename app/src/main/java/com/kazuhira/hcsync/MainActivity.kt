@@ -104,6 +104,7 @@ class MainActivity : AppCompatActivity() {
         btnTakePhoto = findViewById(R.id.btnTakePhoto)
         tabBar = findViewById(R.id.tabBar)
         listViewHistory = findViewById(R.id.listViewHistory)
+        findViewById<TextView>(R.id.tvColTime).layoutParams.width = RationFormat.timeColumnWidthPx(this)
         tvTodayCalories = findViewById(R.id.tvTodayCalories)
         tvTodayCount = findViewById(R.id.tvTodayCount)
         tvTodayProtein = findViewById(R.id.tvTodayProtein)
@@ -133,7 +134,7 @@ class MainActivity : AppCompatActivity() {
             if (isGranted) {
                 startCamera()
             } else {
-                tvOpticalStatus.text = "OPTICAL HUD // STANDBY"
+                tvOpticalStatus.text = "OPTICS // STANDBY"
                 statusText.text = "Optical feed standby (camera permission denied). Tap SCAN to retry."
             }
         }
@@ -275,10 +276,10 @@ class MainActivity : AppCompatActivity() {
                     preview,
                     imageCapture
                 )
-                tvOpticalStatus.text = "OPTICAL HUD // ACTIVE"
+                tvOpticalStatus.text = "OPTICS // ACTIVE"
                 statusText.text = "Optical feed online. Ready for target acquisition."
             } catch (e: Exception) {
-                tvOpticalStatus.text = "OPTICAL HUD // OFFLINE"
+                tvOpticalStatus.text = "OPTICS // OFFLINE"
                 statusText.text = "Optical sensor error: ${e.message}"
             }
         }
