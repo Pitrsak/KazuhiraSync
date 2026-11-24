@@ -6,9 +6,12 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.util.Size
+import android.animation.ValueAnimator
+import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.DecelerateInterpolator
 import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -69,6 +72,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var layoutPendingSync: View
     private lateinit var tvHudRations: TextView
     private lateinit var tvHudAvg: TextView
+    private lateinit var overlayView: IdroidOverlayView
+    private var shownTodayKcal = 0.0
+    private var kcalAnimator: ValueAnimator? = null
     private lateinit var parallaxManager: IdroidParallaxManager
 
     private lateinit var localRepo: LocalMealRepository
@@ -98,6 +104,7 @@ class MainActivity : AppCompatActivity() {
         // TextureView-backed preview so the feed can be colour graded like the iDroid projection
         cameraPreviewView.implementationMode = PreviewView.ImplementationMode.COMPATIBLE
         IdroidOverlayView.applyHoloColorGrade(cameraPreviewView)
+        overlayView = findViewById(R.id.idroidOverlayView)
         statusText = findViewById(R.id.statusText)
         tvModelSubtitle = findViewById(R.id.tvModelSubtitle)
         progressBar = findViewById(R.id.progressBar)
@@ -150,6 +157,7 @@ class MainActivity : AppCompatActivity() {
 
         // Gallery Launcher
         galleryLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            tabBar.activeIndex = 1
             if (uri != null) {
                 processFoodImage(uri)
             }
@@ -163,6 +171,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnTakePhoto.setOnClickListener {
+            it.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                 requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA)
             } else if (imageCapture != null) {
@@ -176,7 +185,10 @@ class MainActivity : AppCompatActivity() {
         tabBar.onTabClick = { index ->
             when (index) {
                 // Disabled with the capture row while a scan is being captured or analysed
-                0 -> if (btnTakePhoto.isEnabled) galleryLauncher.launch("image/*")
+                0 -> if (btnTakePhoto.isEnabled) {
+                    tabBar.activeIndex = 0
+                    galleryLauncher.launch("image/*")
+                }
                 2 -> showSettingsDialog()
             }
         }
@@ -189,6 +201,7 @@ class MainActivity : AppCompatActivity() {
         layoutPendingSync.setOnClickListener { syncPending(interactive = true) }
 
         refreshHistoryList()
+        if (savedInstanceState == null) playBootSequence()
 
         // Handle incoming intent if shared from Gallery/Camera app or launched via Quick Settings / shortcut
         handleIncomingIntent(intent)
@@ -295,6 +308,7 @@ class MainActivity : AppCompatActivity() {
         val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
 
         statusText.text = "Acquiring target scan..."
+        overlayView.flash()
         progressBar.visibility = View.VISIBLE
         btnTakePhoto.isEnabled = false
 
@@ -408,6 +422,7 @@ class MainActivity : AppCompatActivity() {
 
         statusText.text = "Kazuhira is analyzing target intel ($modelName)..."
         progressBar.visibility = View.VISIBLE
+        overlayView.scanning = true
         btnTakePhoto.isEnabled = false
 
         val visionService = GeminiVisionService(this, apiKey, modelName, provider)
@@ -415,6 +430,7 @@ class MainActivity : AppCompatActivity() {
             val result = visionService.analyzeFoodImage(imageUri)
 
             progressBar.visibility = View.GONE
+            overlayView.scanning = false
             btnTakePhoto.isEnabled = true
 
             result.onSuccess { estimation ->
@@ -539,6 +555,7 @@ class MainActivity : AppCompatActivity() {
                 // Two-tap confirmation
                 if (!armed) {
                     armed = true
+                    performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
                     text = "CONFIRM DELETE"
                     return@setOnClickListener
                 }
@@ -568,6 +585,7 @@ class MainActivity : AppCompatActivity() {
     /** Saves the meal locally, then pushes it to Health Connect (insert or update). */
     private fun commitMeal(meal: LocalMealRecord) {
         localRepo.saveMeal(meal)
+        logAdapter.highlightId = meal.id
         refreshHistoryList()
         if (!meal.hcLinked) {
             statusText.text = "Ration updated locally. It was logged before v2.2, so its Health Connect entry is unchanged."
@@ -690,11 +708,50 @@ class MainActivity : AppCompatActivity() {
         val today = LocalDate.now()
         val zone = ZoneId.systemDefault()
         val todayMeals = meals.filter { it.instant.atZone(zone).toLocalDate() == today }
-        tvTodayCalories.text = RationFormat.kcal(todayMeals.sumOf { it.calories })
+        animateTodayKcal(todayMeals.sumOf { it.calories })
         tvTodayCount.text = "${todayMeals.size} RATION${if (todayMeals.size == 1) "" else "S"}"
         tvTodayProtein.text = RationFormat.grams(todayMeals.sumOf { it.proteinG })
         tvTodayCarbs.text = RationFormat.grams(todayMeals.sumOf { it.carbG })
         tvTodayFat.text = RationFormat.grams(todayMeals.sumOf { it.fatG })
+    }
+
+    /** Rolls the big calorie readout from its current value to [target], like the iDroid's counters. */
+    private fun animateTodayKcal(target: Double) {
+        kcalAnimator?.cancel()
+        val from = shownTodayKcal
+        if (RationFormat.kcal(from) == RationFormat.kcal(target)) {
+            shownTodayKcal = target
+            tvTodayCalories.text = RationFormat.kcal(target)
+            return
+        }
+        kcalAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
+            duration = 700
+            interpolator = DecelerateInterpolator(1.6f)
+            addUpdateListener {
+                shownTodayKcal = from + (target - from) * (it.animatedValue as Float)
+                tvTodayCalories.text = RationFormat.kcal(shownTodayKcal)
+            }
+            start()
+        }
+    }
+
+    /** HUD power-on: header, tabs, cards, log and footer fade up one after another. */
+    private fun playBootSequence() {
+        val hud = findViewById<ViewGroup>(R.id.layoutIdroidUi)
+        val rise = 10f * resources.displayMetrics.density
+        for (i in 0 until hud.childCount) {
+            hud.getChildAt(i).apply {
+                alpha = 0f
+                translationY = rise
+                animate()
+                    .alpha(1f)
+                    .translationY(0f)
+                    .setStartDelay(60L + i * 45L)
+                    .setDuration(300)
+                    .setInterpolator(DecelerateInterpolator())
+                    .start()
+            }
+        }
     }
 
     /** Bottom-right HUD block: total rations logged and the average daily intake over the last 7 days. */
@@ -839,6 +896,8 @@ class MainActivity : AppCompatActivity() {
         val dialog = AlertDialog.Builder(this)
             .setView(dialogView)
             .create()
+        tabBar.activeIndex = 2
+        dialog.setOnDismissListener { tabBar.activeIndex = 1 }
 
         btnCancel.setOnClickListener {
             dialog.dismiss()

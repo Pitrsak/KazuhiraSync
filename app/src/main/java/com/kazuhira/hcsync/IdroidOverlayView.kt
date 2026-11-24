@@ -1,10 +1,12 @@
 package com.kazuhira.hcsync
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
 import android.os.Build
 import android.util.AttributeSet
 import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.core.content.ContextCompat
 import kotlin.random.Random
 
@@ -17,6 +19,8 @@ import kotlin.random.Random
  * 4. Faint matrix dot grid.
  * 5. Procedural digital grain.
  * 6. Fine CRT scanlines.
+ * 7. While [scanning]: a bright scan line sweeping down the feed with a fading trail.
+ * 8. [flash]: a quick shutter flash when a target scan is captured.
  */
 class IdroidOverlayView @JvmOverloads constructor(
     context: Context,
@@ -69,6 +73,61 @@ class IdroidOverlayView @JvmOverloads constructor(
     private val vignettePaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private var noisePaint: Paint? = null
 
+    private val density = resources.displayMetrics.density
+    private val sweepLinePaint = Paint().apply {
+        color = ContextCompat.getColor(context, R.color.idroid_cyan_bright)
+        strokeWidth = 1.5f * density
+    }
+    private val sweepTrailPaint = Paint()
+    private val sweepTrailHeight = 72f * density
+    private var sweepPhase = 0f
+    private var sweepAnimator: ValueAnimator? = null
+
+    private val flashPaint = Paint().apply { color = Color.WHITE }
+    private var flashAlpha = 0f
+    private var flashAnimator: ValueAnimator? = null
+
+    /** Sweeps a scan line over the feed while a target is being analysed. */
+    var scanning = false
+        set(value) {
+            if (field == value) return
+            field = value
+            sweepAnimator?.cancel()
+            sweepAnimator = null
+            if (value && ValueAnimator.areAnimatorsEnabled()) {
+                sweepAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
+                    duration = 1600
+                    repeatCount = ValueAnimator.INFINITE
+                    interpolator = AccelerateDecelerateInterpolator()
+                    addUpdateListener {
+                        sweepPhase = it.animatedValue as Float
+                        invalidate()
+                    }
+                    start()
+                }
+            }
+            invalidate()
+        }
+
+    /** Shutter flash for a captured scan. */
+    fun flash() {
+        flashAnimator?.cancel()
+        flashAnimator = ValueAnimator.ofFloat(0.32f, 0f).apply {
+            duration = 260
+            addUpdateListener {
+                flashAlpha = it.animatedValue as Float
+                invalidate()
+            }
+            start()
+        }
+    }
+
+    override fun onDetachedFromWindow() {
+        sweepAnimator?.cancel()
+        flashAnimator?.cancel()
+        super.onDetachedFromWindow()
+    }
+
     init {
         initNoiseShader()
     }
@@ -117,6 +176,12 @@ class IdroidOverlayView @JvmOverloads constructor(
             Shader.TileMode.CLAMP
         )
 
+        sweepTrailPaint.shader = LinearGradient(
+            0f, 0f, 0f, sweepTrailHeight,
+            Color.TRANSPARENT, ContextCompat.getColor(context, R.color.idroid_glow_band),
+            Shader.TileMode.CLAMP
+        )
+
         val radius = Math.hypot(w.toDouble(), h.toDouble()).toFloat() * 0.6f
         vignettePaint.shader = RadialGradient(
             w / 2f, h * 0.55f, radius,
@@ -155,5 +220,19 @@ class IdroidOverlayView @JvmOverloads constructor(
         }
 
         canvas.drawRect(0f, 0f, w, h, vignettePaint)
+
+        if (scanning && sweepAnimator != null) {
+            val y = sweepPhase * h
+            canvas.save()
+            canvas.translate(0f, y - sweepTrailHeight)
+            canvas.drawRect(0f, 0f, w, sweepTrailHeight, sweepTrailPaint)
+            canvas.restore()
+            canvas.drawLine(0f, y, w, y, sweepLinePaint)
+        }
+
+        if (flashAlpha > 0f) {
+            flashPaint.alpha = (255 * flashAlpha).toInt()
+            canvas.drawRect(0f, 0f, w, h, flashPaint)
+        }
     }
 }

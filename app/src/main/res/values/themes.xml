@@ -26,6 +26,12 @@
     <style name="IdroidAlertDialog" parent="ThemeOverlay.Material3.Dialog.Alert">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:backgroundDimAmount">0.55</item>
+        <item name="android:windowAnimationStyle">@style/IdroidDialogAnimation</item>
+    </style>
+
+    <style name="IdroidDialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/idroid_dialog_enter</item>
+        <item name="android:windowExitAnimation">@anim/idroid_dialog_exit</item>
     </style>
 
     <!-- Date / time pickers for the ration mission time -->

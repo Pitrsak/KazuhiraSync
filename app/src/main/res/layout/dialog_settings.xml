@@ -183,6 +183,7 @@
                 android:layout_marginEnd="8dp" />
 
             <Button
+                android:stateListAnimator="@animator/idroid_press"
                 android:id="@+id/btnSaveSettings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

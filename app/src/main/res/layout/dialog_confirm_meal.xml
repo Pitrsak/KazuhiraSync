@@ -399,6 +399,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/btnSaveMeal" />
 
             <Button
+                android:stateListAnimator="@animator/idroid_press"
                 android:id="@+id/btnSaveMeal"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

@@ -283,6 +283,7 @@
                 <!-- Highlighted (selected) row -->
                 <Button
                     android:id="@+id/btnTakePhoto"
+                    android:stateListAnimator="@animator/idroid_press"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:text="Capture Target Scan"
@@ -395,7 +396,7 @@
         </LinearLayout>
 
         <!-- ===================== Footer: description line, button prompts, HUD stats ===================== -->
-        <TextView
+        <com.kazuhira.hcsync.IdroidTypewriterView
             android:id="@+id/statusText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

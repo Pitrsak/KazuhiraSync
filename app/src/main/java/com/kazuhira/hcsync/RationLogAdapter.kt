@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.DecelerateInterpolator
 import android.widget.BaseAdapter
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -20,6 +21,9 @@ sealed class LogRow {
 class RationLogAdapter(private val context: Context) : BaseAdapter() {
 
     private var rows: List<LogRow> = emptyList()
+
+    /** Id of a ration that was just logged or amended; its row slides in once on the next bind. */
+    var highlightId: String? = null
 
     fun submit(meals: List<LocalMealRecord>) {
         val zone = ZoneId.systemDefault()
@@ -55,6 +59,22 @@ class RationLogAdapter(private val context: Context) : BaseAdapter() {
     }
 
     private fun bindMeal(item: LocalMealRecord, view: View): View {
+        // Recycled rows may still be mid-animation from a previous ration
+        view.animate().cancel()
+        view.alpha = 1f
+        view.translationX = 0f
+        if (item.id == highlightId) {
+            highlightId = null
+            view.alpha = 0f
+            view.translationX = -16f * context.resources.displayMetrics.density
+            view.animate()
+                .alpha(1f)
+                .translationX(0f)
+                .setStartDelay(120)
+                .setDuration(340)
+                .setInterpolator(DecelerateInterpolator())
+                .start()
+        }
         view.findViewById<TextView>(R.id.tvMealTitle).text = item.mealName
         view.findViewById<TextView>(R.id.tvMealCalories).text = RationFormat.kcal(item.calories)
         view.findViewById<TextView>(R.id.tvProteinBadge).text = "P ${RationFormat.grams(item.proteinG)}"

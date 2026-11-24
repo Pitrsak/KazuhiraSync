@@ -23,6 +23,7 @@ There is no intermediate backend, proxy server, or account registration required
   - Projector light band, procedural scanlines and CRT grain
   - Darkened header / footer zones and vignette calibrated for legibility over food plates
 - **1:1 iDroid Layout:** `KAZUHIRA SYNC VER` header with amber model line, tab strip with the raised active tab (INTEL FILE opens the gallery, CONFIG opens settings), solid cyan data tile for daily totals, white highlight-bar menu rows, a "Results Log" style ration list with status checks, and a footer with a tap-to-sync badge and TIME / RATIONS / AVG stats.
+- **HUD Motion:** dialogs unfold like a hologram projection, the tab for an open screen lifts, the HUD powers on in sequence, status messages type themselves out, the calorie readout rolls to its new value, a scan line sweeps the feed while Kaz analyses a meal, and new rations slide into the log. Light haptics on capture, tabs and delete. Everything follows the system animation setting.
 - **Gyroscope Parallax Reactivity:** UI cards and the ration log react smoothly to device orientation via rotation vector / accelerometer sensors, creating depth perspective.
 - **MGSV Typography and Palette:** White and pale-aqua type over teal with MGSV amber accents, mixed-case Rajdhani labels and Share Tech Mono numerals, as in the in-game iDroid.
 
